@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include "mainAuction.h"
 
+/* Hello */
+
 // int main()
 // {
 // 	USER_T* user;
