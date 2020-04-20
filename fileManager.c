@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include "mainAuction.h"
 
-/* Hello */
+/* Hello again */
 
 // int main()
 // {
