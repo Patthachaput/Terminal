@@ -4,7 +4,7 @@
  *
  *define all struct that importance with this project 
  *
- *
+ *created by Patthachaput Thanesmaneerat ID:62070503432
  *
  *********************************************************************************
  */
@@ -83,7 +83,7 @@ int writProduct(PRODUCT_T* product);
 
 int writeHistory(HISTORY_T* history);
 
-int writeBackUp(BACKUP_T* thisBackup);
+int writeBackUp(BACKUP_T* thisBackup); /* local function */
 
 BACKUP_T* getBackUp();
 
@@ -97,4 +97,4 @@ int allFileExist(); /* local function */
 
 int saveBackUp(void* bata, char mode);
 
-/*int saveAllData();*/
+/*int saveAllData();*/ //comment out because function has not done yet.

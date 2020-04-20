@@ -1,8 +1,19 @@
+/*********************************************************************************
+ *
+ *fileManager.c
+ *
+ *impliment all function that importance for read and write database file 
+ *
+ *created by Patthachaput Thanesmaneerat ID:62070503432
+ *
+ *********************************************************************************
+ */
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 #include "mainAuction.h"
 
+//ลบออกได้เลยนะเราไว้ test
 // int main()
 // {
 // 	USER_T* user;
@@ -30,6 +41,12 @@
 // 	saveBackUp(product, 'P');
 
 // }
+
+/*check if program open first time
+* return 1 if default file is exist
+*        -1 || -2 || -3 || -4 if defaault not exit and create file
+* initial all global value 
+*/
 int init()
 {
 	int status;
@@ -121,6 +138,7 @@ int init()
 	return status;
 }
 
+//comment out because function sitll not done.
 // int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history, BACKUP_T* thisBackup)
 // {
 // 	writeUser(USER_T* user);
@@ -133,6 +151,11 @@ int init()
 
 // }
 
+/*Save data to backup file
+ *first argument is data that want to save
+ *second is a struct mode 'U' for user 'P' for product
+ *return 1 if Success else return 0
+ */
 int saveBackUp(void* bata, char mode)
 {
 	BACKUP_T thisBackup;
@@ -199,6 +222,11 @@ int saveBackUp(void* bata, char mode)
 	return 1;
 }
 
+/*write array of all user to file user.dat
+ *if Success return 1 
+ *else return 0
+ *argument is array of all user
+ */
 int writeUser(USER_T* user)
 {
 	int newIdUser = 1;
@@ -234,6 +262,11 @@ int writeUser(USER_T* user)
 	return 0;
 }
 
+/*write array of all product to file product.dat
+ *if Success return 1 
+ *else return 0
+ *argument is array of all product
+ */
 int writProduct(PRODUCT_T* product)
 {
 	int newIdProduct = 1;
@@ -271,6 +304,11 @@ int writProduct(PRODUCT_T* product)
 	return 0;
 }
 
+/*write array of all history to file history.dat
+ *if Success return 1 
+ *else return 0
+ *argument is array of all history
+ */
 int writeHistory(HISTORY_T* history)
 {
 	int idUser;
@@ -345,6 +383,11 @@ int writeHistory(HISTORY_T* history)
 	return 0;
 }
 
+/*write array of all backup case to file backup.dat
+ *if Success return 1 
+ *else return 0
+ *argument is array of all backup
+ */
 int writeBackUp(BACKUP_T* thisBackup)
 {
 	int nuwBackUp = 1;
@@ -424,7 +467,7 @@ int writeBackUp(BACKUP_T* thisBackup)
 
 /****************************************************
  *getBackup function if it have backup will return 
- *all dackup data else will return NULL
+ *array of all dackup data else will return NULL
  ****************************************************
  */
 BACKUP_T* getBackUp()
@@ -461,6 +504,10 @@ BACKUP_T* getBackUp()
 	return allBackUp;
 }
 
+/*get all user in file user.dat
+ *if Success return array of all user 
+ *else return NULL
+ */
 USER_T* getUser()
 {
 	FILE* pUser = NULL;
@@ -495,6 +542,10 @@ USER_T* getUser()
 	return allUser;
 }
 
+/*get all product in file product.dat
+ *if Success return array of all product 
+ *else return NULL
+ */
 PRODUCT_T* getProduct()
 {
 	FILE* pProduct = NULL;
@@ -529,6 +580,10 @@ PRODUCT_T* getProduct()
 	return allProduct;
 }
 
+/*get all history in file history.dat
+ *if Success return array of all history 
+ *else return NULL
+ */
 HISTORY_T* getHistory()
 {
 	int idUser;
