@@ -30,7 +30,6 @@
 // 	saveBackUp(product, 'P');
 
 // }
-
 int init()
 {
 	int status;
@@ -197,7 +196,6 @@ int saveBackUp(void* bata, char mode)
 		return 0;
 	}
 
-	free()
 	return 1;
 }
 
