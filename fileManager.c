@@ -122,17 +122,17 @@ int init()
 	return status;
 }
 
-int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history, BACKUP_T* thisBackup)
-{
-	writeUser(USER_T* user);
+// int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history, BACKUP_T* thisBackup)
+// {
+// 	writeUser(USER_T* user);
 
-	writProduct(PRODUCT_T* product);
+// 	writProduct(PRODUCT_T* product);
 
-	writeHistory(HISTORY_T* history);
+// 	writeHistory(HISTORY_T* history);
 
-	writeBackUp(BACKUP_T* thisBackup);
+// 	writeBackUp(BACKUP_T* thisBackup);
 
-}
+// }
 
 int saveBackUp(void* bata, char mode)
 {
