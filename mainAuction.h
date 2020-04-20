@@ -17,12 +17,12 @@ int ADDNEWUSER;
 int ADDNEWPRODUCT;
 int ADDNEWHISTORY;
 
-typedef struct _date 
-{
-	int day;
-	int month;
-	int year;
-}DATE_T;
+// typedef struct _date 
+// {
+// 	int day;
+// 	int month;
+// 	int year;
+// }DATE_T;
 
 typedef struct _history
 {
