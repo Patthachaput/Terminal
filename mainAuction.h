@@ -8,7 +8,6 @@
  *
  *********************************************************************************
  */
-
 int TOTALUSER;
 int TOTALPRODUCT;
 int TOTALHISTORY;
@@ -17,12 +16,14 @@ int ADDNEWUSER;
 int ADDNEWPRODUCT;
 int ADDNEWHISTORY;
 
-// typedef struct _date 
-// {
-// 	int day;
-// 	int month;
-// 	int year;
-// }DATE_T;
+typedef struct _date 
+{
+	int hour;
+	int minute;
+	int day;
+	int month;
+	int year;
+}DATE_T;
 
 typedef struct _history
 {
@@ -68,8 +69,8 @@ typedef struct _backUp
 {
 	int idBackUp;
 	int haveNewUser;
+	int inProcessProduct;
 	USER_T user;
-	int haveNewProduct;
 	PRODUCT_T product;
 }BACKUP_T;
 
@@ -80,14 +81,20 @@ int writeUser(USER_T* user);
 
 int writProduct(PRODUCT_T* product);
 
-/*int writeHistory(HISTORY_T* history);*/
+int writeHistory(HISTORY_T* history);
 
-/*BACKUP_T* getBackUp();*/
+int writeBackUp(BACKUP_T* thisBackup);
+
+BACKUP_T* getBackUp();
 
 USER_T* getUser();
 
 PRODUCT_T* getProduct();
 
-/*HISTORY_T* getHistory();*/
+HISTORY_T* getHistory();
 
 int allFileExist(); /* local function */
+
+int saveBackUp(void* bata, char mode);
+
+/*int saveAllData();*/

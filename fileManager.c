@@ -1,31 +1,34 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include "mainAuction.h"
-
-/* Hello again */
 
 // int main()
 // {
 // 	USER_T* user;
 // 	PRODUCT_T* product;
+// 	HISTORY_T* history;
 
-// 	int init();
+// 	init();
 
-// 	int writeUser(USER_T* user);
+// 	writeUser(user);
 
-// 	int writProduct(PRODUCT_T* product);
+// 	writProduct(product);
 
-// 	int writeHistory(HISTORY_T* history);
+// 	writeHistory(history);
 
-// 	/*BACKUP_T* getBackUp();*/
+// 	getBackUp();
 
-// 	USER_T* getUser();
+// 	getUser();
 
-// 	PRODUCT_T* getProduct();
+// 	getProduct();
 
-// 	/*HISTORY_T* getHistory();*/
+// 	getHistory();
 
-// 	int allFileExist(); /* local function */
+// 	saveBackUp(user, 'U');
+
+// 	saveBackUp(product, 'P');
+
 // }
 
 int init()
@@ -117,6 +120,77 @@ int init()
 	ADDNEWHISTORY = 0;
 
 	return status;
+}
+
+// int saveAllData()
+// {
+
+// }
+
+int saveBackUp(void* bata, char mode)
+{
+	BACKUP_T thisBackup;
+	
+	if(mode == 'U')
+	{
+		USER_T* thisUser = (USER_T*) bata;
+
+		thisBackup.user.idUser =  thisUser->idUser;
+		strcpy(thisBackup.user.email, thisUser->email);
+		strcpy(thisBackup.user.password, thisUser->password);
+		strcpy(thisBackup.user.name, thisUser->name);
+		strcpy(thisBackup.user.address, thisUser->address);
+		strcpy(thisBackup.user.phoneNumber, thisUser->phoneNumber);
+		strcpy(thisBackup.user.bankAccNumber, thisUser->bankAccNumber);
+		thisBackup.haveNewUser = 1;
+		thisBackup.inProcessProduct = 0;
+
+		if(writeBackUp(&thisBackup) == 0)
+		{
+			printf("Error to write user backup!<saveBackUp1>\n");
+			return 0;
+		}
+	}
+	else if(mode == 'P')
+	{
+		PRODUCT_T* thisProduct = (PRODUCT_T*) bata;
+
+		thisBackup.product.idProduct = thisProduct->idProduct;
+		strcpy(thisBackup.product.name, thisProduct->name);  
+		strcpy(thisBackup.product.description, thisProduct->description);  
+		thisBackup.product.category = thisProduct->category;    
+		thisBackup.product.dateOpen.hour = thisProduct->dateOpen.hour;
+		thisBackup.product.dateOpen.minute = thisProduct->dateOpen.minute;
+		thisBackup.product.dateOpen.day = thisProduct->dateOpen.day;
+		thisBackup.product.dateOpen.month = thisProduct->dateOpen.month;
+		thisBackup.product.dateOpen.year = thisProduct->dateOpen.year;
+		thisBackup.product.dateClose.hour = thisProduct->dateClose.hour;
+		thisBackup.product.dateClose.minute = thisProduct->dateClose.minute;
+		thisBackup.product.dateClose.day = thisProduct->dateClose.day;
+		thisBackup.product.dateClose.month = thisProduct->dateClose.month;
+		thisBackup.product.dateClose.year = thisProduct->dateClose.year;
+		thisBackup.product.finalPrice = thisProduct->finalPrice;
+		thisBackup.product.nowPrice = thisProduct->nowPrice;
+		thisBackup.product.minbid = thisProduct->minbid;   
+		thisBackup.product.hostId = thisProduct->hostId;
+		thisBackup.product.userAuthorityId = thisProduct->userAuthorityId; 
+		thisBackup.product.winnerId = thisProduct->winnerId;
+		thisBackup.haveNewUser = 0;
+		thisBackup.inProcessProduct = 1;
+
+		if(writeBackUp(&thisBackup) == 0)
+		{
+			printf("Error to write user backup!<saveBackUp2>\n");
+			return 0;
+		}
+	}
+	else
+	{
+		printf("Error to write user backup!<saveBackUp3>\n");
+		return 0;
+	}
+
+	return 1;
 }
 
 int writeUser(USER_T* user)
@@ -264,43 +338,83 @@ int writeHistory(HISTORY_T* history)
 
 	return 0;
 }
-/*
-int saveBackUp(BACKUP_T* thisBackup)
+
+int writeBackUp(BACKUP_T* thisBackup)
 {
+	int nuwBackUp = 1;
+	int numBackUp = -1;
+
 	FILE* pBackup = NULL;
 	BACKUP_T checkBackUp;
 
-	pBackup = fopen("backup.dat", "rb");
-	if(pBackup == NULL)
-	{
-		printf("Error to read backup file in <saveBackUp>!\n");
-		return 0;
-	}
 	if(TOTALBACKUP != 0)
 	{
+		pBackup = fopen("backup.dat", "rb");
+		if(pBackup == NULL)
+		{
+			printf("Error to read backup file in <writeBackUp>!\n");
+			return 0;
+		}
+
 		for(int i = 0; i < TOTALBACKUP; i++)
 		{
 			if(fread(&checkBackUp, sizeof(BACKUP_T), 1, pBackup) != 1)
 			{
-				printf("Can't read all data from database, please try agin! <saveBackUp>\n");
+				printf("Can't read all data from database, please try agin! <writeBackUp>\n");
 				return 0;
 			}
-			if(thisBackUp->haveNewUser == 1)
+			if(thisBackup->haveNewUser == 1)
 			{
-				if(thisBackUp->user.idUser == checkBackUp.user.idUser)
+				if(thisBackup->user.idUser == checkBackUp.user.idUser)
 				{
-
+					numBackUp = checkBackUp.idBackUp;
+				}
+			}
+			else if(thisBackup->inProcessProduct == 1)
+			{
+				if(thisBackup->product.idProduct == checkBackUp.product.idProduct)
+				{
+					numBackUp = checkBackUp.idBackUp;
 				}
 			}
 		}
-		
-		
+		fclose(pBackup);
 	}
-	
 
+	pBackup = fopen("backup.dat", "ab");
+	if(pBackup == NULL)
+	{
+		printf("Error to add backup file in <writeBackUp>!\n");
+		return 0;
+	}
+	if(numBackUp != -1)
+	{
+		if(fseek(pBackup, 0, SEEK_SET) || fseek(pBackup, numBackUp * sizeof(BACKUP_T), SEEK_SET))
+		{
+			printf("Error to seek in <writeBackUp>\n");
+			return 0;
+		}
+		thisBackup->idBackUp = numBackUp;
+		if(fwrite(thisBackup, sizeof(BACKUP_T), 1, pBackup) != 1)
+		{
+			printf("Erroe to save BackUp! in <writeBackUp1>\n");
+			return 0;
+		}
+	}
+	else
+	{
+		thisBackup->idBackUp = TOTALBACKUP + nuwBackUp;
+		if(fwrite(thisBackup, sizeof(BACKUP_T), 1, pBackup) != 1)
+		{
+			printf("Erroe to save BackUp! in <writeBackUp2>\n");
+			return 0;
+		}
+		TOTALBACKUP++;
+	}
+	fclose(pBackup);
 
+	return 1;
 }
-*/
 
 /****************************************************
  *getBackup function if it have backup will return 
