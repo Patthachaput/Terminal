@@ -1,44 +1,23 @@
-/**
-  *  dataBuilder.h
-  *
-  *  This file build data structure for
-  *  entire project
+/*
+ *
+ *  dataBuilder.h
+ *
+ *      This file build the data structure for entire project
+ *
+ *
+ *
+ *  Project CPE111 Data structure - TEAM TERMINAL
+ *  Member: Natacha Punyathanasub       (Nut)       62070503415
+ *          Patthachaput Thanesmaneerat (Jui)       62070503432
+ *          Supakorn Srisawas           (Field)     62070503464
+ *          Narapathra Morakrant        (Foremost)  62070503464
+ *
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "mainAuction.h"
 #include "dataBuilder.h"
-#include<stdio.h>
-#include<stdlib.h>
-
-/*this structure sort by price*/
-typedef struct{
-    double price;
-    PRODUCT_T * pProduct;
-}PRODUCT_PRICE;
-
-/*this structure sort by date time*/
-typedef struct{
-    DATE_T date;
-    PRODUCT_T* pProduct;
-}PRODUCT_DATE;
-
-/*keep product in category*/
-typedef struct {
-    PRODUCT_PRICE * minBidSort;
-    PRODUCT_PRICE * finalPricesort;
-    PRODUCT_DATE * openDateSort;
-    PRODUCT_DATE * closeDateSort;
-
-    /*counter for 4 sorts*/
-    int minBidCount;
-    int finalPriceCount;
-    int openDateCount;
-    int closeDateCount;
-}PRODUCT_IN_CAT;
-
-PRODUCT_T * products; /*keep entire product*/
-USER_T * users; /*keep entire users*/
-
-PRODUCT_IN_CAT product_in_cat[7];
 
 /* build data structure by reading data in the file
  * No return - if error occur program will be close automatically

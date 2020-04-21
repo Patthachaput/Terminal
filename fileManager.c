@@ -1,52 +1,28 @@
-/*********************************************************************************
+/*
+ * fileManager.c
  *
- *fileManager.c
+ *      impliment all function that importance for read and write database file
  *
- *impliment all function that importance for read and write database file 
- *
- *created by Patthachaput Thanesmaneerat ID:62070503432
- *
- *********************************************************************************
+ *  Project CPE111 Data structure - TEAM TERMINAL
+ *  Member: Natacha Punyathanasub       (Nut)       62070503415
+ *          Patthachaput Thanesmaneerat (Jui)       62070503432
+ *          Supakorn Srisawas           (Field)     62070503464
+ *          Narapathra Morakrant        (Foremost)  62070503464
  */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include "mainAuction.h"
+#include"mainAuction.h"
 
-//ลบออกได้เลยนะเราไว้ test
-// int main()
-// {
-// 	USER_T* user;
-// 	PRODUCT_T* product;
-// 	HISTORY_T* history;
-
-// 	init();
-
-// 	writeUser(user);
-
-// 	writProduct(product);
-
-// 	writeHistory(history);
-
-// 	getBackUp();
-
-// 	getUser();
-
-// 	getProduct();
-
-// 	getHistory();
-
-// 	saveBackUp(user, 'U');
-
-// 	saveBackUp(product, 'P');
-
-// }
-
-/*check if program open first time
-* return 1 if default file is exist
-*        -1 || -2 || -3 || -4 if defaault not exit and create file
-* initial all global value 
-*/
+/*******************************************************************************
+ * Init
+ * - check if program open first time
+ * - return 1 if default file is exist
+ *        -1 || -2 || -3 || -4 if defaault not exit and create file
+ * - initial all global value
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 int init()
 {
 	int status;
@@ -151,10 +127,13 @@ int init()
 
 // }
 
-/*Save data to backup file
- *first argument is data that want to save
- *second is a struct mode 'U' for user 'P' for product
- *return 1 if Success else return 0
+/*******************************************************************************
+ * SaveBackUp
+ * - Save data to backup file
+ * - first argument is data that want to save
+ * - second is a struct mode 'U' for user 'P' for product
+ * return 1 if Success else return 0
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 int saveBackUp(void* bata, char mode)
 {
@@ -222,10 +201,13 @@ int saveBackUp(void* bata, char mode)
 	return 1;
 }
 
-/*write array of all user to file user.dat
- *if Success return 1 
- *else return 0
- *argument is array of all user
+/*******************************************************************************
+ * writeUser
+ * - write array of all user to file user.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all user
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 int writeUser(USER_T* user)
 {
@@ -262,10 +244,13 @@ int writeUser(USER_T* user)
 	return 0;
 }
 
-/*write array of all product to file product.dat
- *if Success return 1 
- *else return 0
- *argument is array of all product
+/*******************************************************************************
+ * writProduct
+ * - write array of all product to file product.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all product
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 int writProduct(PRODUCT_T* product)
 {
@@ -288,12 +273,12 @@ int writProduct(PRODUCT_T* product)
 		pProduct = fopen("product.dat", "wb");
 		if(pProduct == NULL)
 		{
-			printf("Erroe to open product file! in <writProduct>\n");
+			printf("Error to open product file! in <writProduct>\n");
 			return 0;
 		}
 		if(fwrite(product, sizeof(PRODUCT_T), newTotalProduct, pProduct) != newTotalProduct)
 		{
-			printf("Erroe to add product! in <writProduct>\n");
+			printf("Error to add product! in <writProduct>\n");
 			return 0;
 		}
 		free(product);
@@ -304,10 +289,13 @@ int writProduct(PRODUCT_T* product)
 	return 0;
 }
 
-/*write array of all history to file history.dat
- *if Success return 1 
- *else return 0
- *argument is array of all history
+/*******************************************************************************
+ * writeHistory
+ * - write array of all history to file history.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all history
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 int writeHistory(HISTORY_T* history)
 {
@@ -383,10 +371,13 @@ int writeHistory(HISTORY_T* history)
 	return 0;
 }
 
-/*write array of all backup case to file backup.dat
- *if Success return 1 
- *else return 0
- *argument is array of all backup
+/*******************************************************************************
+ * writeBackup
+ * - write array of all backup case to file backup.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all backup
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 int writeBackUp(BACKUP_T* thisBackup)
 {
@@ -465,10 +456,11 @@ int writeBackUp(BACKUP_T* thisBackup)
 	return 1;
 }
 
-/****************************************************
- *getBackup function if it have backup will return 
- *array of all dackup data else will return NULL
- ****************************************************
+/*******************************************************************************
+ * getBackUp
+ * - return the backup if have one
+ * - return null for no backup
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 BACKUP_T* getBackUp()
 {
@@ -504,9 +496,12 @@ BACKUP_T* getBackUp()
 	return allBackUp;
 }
 
-/*get all user in file user.dat
- *if Success return array of all user 
- *else return NULL
+/*******************************************************************************
+ * getUser
+ * - get all user in file user.dat
+ * - if Success return array of all user
+ * - else return NULL
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 USER_T* getUser()
 {
@@ -542,9 +537,12 @@ USER_T* getUser()
 	return allUser;
 }
 
-/*get all product in file product.dat
- *if Success return array of all product 
- *else return NULL
+/*******************************************************************************
+ * getProduct
+ * - get all product in file product.dat
+ * - if Success return array of all product
+ * - else return NULL
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 PRODUCT_T* getProduct()
 {
@@ -580,15 +578,18 @@ PRODUCT_T* getProduct()
 	return allProduct;
 }
 
-/*get all history in file history.dat
- *if Success return array of all history 
- *else return NULL
+/*******************************************************************************
+ * getHistory
+ * - get all history in file history.dat
+ * - if Success return array of all history
+ * - else return NULL
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 HISTORY_T* getHistory()
 {
 	int idUser;
 	int sizeofProductBit;
-	int sizaofSealAuction;
+	int sizaofSealAuction;  /* miss spelling from sizeofSaleAuction */
 	int* productBid;
 	int* sealAuction;
 
@@ -669,12 +670,13 @@ HISTORY_T* getHistory()
 }
 
 
-/************************************************************
- *Local function used dy init.  
- *This function will caheck all file are exit or not,
- *if all file are exit will return 1 else return negative
- *number follow index of file and created it.
- ************************************************************
+/*******************************************************************************
+ * allFileExist
+ * - Local function used dy init.
+ * - This function will check all file are exit or not,
+ * - if all file are exit will return 1 else return negative
+ * - number follow index of file and created it.
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 int allFileExist()
 {

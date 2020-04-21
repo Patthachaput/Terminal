@@ -1,12 +1,21 @@
 /*
+ * validate.c
  *
- *
- *
- *
+ *      contains all validate functions
+ *          - email
+ *          - password
+ *          - name(no title)
+ *          - thai phone number
+ *          - bank account number
+ *          - home address
+ *          - date time (dd-mm-yyyy hh:tt)
  *
  *
  *  Project CPE111 Data structure - TEAM TERMINAL
- *
+ *  Member: Natacha Punyathanasub       (Nut)       62070503415
+ *          Patthachaput Thanesmaneerat (Jui)       62070503432
+ *          Supakorn Srisawas           (Field)     62070503464
+ *          Narapathra Morakrant        (Foremost)  62070503464
  */
 
 #include <stdio.h>
@@ -138,7 +147,7 @@ int checkLowerCase(char password[MAXLEN])
     return lowerCase;
 }
 
-/******************************************************************************************
+/**********************************************************************************
  * checkSymbol.
  * - A function to check how many upper case alphabetic character does it have.
  * - 'password' is the password put in by the user.
@@ -170,7 +179,7 @@ int checkSymbol(char password[MAXLEN])
     return countSymbol;
 }
 
-/****************************************************************************************** *
+/**********************************************************************************
  * validatePassword.
  * A function to validate password with the following rules.
  * - At least 8 characters long and no longer than 12 characters.
@@ -243,7 +252,10 @@ int validatePassword(char password[MAXLEN])
     return correctness;
 }
 
-/* This is checkNameTitle function. It use for check first and last name with title is valid or not.
+/**********************************************************************************
+ * validateName
+ * - This is checkNameTitle function.
+ * - It use for check first and last name with title is valid or not.
  *  Created by Narapathra Morakrant 62070503464
  */
 int validateName(char nameInput[])
@@ -307,7 +319,10 @@ int validateName(char nameInput[])
     return 0;
 }
 
-/* This is checkPhoneNumThai function. It use for check Thai mobile phone number is valid or not.
+/**********************************************************************************
+ * validatePhoneNumThai
+ * - This is checkPhoneNumThai function.
+ * - It use for check Thai mobile phone number is valid or not.
  *  Created by Patthachaput Thanesmaneerat 62070503432
  *  Edited by Narapathra Morakrant 62070503464
  */
@@ -644,7 +659,7 @@ int checkFebuary(int dayCompare, int leapYear)
     {
         if ((dayCompare < 1)||(dayCompare > 29))
         {
-            printf("\t    Not valid - day not in range (not a leap year)\n");
+            printf("\tNot valid - day not in range (not a leap year)\n");
         }
         else if ((dayCompare >= 1)&&(dayCompare <= 29))
         {
@@ -655,7 +670,7 @@ int checkFebuary(int dayCompare, int leapYear)
     {
         if ((dayCompare < 1)||(dayCompare > 28))
         {
-            printf("\t    Not valid - day not in range\n");
+            printf("\tNot valid - day not in range\n");
         }
         else if ((dayCompare >= 1)&&(dayCompare <= 28))
         {
@@ -683,7 +698,7 @@ int checkDay(int day ,int month, int leapyear)
     {
         if ((day < 1)||(day > 31))
         {
-            printf("\t    Not valid - day not in range\n");
+            printf("\tNot valid - day not in range\n");
         }
         else if ((day >= 1)&&(day <= 31))
         {
@@ -695,7 +710,7 @@ int checkDay(int day ,int month, int leapyear)
     {
         if ((day < 1)||(day > 30))
         {
-            printf("\t    Not valid - day not in range\n");
+            printf("\tNot valid - day not in range\n");
         }
         else if ((day >= 1)&&(day <= 30))
         {
@@ -738,7 +753,7 @@ int dateCompare(int day, int month, int year)
     }
     else if (year == yearToday)
     {
-        if (month < monthToday)
+        if (month > monthToday)
         {
             validity = 1;
         }
@@ -757,7 +772,7 @@ int dateCompare(int day, int month, int year)
     
     if (validity == 0)
     {
-        printf("\t    Not Valid - date cannot be in the past \n");
+        printf("\tNot Valid - date cannot be in the past \n");
     }
     
     return validity;
@@ -799,7 +814,7 @@ int timeCompare (char time[MAXLEN])
     
     if (correctness == 0)
     {
-        printf("\t    Not Valid - time cannot be in the past \n");
+        printf("\tNot Valid - time cannot be in the past \n");
     }
     
     return correctness;
@@ -840,27 +855,27 @@ int validateDate(char date[MAXLEN])
                     }
                     else
                     {
-                        printf("\t    Not Valid - not an existing month  \n");
+                        printf("\tNot Valid - not an existing month  \n");
                     }
                 }
                 else
                 {
-                    printf("\t    Not Valid - year out of range \n");
+                    printf("\tNot Valid - year out of range \n");
                 }
             }
             else
             {
-                printf("\t    Not Valid - contain character other than '-' \n");
+                printf("\tNot Valid - contain character other than '-' \n");
             }
         }
         else
         {
-            printf("\t    Not Valid - wrong date format as dashes not in the right position\n");
+            printf("\tNot Valid - wrong date format as dashes not in the right position\n");
         }
     }
     else
     {
-        printf("\t    Not Valid - wrong date format\n");
+        printf("\tNot Valid - wrong date format\n");
     }
     
     return correctness;
@@ -895,27 +910,27 @@ int validateTime(char time[MAXLEN])
                     }
                     else
                     {
-                        printf("\t    Not Valid - minute not in range\n");
+                        printf("\tNot Valid - minute not in range\n");
                     }
                 }
                 else
                 {
-                    printf("\t    Not Valid - hour not in range\n");
+                    printf("\tNot Valid - hour not in range\n");
                 }
             }
             else
             {
-                printf("\t    Not Valid - contain character other than ':' \n");
+                printf("\tNot Valid - contain character other than ':' \n");
             }
         }
         else
         {
-            printf("\t    Not Valid - wrong time format as ':' not in the right position\n");
+            printf("\tNot Valid - wrong time format as ':' not in the right position\n");
         }
     }
     else
     {
-        printf("\t    Not Valid - wrong time format\n");
+        printf("\tNot Valid - wrong time format\n");
     }
     
     return correctness;
@@ -927,7 +942,7 @@ int validateTime(char time[MAXLEN])
  *  - function which check the date and time is valid
  *  - get the string input from the user
  *  - call others function to print error message if it is invalid
- *  - return 0 for invalid nd 1 for valid
+ *  - return 0 for invalid and 1 for valid
  * created by Narapathra Morakrant 62070503464
  */
 int validateDateTime(char input[MAXLEN])
@@ -943,18 +958,25 @@ int validateDateTime(char input[MAXLEN])
     sscanf(date,"%d-%d-%d",&day,&month,&year);
     if ((validateDate(date) == 1)&&(validateTime(time)==1))
     {
+        printf("check1\n");
         if (dateCompare(day,month,year) == 1)
         {
             correctness = 1;
         }
         else if (dateCompare(day,month,year) == 2)
         {
+            printf("check2\n");
             if(timeCompare(time) == 1)
             {
                 correctness = 1;
+            }
+            else
+            {
+                printf("check3\n");
             }
         }
     }
     
     return correctness;
 }
+
