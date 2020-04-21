@@ -1,12 +1,15 @@
 /*
+ * interface.c
  *
- *
- *
- *
+ *      the main file that interact with user and call other functions
+ *  from other file to process the program
  *
  *
  *  Project CPE111 Data structure - TEAM TERMINAL
- *
+ *  Member: Natacha Punyathanasub       (Nut)       62070503415
+ *          Patthachaput Thanesmaneerat (Jui)       62070503432
+ *          Supakorn Srisawas           (Field)     62070503464
+ *          Narapathra Morakrant        (Foremost)  62070503464
  */
 
 #include <stdio.h>
@@ -17,6 +20,8 @@
 #include <time.h>
 
 #include "validate.h"
+#include "mainAuction.h"
+#include "dataBuilder.h"
 
 #define NLOGIN 0
 #define LOGIN 1
@@ -24,6 +29,7 @@
 
 
 int loginStatus = 0; /* 0 for not log in, 1 for login with account, 2 for guest */
+USER_T* loginUser;
 
 int logInMenu()
 {
@@ -86,7 +92,8 @@ int login()
         }
         
         //validate = checkUser(email,password);
-        validate = 1;
+        
+        validate = 1; /* we will assume that we log in now */
         
         if(validate == 1)
         {
@@ -116,13 +123,15 @@ int registration()
     char phoneNumber[64];
     char bankAccNumber[64];
     int validate = 0;
+    USER_T newUser;
     
     do
     {
-        printf("Please enter your infomation\n");
+        printf("Please enter your information\n");
         printf("Email: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", email);
+        strcpy(newUser.email,email);
     
         do
         {
@@ -133,6 +142,7 @@ int registration()
             validate = validatePassword(password);
             if(validate == 1)
             {
+                strcpy(newUser.password,password);
                 break;
             }
         }while (validate != 1);
@@ -145,6 +155,7 @@ int registration()
             validate = validateName(name);
             if(validate == 1)
             {
+                strcpy(newUser.name,name);
                 break;
             }
         }while (validate != 1);
@@ -162,6 +173,7 @@ int registration()
             validate = validatePhoneNumThai(phoneNumber,buffer);
             if(validate == 1)
             {
+                strcpy(newUser.phoneNumber,phoneNumber);
                 break;
             }
         }while (validate != 1);
@@ -175,12 +187,14 @@ int registration()
             validate = validateBankAcc(bankAccNumber,buffer);
             if(validate == 1)
             {
+                strcpy(newUser.bankAccNumber,bankAccNumber);
                 break;
             }
         }while (validate != 1);
         
         if(validate == 1)
         {
+            insertUser(newUser);
             printf("\nThis your information\n");
             printf("\tEmail: %s\n",email);
             printf("\tPassword: %s\n",password);
@@ -244,52 +258,110 @@ void saleHistory()
     
 }
 
-void createAuction()
+void printCategory(int category)
+{
+    int choice = 0;
+    switch (choice) {
+        case 1:
+            printf("Category: Home & Garden\n");
+            break;
+        case 2:
+            printf("Category: Collectibles\n");
+            break;
+        case 3:
+            printf("Category: Sport\n");
+            break;
+        case 4:
+            printf("Category: Electronic\n");
+            break;
+        case 5:
+            printf("Category: Fashion\n");
+            break;
+        case 6:
+            printf("Category: Health & Beauty\n");
+            break;
+        case 7:
+            printf("Category: Motor\n");
+            break;
+        default:
+            break;
+    }
+}
+
+DATE_T createDateStruct(char input[64])
+{
+    DATE_T dateClose;
+    char date[32];
+    char time[32];
+    int day=0;
+    int month=0;
+    int year=0;
+    int hour=0;
+    int minute=0;
+    
+    sscanf(input,"%s %s",date,time);
+    sscanf(date,"%d-%d-%d",&day,&month,&year);
+    sscanf(time,"%d:%d", &hour, &minute);
+    
+    dateClose.hour = hour;
+    dateClose.minute = minute;
+    dateClose.day = day;
+    dateClose.month = month;
+    dateClose.year = year;
+    
+    return dateClose;
+}
+
+int createAuction()
 {
     char buffer[64];
     char buffer2[64];
+    int choice = 0;
     char name[64];
-    char description[120];  /*product description*/
-    int category;           /*fixed category*/
-    char dateClose;
-    double minbid;          /*minimum bid price*/
-    //int hostId;             /* user who created this product */
-    //USER_T* host;
+    char description[120];      /*product description*/
+    int category = 0;           /*fixed category*/
+    char dateClose[64];
+    double minBid = 0;          /*minimum bid price*/
     int validate = 0;
+    PRODUCT_T newProduct;
     
     do
     {
         printf("Please enter the product infomation\n");
+        memset(name,0, sizeof(name));
         printf("Name: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%[^\n]", name);
+        strcpy(newProduct.name,name);
         
-        memset(name,0, sizeof(password));
+        memset(description,0, sizeof(description));
         printf("Description: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%[^\n]", description);
+        strcpy(newProduct.description,description);
         
         do
         {
-            memset(category,0, sizeof(category));
+            category = 0;
             printf("Category: \n");
             printf("\t1.Home & Garden\n");
-            printf("\t2.Collectibles\n"};
+            printf("\t2.Collectibles\n");
             printf("\t3.Sport\n");
             printf("\t4.Electronic\n");
             printf("\t5.Fashion\n");
             printf("\t6.Health & Beauty\n");
             printf("\t7.Motor\n");
-            printf("Choose your category\n");
+            printf("Choose your category ");
             fgets(buffer,sizeof(buffer),stdin);
-                   sscanf(buffer,"%d", category);
-            if((choice > 7)||(choice < 1))
+            sscanf(buffer,"%d", &category);
+            if((category > 7)||(category < 1))
             {
                validate = 0;
                printf("Invalid choice! please try again\n\n");
             }
             else
             {
+                newProduct.category = category;
                 break;
             }
         }while (validate != 1);
@@ -297,14 +369,15 @@ void createAuction()
         do
         {
             memset(buffer2,0, sizeof(buffer2));
-            memset(minBid,0, sizeof(minBid));
+            minBid =0;
             printf("Minimum Bid: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", buffer2);
             validate = 0;
             if(strlen(buffer2) == checkDigits(buffer2))
             {
-                sscanf(buffer2,"%lf",minBid);
+                sscanf(buffer2,"%lf", &minBid);
+                newProduct.minbid = minBid;
                 validate = 1;
                 break;
             }
@@ -312,37 +385,50 @@ void createAuction()
         
         do
         {
-            memset(dateOpen,0, sizeof(dateOpen));
+            memset(dateClose,0, sizeof(dateClose));
             printf("Date Close (dd-mm-yyyy hh:tt) : ");
             fgets(buffer,sizeof(buffer),stdin);
-            sscanf(buffer,"%[^\n]", dateOpen);
-            validate = validateBankAcc(dateOpen);
+            sscanf(buffer,"%[^\n]", dateClose);
+            validate = validateDateTime(dateClose);
             if(validate == 1)
             {
+                newProduct.dateClose = createDateStruct(dateClose);
                 break;
             }
         }while (validate != 1);
         
+        /* we assumed, we are logged in but not really have a user id yet */
+        //newProduct.hostId = loginUser->idUser;
+        //newProduct.host = loginUser;
+        
         if(validate == 1)
         {
+            insertProduct(newProduct);
             printf("\nThis is your product information\n");
-            printf("\tName: %s\n",email);
-            printf("\tDescription: %s\n",password);
-            printf("\tFull name (No title): %s\n",name);
-            printf("\tAddress: %s\n",address);
-            printf("\tPhone Number (Thai): %s\n",phoneNumber);
-            printf("\tBank Account: %s\n",bankAccNumber);
-            printf("Successful registered!\n\n");
+            printf("\tName: %s\n",name);
+            printf("\tDescription: %s\n",description);
+            printCategory(category);
+            printf("\tMinimum Bid: %0.2lf\n",minBid);
+            printf("\tDate Close: %s\n",dateClose);
+            printf("Successful created the auction!\n\n");
             break;
         }
         
     }while (validate != 1);
+    
+    return 1;
 }
 
-void personalInfo()
+int personalInfo()
 {
     char buffer[32];
     int choice = 0;
+    char email[64];
+    char password[64];
+    char name[64];
+    char address[64];
+    char phoneNumber[64];
+    char bankAccNumber[64];
     
     printf("=========== Personal Info =========\n\n");
     printf("\t1. Email: %s\n",email);
@@ -351,7 +437,7 @@ void personalInfo()
     printf("\t4. Address: %s\n",address);
     printf("\t5. Phone Number (Thai): %s\n",phoneNumber);
     printf("\t6. Bank Account: %s\n",bankAccNumber);
-    printf("\t7. Back to homepage"
+    printf("\t7. Back to homepage\n");
     printf("\n");
     printf("===================================\n\n");
     
@@ -418,6 +504,13 @@ int main()
 {
     int choice = 0;
     
+    if(init()==0)
+    {
+        printf("Initial process failed\n");
+        exit(1);
+    }
+    buildData();
+    
     do
     {
         choice = logInMenu();
@@ -439,15 +532,21 @@ int main()
                             break;
                         case 2:
                             bidHistory();
+                            choice = 1;
                             break;
                         case 3:
                             saleHistory();
+                            choice = 1;
                             break;
                         case 4:
-                            createAuction();
+                            if (createAuction() == 1)
+                            {
+                                choice = 1;
+                            }
                             break;
                         case 5:
                             personalInfo();
+                            choice = 1;
                             break;
                         default:
                             break;
@@ -465,6 +564,7 @@ int main()
         }
         else
         {
+            //writProduct(product);
             break;
         }
         

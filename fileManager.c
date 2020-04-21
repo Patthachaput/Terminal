@@ -1,33 +1,28 @@
+/*
+ * fileManager.c
+ *
+ *      impliment all function that importance for read and write database file
+ *
+ *  Project CPE111 Data structure - TEAM TERMINAL
+ *  Member: Natacha Punyathanasub       (Nut)       62070503415
+ *          Patthachaput Thanesmaneerat (Jui)       62070503432
+ *          Supakorn Srisawas           (Field)     62070503464
+ *          Narapathra Morakrant        (Foremost)  62070503464
+ */
+
 #include<stdio.h>
 #include<stdlib.h>
-#include "mainAuction.h"
+#include<string.h>
+#include"mainAuction.h"
 
-/* Hello again */
-
-// int main()
-// {
-// 	USER_T* user;
-// 	PRODUCT_T* product;
-
-// 	int init();
-
-// 	int writeUser(USER_T* user);
-
-// 	int writProduct(PRODUCT_T* product);
-
-// 	int writeHistory(HISTORY_T* history);
-
-// 	/*BACKUP_T* getBackUp();*/
-
-// 	USER_T* getUser();
-
-// 	PRODUCT_T* getProduct();
-
-// 	/*HISTORY_T* getHistory();*/
-
-// 	int allFileExist(); /* local function */
-// }
-
+/*******************************************************************************
+ * Init
+ * - check if program open first time
+ * - return 1 if default file is exist
+ *        -1 || -2 || -3 || -4 if defaault not exit and create file
+ * - initial all global value
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 int init()
 {
 	int status;
@@ -119,6 +114,101 @@ int init()
 	return status;
 }
 
+//comment out because function sitll not done.
+// int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history, BACKUP_T* thisBackup)
+// {
+// 	writeUser(USER_T* user);
+
+// 	writProduct(PRODUCT_T* product);
+
+// 	writeHistory(HISTORY_T* history);
+
+// 	writeBackUp(BACKUP_T* thisBackup);
+
+// }
+
+/*******************************************************************************
+ * SaveBackUp
+ * - Save data to backup file
+ * - first argument is data that want to save
+ * - second is a struct mode 'U' for user 'P' for product
+ * return 1 if Success else return 0
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
+int saveBackUp(void* bata, char mode)
+{
+	BACKUP_T thisBackup;
+	
+	if(mode == 'U')
+	{
+		USER_T* thisUser = (USER_T*) bata;
+
+		thisBackup.user.idUser =  thisUser->idUser;
+		strcpy(thisBackup.user.email, thisUser->email);
+		strcpy(thisBackup.user.password, thisUser->password);
+		strcpy(thisBackup.user.name, thisUser->name);
+		strcpy(thisBackup.user.address, thisUser->address);
+		strcpy(thisBackup.user.phoneNumber, thisUser->phoneNumber);
+		strcpy(thisBackup.user.bankAccNumber, thisUser->bankAccNumber);
+		thisBackup.haveNewUser = 1;
+		thisBackup.inProcessProduct = 0;
+
+		if(writeBackUp(&thisBackup) == 0)
+		{
+			printf("Error to write user backup!<saveBackUp1>\n");
+			return 0;
+		}
+	}
+	else if(mode == 'P')
+	{
+		PRODUCT_T* thisProduct = (PRODUCT_T*) bata;
+
+		thisBackup.product.idProduct = thisProduct->idProduct;
+		strcpy(thisBackup.product.name, thisProduct->name);  
+		strcpy(thisBackup.product.description, thisProduct->description);  
+		thisBackup.product.category = thisProduct->category;    
+		thisBackup.product.dateOpen.hour = thisProduct->dateOpen.hour;
+		thisBackup.product.dateOpen.minute = thisProduct->dateOpen.minute;
+		thisBackup.product.dateOpen.day = thisProduct->dateOpen.day;
+		thisBackup.product.dateOpen.month = thisProduct->dateOpen.month;
+		thisBackup.product.dateOpen.year = thisProduct->dateOpen.year;
+		thisBackup.product.dateClose.hour = thisProduct->dateClose.hour;
+		thisBackup.product.dateClose.minute = thisProduct->dateClose.minute;
+		thisBackup.product.dateClose.day = thisProduct->dateClose.day;
+		thisBackup.product.dateClose.month = thisProduct->dateClose.month;
+		thisBackup.product.dateClose.year = thisProduct->dateClose.year;
+		thisBackup.product.finalPrice = thisProduct->finalPrice;
+		thisBackup.product.nowPrice = thisProduct->nowPrice;
+		thisBackup.product.minbid = thisProduct->minbid;   
+		thisBackup.product.hostId = thisProduct->hostId;
+		thisBackup.product.userAuthorityId = thisProduct->userAuthorityId; 
+		thisBackup.product.winnerId = thisProduct->winnerId;
+		thisBackup.haveNewUser = 0;
+		thisBackup.inProcessProduct = 1;
+
+		if(writeBackUp(&thisBackup) == 0)
+		{
+			printf("Error to write user backup!<saveBackUp2>\n");
+			return 0;
+		}
+	}
+	else
+	{
+		printf("Error to write user backup!<saveBackUp3>\n");
+		return 0;
+	}
+
+	return 1;
+}
+
+/*******************************************************************************
+ * writeUser
+ * - write array of all user to file user.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all user
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 int writeUser(USER_T* user)
 {
 	int newIdUser = 1;
@@ -154,6 +244,14 @@ int writeUser(USER_T* user)
 	return 0;
 }
 
+/*******************************************************************************
+ * writProduct
+ * - write array of all product to file product.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all product
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 int writProduct(PRODUCT_T* product)
 {
 	int newIdProduct = 1;
@@ -175,12 +273,12 @@ int writProduct(PRODUCT_T* product)
 		pProduct = fopen("product.dat", "wb");
 		if(pProduct == NULL)
 		{
-			printf("Erroe to open product file! in <writProduct>\n");
+			printf("Error to open product file! in <writProduct>\n");
 			return 0;
 		}
 		if(fwrite(product, sizeof(PRODUCT_T), newTotalProduct, pProduct) != newTotalProduct)
 		{
-			printf("Erroe to add product! in <writProduct>\n");
+			printf("Error to add product! in <writProduct>\n");
 			return 0;
 		}
 		free(product);
@@ -191,6 +289,14 @@ int writProduct(PRODUCT_T* product)
 	return 0;
 }
 
+/*******************************************************************************
+ * writeHistory
+ * - write array of all history to file history.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all history
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 int writeHistory(HISTORY_T* history)
 {
 	int idUser;
@@ -264,48 +370,97 @@ int writeHistory(HISTORY_T* history)
 
 	return 0;
 }
-/*
-int saveBackUp(BACKUP_T* thisBackup)
+
+/*******************************************************************************
+ * writeBackup
+ * - write array of all backup case to file backup.dat
+ * - if Success return 1
+ * - else return 0
+ * - argument is array of all backup
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
+int writeBackUp(BACKUP_T* thisBackup)
 {
+	int nuwBackUp = 1;
+	int numBackUp = -1;
+
 	FILE* pBackup = NULL;
 	BACKUP_T checkBackUp;
 
-	pBackup = fopen("backup.dat", "rb");
-	if(pBackup == NULL)
-	{
-		printf("Error to read backup file in <saveBackUp>!\n");
-		return 0;
-	}
 	if(TOTALBACKUP != 0)
 	{
+		pBackup = fopen("backup.dat", "rb");
+		if(pBackup == NULL)
+		{
+			printf("Error to read backup file in <writeBackUp>!\n");
+			return 0;
+		}
+
 		for(int i = 0; i < TOTALBACKUP; i++)
 		{
 			if(fread(&checkBackUp, sizeof(BACKUP_T), 1, pBackup) != 1)
 			{
-				printf("Can't read all data from database, please try agin! <saveBackUp>\n");
+				printf("Can't read all data from database, please try agin! <writeBackUp>\n");
 				return 0;
 			}
-			if(thisBackUp->haveNewUser == 1)
+			if(thisBackup->haveNewUser == 1)
 			{
-				if(thisBackUp->user.idUser == checkBackUp.user.idUser)
+				if(thisBackup->user.idUser == checkBackUp.user.idUser)
 				{
-
+					numBackUp = checkBackUp.idBackUp;
+				}
+			}
+			else if(thisBackup->inProcessProduct == 1)
+			{
+				if(thisBackup->product.idProduct == checkBackUp.product.idProduct)
+				{
+					numBackUp = checkBackUp.idBackUp;
 				}
 			}
 		}
-		
-		
+		fclose(pBackup);
 	}
-	
 
+	pBackup = fopen("backup.dat", "ab");
+	if(pBackup == NULL)
+	{
+		printf("Error to add backup file in <writeBackUp>!\n");
+		return 0;
+	}
+	if(numBackUp != -1)
+	{
+		if(fseek(pBackup, 0, SEEK_SET) || fseek(pBackup, numBackUp * sizeof(BACKUP_T), SEEK_SET))
+		{
+			printf("Error to seek in <writeBackUp>\n");
+			return 0;
+		}
+		thisBackup->idBackUp = numBackUp;
+		if(fwrite(thisBackup, sizeof(BACKUP_T), 1, pBackup) != 1)
+		{
+			printf("Erroe to save BackUp! in <writeBackUp1>\n");
+			return 0;
+		}
+	}
+	else
+	{
+		thisBackup->idBackUp = TOTALBACKUP + nuwBackUp;
+		if(fwrite(thisBackup, sizeof(BACKUP_T), 1, pBackup) != 1)
+		{
+			printf("Erroe to save BackUp! in <writeBackUp2>\n");
+			return 0;
+		}
+		TOTALBACKUP++;
+	}
+	fclose(pBackup);
 
+	return 1;
 }
-*/
 
-/****************************************************
- *getBackup function if it have backup will return 
- *all dackup data else will return NULL
- ****************************************************
+/*******************************************************************************
+ * getBackUp
+ * - return the backup if have one
+ * - return null for no backup
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 BACKUP_T* getBackUp()
 {
@@ -341,6 +496,13 @@ BACKUP_T* getBackUp()
 	return allBackUp;
 }
 
+/*******************************************************************************
+ * getUser
+ * - get all user in file user.dat
+ * - if Success return array of all user
+ * - else return NULL
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 USER_T* getUser()
 {
 	FILE* pUser = NULL;
@@ -375,6 +537,13 @@ USER_T* getUser()
 	return allUser;
 }
 
+/*******************************************************************************
+ * getProduct
+ * - get all product in file product.dat
+ * - if Success return array of all product
+ * - else return NULL
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 PRODUCT_T* getProduct()
 {
 	FILE* pProduct = NULL;
@@ -409,11 +578,18 @@ PRODUCT_T* getProduct()
 	return allProduct;
 }
 
+/*******************************************************************************
+ * getHistory
+ * - get all history in file history.dat
+ * - if Success return array of all history
+ * - else return NULL
+ * created by Patthachaput Thanesmaneerat 62070503432
+ */
 HISTORY_T* getHistory()
 {
 	int idUser;
 	int sizeofProductBit;
-	int sizaofSealAuction;
+	int sizaofSealAuction;  /* miss spelling from sizeofSaleAuction */
 	int* productBid;
 	int* sealAuction;
 
@@ -494,12 +670,13 @@ HISTORY_T* getHistory()
 }
 
 
-/************************************************************
- *Local function used dy init.  
- *This function will caheck all file are exit or not,
- *if all file are exit will return 1 else return negative
- *number follow index of file and created it.
- ************************************************************
+/*******************************************************************************
+ * allFileExist
+ * - Local function used dy init.
+ * - This function will check all file are exit or not,
+ * - if all file are exit will return 1 else return negative
+ * - number follow index of file and created it.
+ * created by Patthachaput Thanesmaneerat 62070503432
  */
 int allFileExist()
 {

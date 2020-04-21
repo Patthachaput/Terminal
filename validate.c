@@ -1,12 +1,21 @@
 /*
+ * validate.c
  *
- *
- *
- *
+ *      contains all validate functions
+ *          - email
+ *          - password
+ *          - name(no title)
+ *          - thai phone number
+ *          - bank account number
+ *          - home address
+ *          - date time (dd-mm-yyyy hh:tt)
  *
  *
  *  Project CPE111 Data structure - TEAM TERMINAL
- *
+ *  Member: Natacha Punyathanasub       (Nut)       62070503415
+ *          Patthachaput Thanesmaneerat (Jui)       62070503432
+ *          Supakorn Srisawas           (Field)     62070503464
+ *          Narapathra Morakrant        (Foremost)  62070503464
  */
 
 #include <stdio.h>
@@ -138,7 +147,7 @@ int checkLowerCase(char password[MAXLEN])
     return lowerCase;
 }
 
-/******************************************************************************************
+/**********************************************************************************
  * checkSymbol.
  * - A function to check how many upper case alphabetic character does it have.
  * - 'password' is the password put in by the user.
@@ -170,7 +179,140 @@ int checkSymbol(char password[MAXLEN])
     return countSymbol;
 }
 
-/****************************************************************************************** *
+/*check Email function
+ *
+ *
+ *
+ * created by Natacha Punyathanasub 62070503415
+ *
+int checkEmail(char email[])
+{
+    int i;
+    int valid=1;
+    char *after;
+    char *tld;
+
+    //after variable is use for the @ (at-sign symbol) to cut into the two section
+    //before-at and after-at by the way after at will be use to correct the tld that is 4-6
+    //from the last position of input information.
+    after = strrchr(email,'@');
+    tld=&after[strlen(after)-6];
+
+    //check for tld process.
+    if (strcmp(tld,".ac.th")==0 || strcmp(tld,".co.th")==0 || strcmp(&tld[2],".com")==0 || strcmp(&tld[2],".net")==0)
+    {
+        valid=1;
+    }
+    else
+    {
+        printf("%s",tld);
+        valid=-6;
+    }
+
+    for (i=0;i<strlen(after)-1;i++)
+    {
+        //check double period.
+        if(after[i]=='.' && after[i+1]=='.')
+        {
+            valid=-7;
+            break;
+        }
+        //check _ in after @ section.
+        else if(after[i]=='_')
+        {
+            valid=-8;
+            break;
+        }
+    }
+    return valid;
+}
+
+ *
+ * Continue function from Check email This function is
+ * checking for case of special character in email.
+ * created by Natacha Punyathanasub 62070503415
+ *
+int validEmail(char email[])
+{
+    int i;
+    int at=0;
+    int valid=0;
+
+    for (i=0;i<strlen(email)-1;i++)
+    {
+        if (isspace(email[i])!=0)
+        {
+            valid=-1;
+            break;
+        }
+        else if (ispunct(email[i]) != 0)
+        {
+            if (i == 0)
+            {
+                valid=-2;
+                break;
+            }
+            else if (email[i]=='.'||email[i]=='_'||email[i]=='-'||email[i]=='/')
+            {
+                valid=0;
+            }
+            else if (email[i] =='@')
+            {
+                valid=0;
+                at++;
+                if (isalpha(email[i-1])==0 && isalpha(email[i+1])==0)
+                {
+                    valid=-3;
+                    break;
+                }
+            }
+            else
+            {
+                valid=-4;
+                break;
+            }
+        }
+    }
+    if (valid == 0 && at != 1)
+    {
+        valid=-5;
+    }
+    if (valid==0)
+    {
+        valid=checkEmail(email);
+    }
+return valid;
+}
+
+ * Control email function that check email result from the
+ * email validation and it will be return 1 if it true.
+ * and 0 if it not following the condition.(passing to the
+ * validate function in validation.c(source file)
+ * created by Natacha Punyathanasub 62070503415
+ *
+int controlEmail(char email[])
+{
+    int valid;
+    int emailResult=0;
+    char input[MAXLEN];
+    if (strlen(email)<2)
+    {
+        exit(0);
+    }
+    valid=validEmail(email);
+    if (valid==1)
+    {
+        emailResult = 1;
+    }
+    else
+    {
+        emailResult = 0;
+    }
+return emailResult;
+}
+*/
+
+/**********************************************************************************
  * validatePassword.
  * A function to validate password with the following rules.
  * - At least 8 characters long and no longer than 12 characters.
@@ -243,7 +385,10 @@ int validatePassword(char password[MAXLEN])
     return correctness;
 }
 
-/* This is checkNameTitle function. It use for check first and last name with title is valid or not.
+/**********************************************************************************
+ * validateName
+ * - This is checkNameTitle function.
+ * - It use for check first and last name with title is valid or not.
  *  Created by Narapathra Morakrant 62070503464
  */
 int validateName(char nameInput[])
@@ -307,7 +452,10 @@ int validateName(char nameInput[])
     return 0;
 }
 
-/* This is checkPhoneNumThai function. It use for check Thai mobile phone number is valid or not.
+/**********************************************************************************
+ * validatePhoneNumThai
+ * - This is checkPhoneNumThai function.
+ * - It use for check Thai mobile phone number is valid or not.
  *  Created by Patthachaput Thanesmaneerat 62070503432
  *  Edited by Narapathra Morakrant 62070503464
  */
@@ -398,6 +546,198 @@ int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[])
     
     return 0;
 }
+
+/*
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int addressCheck(char address[])
+{
+    int i = 0;
+    int invalid=0;
+    int midValue = 0;
+    int slashCount=0;
+    if( isdigit(address[0]) != 1)
+    {
+             invalid = 1;
+    }
+
+    for(i=1;i<(strlen(address)-1);i++)
+    {
+        if( (isdigit(address[i]) != 1) && (address[i] != '/')  )
+        {
+            midValue = 1;
+        }
+    }
+    for(i=0;i<(strlen(address)-1);i++)
+    {
+        if( address[i] == '/' )
+        {
+            slashCount++ ;
+            if(isdigit(address[i+1]) == 0)
+            {
+            midValue = 1;
+            }
+        }
+    }
+    if(midValue == 1)
+    {
+        invalid = 1;
+    }
+    if(isdigit(address[ strlen(address) -1 ])!=1 )
+    {
+          invalid = 1;
+    }
+    if(slashCount>1)
+    {
+          invalid = 1;
+    }
+    return invalid;
+}
+
+ *
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int streetCheck(char streetName[])
+{
+    int i = 0;
+    for(i=0;i<strlen(streetName);i++)
+    {
+        if( (isalnum(streetName[i])==0))
+        {
+            return 1;
+        }
+    }
+    return 0;
+
+}
+
+ *
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int LaneAndPostal(char thirdArgument[],char forthArgument[])
+{
+    int invalid = 0;
+    char postalCode[32] = "";
+    if( strcmp(forthArgument,"") == 0)
+    {
+        strcpy(postalCode,thirdArgument);
+    }
+    else
+    {
+        strcpy(postalCode,forthArgument);
+
+        if( !((strcmp(thirdArgument,"Road") == 0) || (strcmp(thirdArgument,"Street") == 0) || (strcmp(thirdArgument,"Lane") == 0)) )
+        {
+                      invalid = 1;
+        }
+    }
+
+    if(  ( postalCode[0] != '1'   )  || (  postalCode[1] !=  '0'  ) || ( strlen(postalCode) != 5)  )
+    {
+               invalid = 1;
+    }
+    return invalid;
+}
+
+ *
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int validateAddress()
+{
+    char returnAddress[128];
+    int loop = 1;
+    char address1[128] = "";
+    char address2[128] = "";
+    char address3[128] = "";
+    char address4[128] = "";
+    char address5[128] = "";
+
+
+    while(loop)
+    {
+        char stringInput[128];
+        loop = 0;
+        printf("   Please Enter Address :");
+        fgets(stringInput,sizeof(stringInput),stdin);
+        sscanf(stringInput,"%[^\n]",returnAddress);
+        sscanf(stringInput,"%s %s %s %s %s",address1,address2,address3,address4,address5);
+        //printf("aaaa%s\n",address1);
+        //printf("bbbb%s\n",address2);
+        //printf("cccc%s\n",address3);
+        //printf("dddd%s\n",address4);
+        //printf("eeee%s\n",address5);
+       
+
+        if(loop == 0)
+        {
+            //printf("Address is valid\n");
+          loop = addressCheck(address1);
+            //printf("Address is valid 1\n");
+            if(strlen(address2) > 1)
+            {
+                if(loop == 0)
+                {
+                    loop = streetCheck(address2);
+                    //printf("Address is valid 2\n");
+                    if(loop == 0)
+                    {
+                        loop = LaneAndPostal(address3,address4);
+                        //printf("Address is valid 3\n");
+                        if(loop != 0)
+                        {
+                            printf("invalid\n");
+                        }
+                        else
+                        {
+                            if(strcmp(address5,"") == 0)
+                            {
+                                printf("valid\n");
+                            }
+                            else
+                            {
+                                printf("invalid\n");
+                            }
+                        }
+                    }
+                    else
+                    {
+                    printf("invalid\n");
+                    }
+                }
+                else
+                {
+                    printf("invalid\n");
+                }
+            }
+            else
+            {
+                printf("Invalid : please add more detail \n");
+            }
+        }
+        else
+        {
+            printf("Invalid Address\n");
+        }
+
+    }
+
+}
+
+*/
+
+
 
 /*********************************************************************************
  * CheckDashs
@@ -644,7 +984,7 @@ int checkFebuary(int dayCompare, int leapYear)
     {
         if ((dayCompare < 1)||(dayCompare > 29))
         {
-            printf("\t    Not valid - day not in range (not a leap year)\n");
+            printf("\tNot valid - day not in range (not a leap year)\n");
         }
         else if ((dayCompare >= 1)&&(dayCompare <= 29))
         {
@@ -655,7 +995,7 @@ int checkFebuary(int dayCompare, int leapYear)
     {
         if ((dayCompare < 1)||(dayCompare > 28))
         {
-            printf("\t    Not valid - day not in range\n");
+            printf("\tNot valid - day not in range\n");
         }
         else if ((dayCompare >= 1)&&(dayCompare <= 28))
         {
@@ -683,7 +1023,7 @@ int checkDay(int day ,int month, int leapyear)
     {
         if ((day < 1)||(day > 31))
         {
-            printf("\t    Not valid - day not in range\n");
+            printf("\tNot valid - day not in range\n");
         }
         else if ((day >= 1)&&(day <= 31))
         {
@@ -695,7 +1035,7 @@ int checkDay(int day ,int month, int leapyear)
     {
         if ((day < 1)||(day > 30))
         {
-            printf("\t    Not valid - day not in range\n");
+            printf("\tNot valid - day not in range\n");
         }
         else if ((day >= 1)&&(day <= 30))
         {
@@ -738,7 +1078,7 @@ int dateCompare(int day, int month, int year)
     }
     else if (year == yearToday)
     {
-        if (month < monthToday)
+        if (month > monthToday)
         {
             validity = 1;
         }
@@ -757,7 +1097,7 @@ int dateCompare(int day, int month, int year)
     
     if (validity == 0)
     {
-        printf("\t    Not Valid - date cannot be in the past \n");
+        printf("\tNot Valid - date cannot be in the past \n");
     }
     
     return validity;
@@ -799,7 +1139,7 @@ int timeCompare (char time[MAXLEN])
     
     if (correctness == 0)
     {
-        printf("\t    Not Valid - time cannot be in the past \n");
+        printf("\tNot Valid - time cannot be in the past \n");
     }
     
     return correctness;
@@ -840,27 +1180,27 @@ int validateDate(char date[MAXLEN])
                     }
                     else
                     {
-                        printf("\t    Not Valid - not an existing month  \n");
+                        printf("\tNot Valid - not an existing month  \n");
                     }
                 }
                 else
                 {
-                    printf("\t    Not Valid - year out of range \n");
+                    printf("\tNot Valid - year out of range \n");
                 }
             }
             else
             {
-                printf("\t    Not Valid - contain character other than '-' \n");
+                printf("\tNot Valid - contain character other than '-' \n");
             }
         }
         else
         {
-            printf("\t    Not Valid - wrong date format as dashes not in the right position\n");
+            printf("\tNot Valid - wrong date format as dashes not in the right position\n");
         }
     }
     else
     {
-        printf("\t    Not Valid - wrong date format\n");
+        printf("\tNot Valid - wrong date format\n");
     }
     
     return correctness;
@@ -895,27 +1235,27 @@ int validateTime(char time[MAXLEN])
                     }
                     else
                     {
-                        printf("\t    Not Valid - minute not in range\n");
+                        printf("\tNot Valid - minute not in range\n");
                     }
                 }
                 else
                 {
-                    printf("\t    Not Valid - hour not in range\n");
+                    printf("\tNot Valid - hour not in range\n");
                 }
             }
             else
             {
-                printf("\t    Not Valid - contain character other than ':' \n");
+                printf("\tNot Valid - contain character other than ':' \n");
             }
         }
         else
         {
-            printf("\t    Not Valid - wrong time format as ':' not in the right position\n");
+            printf("\tNot Valid - wrong time format as ':' not in the right position\n");
         }
     }
     else
     {
-        printf("\t    Not Valid - wrong time format\n");
+        printf("\tNot Valid - wrong time format\n");
     }
     
     return correctness;
@@ -927,7 +1267,7 @@ int validateTime(char time[MAXLEN])
  *  - function which check the date and time is valid
  *  - get the string input from the user
  *  - call others function to print error message if it is invalid
- *  - return 0 for invalid nd 1 for valid
+ *  - return 0 for invalid and 1 for valid
  * created by Narapathra Morakrant 62070503464
  */
 int validateDateTime(char input[MAXLEN])
@@ -943,18 +1283,25 @@ int validateDateTime(char input[MAXLEN])
     sscanf(date,"%d-%d-%d",&day,&month,&year);
     if ((validateDate(date) == 1)&&(validateTime(time)==1))
     {
+        //printf("check1\n");
         if (dateCompare(day,month,year) == 1)
         {
             correctness = 1;
         }
         else if (dateCompare(day,month,year) == 2)
         {
+            //printf("check2\n");
             if(timeCompare(time) == 1)
             {
                 correctness = 1;
             }
+            /*else
+            {
+                printf("check3\n");
+            }*/
         }
     }
     
     return correctness;
 }
+
