@@ -1,15 +1,11 @@
 # Terminal
  Project CPE111 Data structure - TEAM TERMINAL
- Member: Natacha Punyathanasub                  (Nut)            62070503415
-                Patthachaput Thanesmaneerat         (Jui)             62070503432
-                Supakorn Srisawas                           (Field)          62070503464
-                Narapathra Morakrant                       (Foremost)  62070503464
+ Member: Natacha Punyathanasub              (Nut)            62070503415
+                Patthachaput Thanesmaneerat     (Jui)             62070503432
+                Supakorn Srisawas                       (Field)          62070503464
+                Narapathra Morakrant                   (Foremost)  62070503464
                 
 CODE : https://github.com/Patthachaput/Terminal.git
-
-Note to validation - All are from project 1, except the name that has no title
-
-No example files 
                 
 Currently working
 - create data structure
@@ -35,3 +31,4 @@ Questions
 1. Is it possible to write the data in pointer in structure to file ?
 2. Is nessary to hide password when log in ?
 
+Note to validation - All are from project 1, except the name that has no title
