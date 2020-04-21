@@ -1,10 +1,10 @@
 # Terminal
  Project CPE111 Data structure - TEAM TERMINAL
  Member: Natacha Punyathanasub              (Nut)            62070503415
-                Patthachaput Thanesmaneerat     (Jui)             62070503432
-                Supakorn Srisawas                       (Field)          62070503464
-                Narapathra Morakrant                   (Foremost)  62070503464
-                
+ 		 Patthachaput Thanesmaneerat     	(Jui)            62070503432
+ 		 Supakorn Srisawas                  (Field)          62070503464
+ 		 Narapathra Morakrant               (Foremost)       62070503464
+
 CODE : https://github.com/Patthachaput/Terminal.git
 
 Note  - All are from project 1, except the name that has no title
