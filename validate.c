@@ -179,6 +179,139 @@ int checkSymbol(char password[MAXLEN])
     return countSymbol;
 }
 
+/*check Email function
+ *
+ *
+ *
+ * created by Natacha Punyathanasub 62070503415
+ *
+int checkEmail(char email[])
+{
+    int i;
+    int valid=1;
+    char *after;
+    char *tld;
+
+    //after variable is use for the @ (at-sign symbol) to cut into the two section
+    //before-at and after-at by the way after at will be use to correct the tld that is 4-6
+    //from the last position of input information.
+    after = strrchr(email,'@');
+    tld=&after[strlen(after)-6];
+
+    //check for tld process.
+    if (strcmp(tld,".ac.th")==0 || strcmp(tld,".co.th")==0 || strcmp(&tld[2],".com")==0 || strcmp(&tld[2],".net")==0)
+    {
+        valid=1;
+    }
+    else
+    {
+        printf("%s",tld);
+        valid=-6;
+    }
+
+    for (i=0;i<strlen(after)-1;i++)
+    {
+        //check double period.
+        if(after[i]=='.' && after[i+1]=='.')
+        {
+            valid=-7;
+            break;
+        }
+        //check _ in after @ section.
+        else if(after[i]=='_')
+        {
+            valid=-8;
+            break;
+        }
+    }
+    return valid;
+}
+
+ *
+ * Continue function from Check email This function is
+ * checking for case of special character in email.
+ * created by Natacha Punyathanasub 62070503415
+ *
+int validEmail(char email[])
+{
+    int i;
+    int at=0;
+    int valid=0;
+
+    for (i=0;i<strlen(email)-1;i++)
+    {
+        if (isspace(email[i])!=0)
+        {
+            valid=-1;
+            break;
+        }
+        else if (ispunct(email[i]) != 0)
+        {
+            if (i == 0)
+            {
+                valid=-2;
+                break;
+            }
+            else if (email[i]=='.'||email[i]=='_'||email[i]=='-'||email[i]=='/')
+            {
+                valid=0;
+            }
+            else if (email[i] =='@')
+            {
+                valid=0;
+                at++;
+                if (isalpha(email[i-1])==0 && isalpha(email[i+1])==0)
+                {
+                    valid=-3;
+                    break;
+                }
+            }
+            else
+            {
+                valid=-4;
+                break;
+            }
+        }
+    }
+    if (valid == 0 && at != 1)
+    {
+        valid=-5;
+    }
+    if (valid==0)
+    {
+        valid=checkEmail(email);
+    }
+return valid;
+}
+
+ * Control email function that check email result from the
+ * email validation and it will be return 1 if it true.
+ * and 0 if it not following the condition.(passing to the
+ * validate function in validation.c(source file)
+ * created by Natacha Punyathanasub 62070503415
+ *
+int controlEmail(char email[])
+{
+    int valid;
+    int emailResult=0;
+    char input[MAXLEN];
+    if (strlen(email)<2)
+    {
+        exit(0);
+    }
+    valid=validEmail(email);
+    if (valid==1)
+    {
+        emailResult = 1;
+    }
+    else
+    {
+        emailResult = 0;
+    }
+return emailResult;
+}
+*/
+
 /**********************************************************************************
  * validatePassword.
  * A function to validate password with the following rules.
@@ -413,6 +546,198 @@ int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[])
     
     return 0;
 }
+
+/*
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int addressCheck(char address[])
+{
+    int i = 0;
+    int invalid=0;
+    int midValue = 0;
+    int slashCount=0;
+    if( isdigit(address[0]) != 1)
+    {
+             invalid = 1;
+    }
+
+    for(i=1;i<(strlen(address)-1);i++)
+    {
+        if( (isdigit(address[i]) != 1) && (address[i] != '/')  )
+        {
+            midValue = 1;
+        }
+    }
+    for(i=0;i<(strlen(address)-1);i++)
+    {
+        if( address[i] == '/' )
+        {
+            slashCount++ ;
+            if(isdigit(address[i+1]) == 0)
+            {
+            midValue = 1;
+            }
+        }
+    }
+    if(midValue == 1)
+    {
+        invalid = 1;
+    }
+    if(isdigit(address[ strlen(address) -1 ])!=1 )
+    {
+          invalid = 1;
+    }
+    if(slashCount>1)
+    {
+          invalid = 1;
+    }
+    return invalid;
+}
+
+ *
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int streetCheck(char streetName[])
+{
+    int i = 0;
+    for(i=0;i<strlen(streetName);i++)
+    {
+        if( (isalnum(streetName[i])==0))
+        {
+            return 1;
+        }
+    }
+    return 0;
+
+}
+
+ *
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int LaneAndPostal(char thirdArgument[],char forthArgument[])
+{
+    int invalid = 0;
+    char postalCode[32] = "";
+    if( strcmp(forthArgument,"") == 0)
+    {
+        strcpy(postalCode,thirdArgument);
+    }
+    else
+    {
+        strcpy(postalCode,forthArgument);
+
+        if( !((strcmp(thirdArgument,"Road") == 0) || (strcmp(thirdArgument,"Street") == 0) || (strcmp(thirdArgument,"Lane") == 0)) )
+        {
+                      invalid = 1;
+        }
+    }
+
+    if(  ( postalCode[0] != '1'   )  || (  postalCode[1] !=  '0'  ) || ( strlen(postalCode) != 5)  )
+    {
+               invalid = 1;
+    }
+    return invalid;
+}
+
+ *
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ *
+int validateAddress()
+{
+    char returnAddress[128];
+    int loop = 1;
+    char address1[128] = "";
+    char address2[128] = "";
+    char address3[128] = "";
+    char address4[128] = "";
+    char address5[128] = "";
+
+
+    while(loop)
+    {
+        char stringInput[128];
+        loop = 0;
+        printf("   Please Enter Address :");
+        fgets(stringInput,sizeof(stringInput),stdin);
+        sscanf(stringInput,"%[^\n]",returnAddress);
+        sscanf(stringInput,"%s %s %s %s %s",address1,address2,address3,address4,address5);
+        //printf("aaaa%s\n",address1);
+        //printf("bbbb%s\n",address2);
+        //printf("cccc%s\n",address3);
+        //printf("dddd%s\n",address4);
+        //printf("eeee%s\n",address5);
+       
+
+        if(loop == 0)
+        {
+            //printf("Address is valid\n");
+          loop = addressCheck(address1);
+            //printf("Address is valid 1\n");
+            if(strlen(address2) > 1)
+            {
+                if(loop == 0)
+                {
+                    loop = streetCheck(address2);
+                    //printf("Address is valid 2\n");
+                    if(loop == 0)
+                    {
+                        loop = LaneAndPostal(address3,address4);
+                        //printf("Address is valid 3\n");
+                        if(loop != 0)
+                        {
+                            printf("invalid\n");
+                        }
+                        else
+                        {
+                            if(strcmp(address5,"") == 0)
+                            {
+                                printf("valid\n");
+                            }
+                            else
+                            {
+                                printf("invalid\n");
+                            }
+                        }
+                    }
+                    else
+                    {
+                    printf("invalid\n");
+                    }
+                }
+                else
+                {
+                    printf("invalid\n");
+                }
+            }
+            else
+            {
+                printf("Invalid : please add more detail \n");
+            }
+        }
+        else
+        {
+            printf("Invalid Address\n");
+        }
+
+    }
+
+}
+
+*/
+
+
 
 /*********************************************************************************
  * CheckDashs

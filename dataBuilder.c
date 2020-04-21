@@ -21,6 +21,7 @@
 
 /* build data structure by reading data in the file
  * if error occur program will be close automatically
+ * created by Supakorn Srisawas 62070503464
  */
 void buildData()
 {
@@ -95,6 +96,7 @@ void buildData()
 
 /* insert users into data structure
  * No return
+ * created by Supakorn Srisawas 62070503464
  */
 void insertUser(USER_T user)
 {
@@ -107,6 +109,7 @@ void insertUser(USER_T user)
 
 /* insert product into data structure
  * No return
+ * created by Supakorn Srisawas 62070503464
  */
 void insertProduct(PRODUCT_T product)
 {
@@ -129,6 +132,7 @@ void insertProduct(PRODUCT_T product)
 
 /* insert product and sort by product final price
  * No return
+ * created by Supakorn Srisawas 62070503464
  */
 void insertfinalPriceSort(PRODUCT_T* product)
 {
@@ -148,6 +152,7 @@ void insertfinalPriceSort(PRODUCT_T* product)
 
 /* insert product and sort by minbid
  * No return
+ * created by Supakorn Srisawas 62070503464
  */
 void insertMinbidSort(PRODUCT_T* product)
 {
@@ -165,7 +170,9 @@ void insertMinbidSort(PRODUCT_T* product)
     product_in_cat[product->category].minBidCount++;
 }
 
-/*This function display all products in lists*/
+/*This function display all products in lists
+ * created by Supakorn Srisawas 62070503464
+ */
 void showProductByCat(int cat)
 {
     printf("final price %d\n",product_in_cat[cat].finalPriceCount);
@@ -179,6 +186,7 @@ void showProductByCat(int cat)
 
 /*close program and write all file into data
  * No return
+ *created by Supakorn Srisawas 62070503464
  */
 void closeProgram()
 {
