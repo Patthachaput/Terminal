@@ -958,22 +958,22 @@ int validateDateTime(char input[MAXLEN])
     sscanf(date,"%d-%d-%d",&day,&month,&year);
     if ((validateDate(date) == 1)&&(validateTime(time)==1))
     {
-        printf("check1\n");
+        //printf("check1\n");
         if (dateCompare(day,month,year) == 1)
         {
             correctness = 1;
         }
         else if (dateCompare(day,month,year) == 2)
         {
-            printf("check2\n");
+            //printf("check2\n");
             if(timeCompare(time) == 1)
             {
                 correctness = 1;
             }
-            else
+            /*else
             {
                 printf("check3\n");
-            }
+            }*/
         }
     }
     

@@ -10,8 +10,6 @@
 *          Narapathra Morakrant        (Foremost)  62070503464
 *
 */
-//#ifndef validate_h
-//#define validate_h
 
 /*this structure sort by price*/
 typedef struct
@@ -51,33 +49,32 @@ PRODUCT_IN_CAT product_in_cat[7];
 /* build data structure by reading data in the file
  * No return - if error occur program will be close automatically
  */
-int buildData();
+void buildData();
 
 /* insert users into data structure
  * No return
  */
-int insertUser(USER_T user);
+void insertUser(USER_T user);
 
 /* insert product into data structure
  * No return
  */
-int insertProduct(PRODUCT_T product);
+void insertProduct(PRODUCT_T product);
 
 /* insert product and sort by minbid
  */
-int insertMinbidSort(PRODUCT_T* product);
+void insertMinbidSort(PRODUCT_T* product);
 
 /* insert product and sort by final price
  */
-int insertfinalPriceSort(PRODUCT_T* product);
+void insertfinalPriceSort(PRODUCT_T* product);
 
 /* close program and write all file into data
  * return 1- if close program and write file success
  * No return - in case error program will be closed automatically
  */
-int closeProgram();
+void closeProgram();
 
 /* This function display all products in lists*/
-int showProductByCat(int cat);
+void showProductByCat(int cat);
 
-//#endif

@@ -36,13 +36,6 @@ int logInMenu()
     char buffer[32];
     int choice = 0;
     
-    if(init()==0)
-    {
-        printf("Initial process failed\n");
-        exit(1);
-    }
-    buildData();
-    
     printf("=============== Login =============\n\n");
     printf("           1.Log in                \n");
     printf("           2.Log in as guest       \n");
@@ -100,7 +93,7 @@ int login()
         
         //validate = checkUser(email,password);
         
-        validate = 1; /* we will assume that we log in now*/
+        validate = 1; /* we will assume that we log in now */
         
         if(validate == 1)
         {
@@ -134,7 +127,7 @@ int registration()
     
     do
     {
-        printf("Please enter your infomation\n");
+        printf("Please enter your information\n");
         printf("Email: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", email);
@@ -319,7 +312,7 @@ DATE_T createDateStruct(char input[64])
     return dateClose;
 }
 
-void createAuction()
+int createAuction()
 {
     char buffer[64];
     char buffer2[64];
@@ -335,11 +328,13 @@ void createAuction()
     do
     {
         printf("Please enter the product infomation\n");
+        memset(name,0, sizeof(name));
         printf("Name: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%[^\n]", name);
+        strcpy(newProduct.name,name);
         
-        memset(name,0, sizeof(name));
+        memset(description,0, sizeof(description));
         printf("Description: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%[^\n]", description);
@@ -402,8 +397,9 @@ void createAuction()
             }
         }while (validate != 1);
         
-        newProduct.hostId = loginUser->idUser;
-        newProduct.host = loginUser;
+        /* we assumed, we are logged in but not really have a user id yet */
+        //newProduct.hostId = loginUser->idUser;
+        //newProduct.host = loginUser;
         
         if(validate == 1)
         {
@@ -419,6 +415,8 @@ void createAuction()
         }
         
     }while (validate != 1);
+    
+    return 1;
 }
 
 int personalInfo()
@@ -506,6 +504,13 @@ int main()
 {
     int choice = 0;
     
+    if(init()==0)
+    {
+        printf("Initial process failed\n");
+        exit(1);
+    }
+    buildData();
+    
     do
     {
         choice = logInMenu();
@@ -527,15 +532,21 @@ int main()
                             break;
                         case 2:
                             bidHistory();
+                            choice = 1;
                             break;
                         case 3:
                             saleHistory();
+                            choice = 1;
                             break;
                         case 4:
-                            createAuction();
+                            if (createAuction() == 1)
+                            {
+                                choice = 1;
+                            }
                             break;
                         case 5:
                             personalInfo();
+                            choice = 1;
                             break;
                         default:
                             break;
@@ -553,6 +564,7 @@ int main()
         }
         else
         {
+            //writProduct(product);
             break;
         }
         

@@ -20,9 +20,9 @@
 #include "dataBuilder.h"
 
 /* build data structure by reading data in the file
- * No return - if error occur program will be close automatically
+ * if error occur program will be close automatically
  */
-int buildData()
+void buildData()
 {
     int i;/*counter*/
 
@@ -90,12 +90,13 @@ int buildData()
     /*check will be delete soon*/
     printf("total users:%d\n",TOTALUSER);
     printf("total products:%d\n",TOTALPRODUCT);
+
 }
 
 /* insert users into data structure
  * No return
  */
-int insertUser(USER_T user)
+void insertUser(USER_T user)
 {
     ADDNEWUSER++;
     user.idUser =TOTALUSER+ADDNEWUSER;
@@ -107,7 +108,7 @@ int insertUser(USER_T user)
 /* insert product into data structure
  * No return
  */
-int insertProduct(PRODUCT_T product)
+void insertProduct(PRODUCT_T product)
 {
     ADDNEWPRODUCT++;
     product.idProduct = TOTALPRODUCT + ADDNEWPRODUCT;/*set auto increment id*/
@@ -121,7 +122,7 @@ int insertProduct(PRODUCT_T product)
     product_in_cat[product.category].closeDateSort = realloc(product_in_cat[product.category].closeDateSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_DATE));
 
     products[TOTALPRODUCT+ADDNEWPRODUCT-1] = product;
-    printf("Insert %s\n", product.name);
+    printf("Insert product to store %s\n", product.name);
     insertMinbidSort(&product);
     insertfinalPriceSort(&product);
 }
@@ -129,7 +130,7 @@ int insertProduct(PRODUCT_T product)
 /* insert product and sort by product final price
  * No return
  */
-int insertfinalPriceSort(PRODUCT_T* product)
+void insertfinalPriceSort(PRODUCT_T* product)
 {
     int i;/*counter*/
     for(i=product_in_cat[product->category].finalPriceCount-1;(i>=0 && product_in_cat[product->category].finalPricesort[i].price > product->finalPrice);i--)
@@ -148,7 +149,7 @@ int insertfinalPriceSort(PRODUCT_T* product)
 /* insert product and sort by minbid
  * No return
  */
-int insertMinbidSort(PRODUCT_T* product)
+void insertMinbidSort(PRODUCT_T* product)
 {
     int i;/*counter*/
     for(i=product_in_cat[product->category].minBidCount-1;(i>=0 && product_in_cat[product->category].minBidSort[i].price > product->minbid);i--)
@@ -165,7 +166,7 @@ int insertMinbidSort(PRODUCT_T* product)
 }
 
 /*This function display all products in lists*/
-int showProductByCat(int cat)
+void showProductByCat(int cat)
 {
     printf("final price %d\n",product_in_cat[cat].finalPriceCount);
     int i;
@@ -179,7 +180,7 @@ int showProductByCat(int cat)
 /*close program and write all file into data
  * No return
  */
-int closeProgram()
+void closeProgram()
 {
     writProduct(products);
     writeUser(users);

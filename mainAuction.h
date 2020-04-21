@@ -9,10 +9,7 @@
  *          Supakorn Srisawas           (Field)     62070503464
  *          Narapathra Morakrant        (Foremost)  62070503464
  */
-/*#ifndef validate_h
-#define validate_h
 
-#include "mainAuction.h"*/
 
 int TOTALUSER;
 int TOTALPRODUCT;
@@ -187,4 +184,3 @@ int allFileExist(); /* local function */
 int saveBackUp(void* bata, char mode);
 
 /*int saveAllData();*/ //comment out because function has not done yet.
-//#endif
