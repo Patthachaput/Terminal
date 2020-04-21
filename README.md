@@ -6,6 +6,11 @@
                 Narapathra Morakrant                   (Foremost)  62070503464
                 
 CODE : https://github.com/Patthachaput/Terminal.git
+
+Note  - All are from project 1, except the name that has no title
+         - No example files
+         - use can type anything to log in as we are not checking it, and assume the log in
+           value to be true
                 
 Currently working
 - create data structure
@@ -31,4 +36,3 @@ Questions
 1. Is it possible to write the data in pointer in structure to file ?
 2. Is nessary to hide password when log in ?
 
-Note to validation - All are from project 1, except the name that has no title
