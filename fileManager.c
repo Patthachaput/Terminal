@@ -129,7 +129,15 @@ int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history)
 	int status = 0;
 
 	status = writeUser(user);
+	if(status == 0)
+	{
+		return status;
+	}
 	status = writProduct(product);
+	if(status == 0)
+	{
+		return status;
+	}
 	status = writeHistory(history);
 
 	return status;
