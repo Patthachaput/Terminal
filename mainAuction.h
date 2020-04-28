@@ -14,10 +14,8 @@
 int TOTALUSER;
 int TOTALPRODUCT;
 int TOTALHISTORY;
-int TOTALBACKUP;
 int ADDNEWUSER;
 int ADDNEWPRODUCT;
-int ADDNEWHISTORY;
 
 typedef struct _date
 {
@@ -46,7 +44,6 @@ typedef struct _user
     char address[120];
     char phoneNumber[60];
     char bankAccNumber[60];
-    HISTORY_T* history;
 }USER_T;
 
 typedef struct _product
@@ -61,11 +58,7 @@ typedef struct _product
     double nowPrice;
     double minbid;          /*minimum bid price*/
     int hostId;             /*user who created this product*/
-    USER_T* host;
     int userAuthorityId;    /*user who have now authority*/
-    USER_T* userAuthority;
-    int winnerId;           /*winner*/
-    USER_T* winner;
 }PRODUCT_T;
 
 typedef struct
@@ -119,24 +112,6 @@ int writProduct(PRODUCT_T* product);
 int writeHistory(HISTORY_T* history);
 
 /*******************************************************************************
-* writeBackup
-* - write array of all backup case to file backup.dat
-* - if Success return 1
-* - else return 0
-* - argument is array of all backup
-* created by Patthachaput Thanesmaneerat 62070503432
-*/
-int writeBackUp(BACKUP_T* thisBackup); /* local function */
-
-/*******************************************************************************
-* getBackUp
-* - return the backup if have one
-* - return null for no backup
-* created by Patthachaput Thanesmaneerat 62070503432
-*/
-BACKUP_T* getBackUp();
-
-/*******************************************************************************
 * getUser
 * - get all user in file user.dat
 * - if Success return array of all user
@@ -173,14 +148,4 @@ HISTORY_T* getHistory();
 */
 int allFileExist(); /* local function */
 
-/*******************************************************************************
-* SaveBackUp
-* - Save data to backup file
-* - first argument is data that want to save
-* - second is a struct mode 'U' for user 'P' for product
-* return 1 if Success else return 0
-* created by Patthachaput Thanesmaneerat 62070503432
-*/
-int saveBackUp(void* bata, char mode);
-
-/*int saveAllData();*/ //comment out because function has not done yet.
+int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history);
