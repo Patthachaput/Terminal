@@ -220,10 +220,6 @@ int writProduct(PRODUCT_T* product)
 			return 0;
 		}
 		fclose(pProduct);
-		
-		TOTALPRODUCT = newTotalProduct;
-		ADDNEWPRODUCT = 0;
-		
 		return 1;
 	}
 
@@ -296,11 +292,7 @@ int writeHistory(HISTORY_T* history)
 			}
 		}
 	    fclose(pHistory);
-	    
 	    TOTALHISTORY = newTotalNumOfHis;
-	    TOTALUSER = newTotalNumOfHis;
-	    ADDNEWUSER = 0;
-	    
 	    return 1;
 	}
 
