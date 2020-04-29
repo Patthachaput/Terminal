@@ -17,99 +17,99 @@
 #include"mainAuction.h"
 
 //Delete soon when done all
-int main(int argc, char const *argv[])
-{
-	USER_T* user;
-	PRODUCT_T* product;
-	HISTORY_T history[4];
-	HISTORY_T* gethis;
+// int main(int argc, char const *argv[])
+// {
+// 	USER_T* user;
+// 	PRODUCT_T* product;
+// 	HISTORY_T history[4];
+// 	HISTORY_T* gethis;
 
-	init();
-	TOTALHISTORY = 4;
+// 	init();
+// 	TOTALHISTORY = 4;
 
-	printf("ok1\n");
-	history[0].idUser = 1;
-	history[0].productBid = calloc(3, sizeof(int));
-	if(history[0].productBid == NULL)
-	{
-		printf("error\n");
-	}
-	history[0].sizeofProductBit = 3;
-	history[0].sealAuction = calloc(4, sizeof(int));
-	if(history[0].sealAuction == NULL)
-	{
-		printf("error\n");
-	}
-	history[0].sizeofSealAuction = 4;
+// 	printf("ok1\n");
+// 	history[0].idUser = 1;
+// 	history[0].productBid = calloc(3, sizeof(int));
+// 	if(history[0].productBid == NULL)
+// 	{
+// 		printf("error\n");
+// 	}
+// 	history[0].sizeofProductBit = 3;
+// 	history[0].sealAuction = calloc(4, sizeof(int));
+// 	if(history[0].sealAuction == NULL)
+// 	{
+// 		printf("error\n");
+// 	}
+// 	history[0].sizeofSealAuction = 4;
 
-	history[0].productBid[0] = 1111;
-	history[0].productBid[1] = 2222;
-	history[0].productBid[2] = 3333;
+// 	history[0].productBid[0] = 1111;
+// 	history[0].productBid[1] = 2222;
+// 	history[0].productBid[2] = 3333;
 
-	history[0].sealAuction[0] = 123;
-	history[0].sealAuction[1] = 456;
-	history[0].sealAuction[2] = 789;
-
-
-	printf("ok2\n");
-	history[1].idUser = 2;
-	history[1].productBid = calloc(3, sizeof(int));
-	history[1].sizeofProductBit = 3;
-	history[1].sealAuction = calloc(4, sizeof(int));
-	history[1].sizeofSealAuction = 4;
-
-	history[1].productBid[0] = 11111;
-	history[1].productBid[1] = 2222;
-	history[1].productBid[2] = 3333;
-
-	history[1].sealAuction[0] = 1233;
-	history[1].sealAuction[1] = 4566;
-	history[1].sealAuction[2] = 7899;
-
-	printf("ok3\n");
-	history[2].idUser = 3;
-	history[2].productBid = calloc(3, sizeof(int));
-	history[2].sizeofProductBit = 3;
-	history[2].sealAuction = calloc(4, sizeof(int));
-	history[2].sizeofSealAuction = 4;
-
-	history[3].idUser = 4;
-	history[3].productBid = calloc(3, sizeof(int));
-	history[3].sizeofProductBit = 3;
-	history[3].sealAuction = calloc(4, sizeof(int));
-	history[3].sizeofSealAuction = 4;
+// 	history[0].sealAuction[0] = 123;
+// 	history[0].sealAuction[1] = 456;
+// 	history[0].sealAuction[2] = 789;
 
 
-	writeUser(user);
+// 	printf("ok2\n");
+// 	history[1].idUser = 2;
+// 	history[1].productBid = calloc(3, sizeof(int));
+// 	history[1].sizeofProductBit = 3;
+// 	history[1].sealAuction = calloc(4, sizeof(int));
+// 	history[1].sizeofSealAuction = 4;
 
-	writeProduct(product);
+// 	history[1].productBid[0] = 11111;
+// 	history[1].productBid[1] = 2222;
+// 	history[1].productBid[2] = 3333;
 
-	printf("ok4\n");
-	writeHistory(history);
+// 	history[1].sealAuction[0] = 1233;
+// 	history[1].sealAuction[1] = 4566;
+// 	history[1].sealAuction[2] = 7899;
 
-	getUser();
+// 	printf("ok3\n");
+// 	history[2].idUser = 3;
+// 	history[2].productBid = calloc(3, sizeof(int));
+// 	history[2].sizeofProductBit = 3;
+// 	history[2].sealAuction = calloc(4, sizeof(int));
+// 	history[2].sizeofSealAuction = 4;
 
-	getProduct();
-
-	printf("ok5\n");
-	gethis = getHistory();
-
-	printf("ok6\n");
-	printf("1-%d\n", gethis[0].idUser);
-	printf("2-%d\n", gethis[1].idUser);
-	printf("3-%d\n", gethis[2].idUser);
-	printf("4-%d\n", gethis[3].idUser);
-
-	printf("ok7\n");
-	printf("%d\n", gethis[1].productBid[0]);
-	printf("%d\n", gethis[1].productBid[1]);
-	printf("%d\n", gethis[2].productBid[3]);
+// 	history[3].idUser = 4;
+// 	history[3].productBid = calloc(3, sizeof(int));
+// 	history[3].sizeofProductBit = 3;
+// 	history[3].sealAuction = calloc(4, sizeof(int));
+// 	history[3].sizeofSealAuction = 4;
 
 
-	saveAllDatas(user, product, history);
+// 	writeUser(user);
+
+// 	writeProduct(product);
+
+// 	printf("ok4\n");
+// 	writeHistory(history);
+
+// 	getUser();
+
+// 	getProduct();
+
+// 	printf("ok5\n");
+// 	gethis = getHistory();
+
+// 	printf("ok6\n");
+// 	printf("1-%d\n", gethis[0].idUser);
+// 	printf("2-%d\n", gethis[1].idUser);
+// 	printf("3-%d\n", gethis[2].idUser);
+// 	printf("4-%d\n", gethis[3].idUser);
+
+// 	printf("ok7\n");
+// 	printf("%d\n", gethis[1].productBid[0]);
+// 	printf("%d\n", gethis[1].productBid[1]);
+// 	printf("%d\n", gethis[2].productBid[3]);
+
+
+// 	saveAllDatas(user, product, history);
 	
-	return 0;
-}
+// 	return 0;
+// }
 
 /*******************************************************************************
  * Init
