@@ -32,7 +32,7 @@ typedef struct _history
     int* productBid;
     int sizeofProductBit;
     int* sealAuction;
-    int sizaofSealAuction;
+    int sizeofSealAuction;
 }HISTORY_T;
 
 typedef struct _user
@@ -99,7 +99,7 @@ int writeUser(USER_T* user);
 * - argument is array of all product
 * created by Patthachaput Thanesmaneerat 62070503432
 */
-int writProduct(PRODUCT_T* product);
+int writeProduct(PRODUCT_T* product);
 
 /*******************************************************************************
 * writeHistory
@@ -146,6 +146,6 @@ HISTORY_T* getHistory();
 * - number follow index of file and created it.
 * created by Patthachaput Thanesmaneerat 62070503432
 */
-int allFileExist(); /* local function */
+int allFilesExist(); /* local function */
 
-int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history);
+int saveAllDatas(USER_T* user, PRODUCT_T* product, HISTORY_T* history);

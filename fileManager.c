@@ -17,30 +17,99 @@
 #include"mainAuction.h"
 
 //Delete soon when done all
-// int main(int argc, char const *argv[])
-// {
-// 	USER_T* user;
-// 	PRODUCT_T* product;
-// 	HISTORY_T* history;
+int main(int argc, char const *argv[])
+{
+	USER_T* user;
+	PRODUCT_T* product;
+	HISTORY_T history[4];
+	HISTORY_T* gethis;
 
-// 	init();
+	init();
+	TOTALHISTORY = 4;
 
-// 	writeUser(user);
+	printf("ok1\n");
+	history[0].idUser = 1;
+	history[0].productBid = calloc(3, sizeof(int));
+	if(history[0].productBid == NULL)
+	{
+		printf("error\n");
+	}
+	history[0].sizeofProductBit = 3;
+	history[0].sealAuction = calloc(4, sizeof(int));
+	if(history[0].sealAuction == NULL)
+	{
+		printf("error\n");
+	}
+	history[0].sizeofSealAuction = 4;
 
-// 	writProduct(product);
+	history[0].productBid[0] = 1111;
+	history[0].productBid[1] = 2222;
+	history[0].productBid[2] = 3333;
 
-// 	writeHistory(history);
+	history[0].sealAuction[0] = 123;
+	history[0].sealAuction[1] = 456;
+	history[0].sealAuction[2] = 789;
 
-// 	getUser();
 
-// 	getProduct();
+	printf("ok2\n");
+	history[1].idUser = 2;
+	history[1].productBid = calloc(3, sizeof(int));
+	history[1].sizeofProductBit = 3;
+	history[1].sealAuction = calloc(4, sizeof(int));
+	history[1].sizeofSealAuction = 4;
 
-// 	getHistory();
+	history[1].productBid[0] = 11111;
+	history[1].productBid[1] = 2222;
+	history[1].productBid[2] = 3333;
 
-// 	saveAllData(user, product, history);
+	history[1].sealAuction[0] = 1233;
+	history[1].sealAuction[1] = 4566;
+	history[1].sealAuction[2] = 7899;
+
+	printf("ok3\n");
+	history[2].idUser = 3;
+	history[2].productBid = calloc(3, sizeof(int));
+	history[2].sizeofProductBit = 3;
+	history[2].sealAuction = calloc(4, sizeof(int));
+	history[2].sizeofSealAuction = 4;
+
+	history[3].idUser = 4;
+	history[3].productBid = calloc(3, sizeof(int));
+	history[3].sizeofProductBit = 3;
+	history[3].sealAuction = calloc(4, sizeof(int));
+	history[3].sizeofSealAuction = 4;
+
+
+	writeUser(user);
+
+	writeProduct(product);
+
+	printf("ok4\n");
+	writeHistory(history);
+
+	getUser();
+
+	getProduct();
+
+	printf("ok5\n");
+	gethis = getHistory();
+
+	printf("ok6\n");
+	printf("1-%d\n", gethis[0].idUser);
+	printf("2-%d\n", gethis[1].idUser);
+	printf("3-%d\n", gethis[2].idUser);
+	printf("4-%d\n", gethis[3].idUser);
+
+	printf("ok7\n");
+	printf("%d\n", gethis[1].productBid[0]);
+	printf("%d\n", gethis[1].productBid[1]);
+	printf("%d\n", gethis[2].productBid[3]);
+
+
+	saveAllDatas(user, product, history);
 	
-// 	return 0;
-// }
+	return 0;
+}
 
 /*******************************************************************************
  * Init
@@ -64,7 +133,7 @@ int init()
 	int numHistory;
 	BACKUP_T numBackUp;
 
-	status = allFileExist();
+	status = allFilesExist();
 
 	pUser = fopen("user.dat", "rb");
 	if(pUser == NULL)
@@ -124,7 +193,7 @@ int init()
 }
 
 /* this function will savw all file return 1 if done else return 0 */
-int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history)
+int saveAllDatas(USER_T* user, PRODUCT_T* product, HISTORY_T* history)
 {
 	int status = 0;
 
@@ -133,7 +202,7 @@ int saveAllData(USER_T* user, PRODUCT_T* product, HISTORY_T* history)
 	{
 		return status;
 	}
-	status = writProduct(product);
+	status = writeProduct(product);
 	if(status == 0)
 	{
 		return status;
@@ -192,7 +261,7 @@ int writeUser(USER_T* user)
  * - argument is array of all product
  * created by Patthachaput Thanesmaneerat 62070503432
  */
-int writProduct(PRODUCT_T* product)
+int writeProduct(PRODUCT_T* product)
 {
 	int newIdProduct = 1;
 	int newTotalProduct = 0;
@@ -238,7 +307,7 @@ int writeHistory(HISTORY_T* history)
 {
 	int idUser;
 	int sizeofProductBit;
-	int sizaofSealAuction;
+	int sizeofSealAuction;
 	int* productBid = NULL;
 	int* sealAuction = NULL;
 
@@ -257,11 +326,11 @@ int writeHistory(HISTORY_T* history)
 			return 0;
 		}
 
-		for(int i; i < newTotalNumOfHis; i++)
+		for(int i = 0; i < newTotalNumOfHis; i++)
 		{
 			idUser = i + newNumOfHis;
 			sizeofProductBit = history[i].sizeofProductBit;
-			sizaofSealAuction = history[i].sizaofSealAuction;
+			sizeofSealAuction = history[i].sizeofSealAuction;
 			productBid = history[i].productBid;
 			sealAuction = history[i].sealAuction;
 
@@ -270,17 +339,17 @@ int writeHistory(HISTORY_T* history)
 				printf("Erroe to add writeHistory! in <writProduct2>\n");
 				return 0;
 			}
-		    if(fwrite(&sizaofSealAuction, sizeof(int), 1, pHistory) != 1)
+		    if(fwrite(&sizeofSealAuction, sizeof(int), 1, pHistory) != 1)
 			{
 				printf("Erroe to add writeHistory! in <writProduct3>\n");
 				return 0;
 			}
-		    if(fwrite(productBid, sizeofProductBit * sizeof(int), 1, pHistory) != 1)
+		    if(fwrite(productBid, sizeof(int), sizeofProductBit, pHistory) != sizeofProductBit)
 			{
 				printf("Erroe to add writeHistory! in <writProduct4>\n");
 				return 0;
 			}
-		    if(fwrite(sealAuction, sizaofSealAuction * sizeof(int), 1, pHistory) != 1)
+		    if(fwrite(sealAuction, sizeof(int), sizeofSealAuction, pHistory) != sizeofSealAuction)
 			{
 				printf("Erroe to add writeHistory! in <writProduct5>\n");
 				return 0;
@@ -315,7 +384,7 @@ USER_T* getUser()
 	if(pUser == NULL)
 	{
 		printf("Error to read user file in <getUser>!\n");
-		return allUser;
+		return NULL;
 	}
 	if(TOTALUSER != 0)
 	{
@@ -323,7 +392,7 @@ USER_T* getUser()
 		if(allUser == NULL)
 		{
 			printf("Error with alocade memory in <getUser>\n");
-			return allUser;
+			return NULL;
 		}
 
 		for(int i = 0; i < TOTALUSER; i++)
@@ -331,7 +400,7 @@ USER_T* getUser()
 			if(fread(&allUser[i], sizeof(USER_T), 1, pUser) != 1)
 			{
 				printf("Can't read all data from database, please try agin! <getUser>\n");
-				return allUser;
+				return NULL;
 			}
 		}
 	}
@@ -356,7 +425,7 @@ PRODUCT_T* getProduct()
 	if(pProduct == NULL)
 	{
 		printf("Error to read product file in <getProduct>!\n");
-		return allProduct;
+		return NULL;
 	}
 	if(TOTALPRODUCT != 0)
 	{
@@ -364,7 +433,7 @@ PRODUCT_T* getProduct()
 		if(allProduct == NULL)
 		{
 			printf("Error with alocade memory in <getProduct>\n");
-			return allProduct;
+			return NULL;
 		}
 
 		for(int i = 0; i < TOTALPRODUCT; i++)
@@ -372,7 +441,7 @@ PRODUCT_T* getProduct()
 			if(fread(&allProduct[i], sizeof(PRODUCT_T), 1, pProduct) != 1)
 			{
 				printf("Can't read all data from database, please try agin! <getProduct>\n");
-				return allProduct;
+				return NULL;
 			}
 		}
 	}
@@ -392,7 +461,7 @@ HISTORY_T* getHistory()
 {
 	int idUser;
 	int sizeofProductBit;
-	int sizaofSealAuction;  /* miss spelling from sizeofSaleAuction */
+	int sizeofSealAuction;  /* miss spelling from sizeofSaleAuction */
 	int* productBid;
 	int* sealAuction;
 
@@ -403,15 +472,15 @@ HISTORY_T* getHistory()
 	if(pHistory == NULL)
 	{
 		printf("Error to read history file in <getHistory>!\n");
-		return allHistory;
+		return NULL;
 	}
-	if(TOTALHISTORY != 0)
+	if(TOTALHISTORY > 0)
 	{
 		allHistory = calloc(TOTALHISTORY, sizeof(HISTORY_T));
 		if(allHistory == NULL)
 		{
 			printf("Error with alocade memory in <getHistory1>\n");
-			return allHistory;
+			return NULL;
 		}
 
 		for(int i = 0; i < TOTALHISTORY; i++)
@@ -419,36 +488,36 @@ HISTORY_T* getHistory()
 			if(fread(&sizeofProductBit, sizeof(int), 1, pHistory) != 1)
 			{
 				printf("Can't read sizeofProductBit, please try agin! <getHistory>\n");
-				return allHistory;
+				return NULL;
 			}
-			if(fread(&sizaofSealAuction, sizeof(int), 1, pHistory) != 1)
+			if(fread(&sizeofSealAuction, sizeof(int), 1, pHistory) != 1)
 			{
-				printf("Can't read sizaofSealAuction, please try agin! <getHistory>\n");
-				return allHistory;
+				printf("Can't read sizeofSealAuction, please try agin! <getHistory>\n");
+				return NULL;
 			}
 
 			productBid = calloc(sizeofProductBit, sizeof(int));
 			if(allHistory == NULL)
 			{
 				printf("Error with alocade memory in <getHistory2>\n");
-				return allHistory;
+				return NULL;
 			}
-			sealAuction = calloc(sizaofSealAuction, sizeof(int));
+			sealAuction = calloc(sizeofSealAuction, sizeof(int));
 			if(allHistory == NULL)
 			{
 				printf("Error with alocade memory in <getHistory3>\n");
-				return allHistory;
+				return NULL;
 			}
 
-			if(fread(productBid, sizeofProductBit * sizeof(int), 1, pHistory) != 1)
+			if(fread(productBid, sizeof(int), sizeofProductBit, pHistory) != sizeofProductBit)
 			{
 				printf("Can't read productBid, please try agin! <getHistory>\n");
-				return allHistory;
+				return NULL;
 			}
-			if(fread(sealAuction, sizaofSealAuction * sizeof(int), 1, pHistory) != 1)
+			if(fread(sealAuction, sizeof(int), sizeofSealAuction, pHistory) != sizeofSealAuction)
 			{
 				printf("Can't read sealAuction, please try agin! <getHistory>\n");
-				return allHistory;
+				return NULL;
 			}
 			if(fread(&idUser, sizeof(int), 1, pHistory) != 1)
 			{
@@ -459,7 +528,7 @@ HISTORY_T* getHistory()
 			allHistory[i].productBid = productBid;
 			allHistory[i].sealAuction = sealAuction;
 			allHistory[i].sizeofProductBit = sizeofProductBit;
-			allHistory[i].sizaofSealAuction = sizaofSealAuction;
+			allHistory[i].sizeofSealAuction = sizeofSealAuction;
 		}
 	}
 	fclose(pHistory);
@@ -469,14 +538,14 @@ HISTORY_T* getHistory()
 
 
 /*******************************************************************************
- * allFileExist
+ * allFilesExist
  * - Local function used dy init.
  * - This function will check all file are exit or not,
  * - if all file are exit will return 1 else return negative
  * - number follow index of file and created it.
  * created by Patthachaput Thanesmaneerat 62070503432
  */
-int allFileExist()
+int allFilesExist()
 {
 	int status = 1;
 	int userExist = 0;
