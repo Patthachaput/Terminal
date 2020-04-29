@@ -16,7 +16,7 @@
 #include<string.h>
 #include"mainAuction.h"
 
-// Delete soon when done all
+//Delete soon when done all
 // int main(int argc, char const *argv[])
 // {
 // 	USER_T* user;
@@ -207,6 +207,7 @@ int writProduct(PRODUCT_T* product)
 
 	if(newTotalProduct > 0)
 	{
+		
 		pProduct = fopen("product.dat", "wb");
 		if(pProduct == NULL)
 		{
@@ -219,6 +220,10 @@ int writProduct(PRODUCT_T* product)
 			return 0;
 		}
 		fclose(pProduct);
+		
+		TOTALPRODUCT = newTotalProduct;
+		ADDNEWPRODUCT = 0;
+		
 		return 1;
 	}
 
@@ -291,6 +296,11 @@ int writeHistory(HISTORY_T* history)
 			}
 		}
 	    fclose(pHistory);
+	    
+	    TOTALHISTORY = newTotalNumOfHis;
+	    TOTALUSER = newTotalNumOfHis;
+	    ADDNEWUSER = 0;
+	    
 	    return 1;
 	}
 

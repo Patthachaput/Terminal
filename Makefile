@@ -42,4 +42,4 @@ onlineAuction$(EXECEXT) : interface.o validate.o dataBuilder.o fileManager.o
 
 clean : 
 	-rm *.o
-	-rm $(EXECUTABLES) 
+	-rm $(EXECUTABLES)
