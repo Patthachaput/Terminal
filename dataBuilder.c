@@ -70,7 +70,6 @@ int buildData()
     	printf("Error allocating memories\n");
         exit(1);
     }
-
     /**==================for searching=============================*/
     for (int i = 0; i < 7; i++)
     {
@@ -108,15 +107,22 @@ int buildData()
 	products = getProduct();
 
     users_by_id = calloc(TOTALUSER,sizeof(USER_T));
-    users_by_email = calloc(TOTALUSER,sizeof(USER_T));
-    if(users_by_id == NULL || users_by_email==NULL)
+    if(users_by_id == NULL)
     {
         printf("Error allocating memories\n");
         exit(1);
     }
+
+    users_by_email = calloc(TOTALUSER,sizeof(USER_T));
+    if(users_by_email==NULL)
+    {
+        printf("Error allocating memories\n");
+        exit(1);
+    }
+
     users_by_id = getUser();
 
-    histories = calloc(TOTALHISTORY,sizeof(HISTORY_T));
+    histories = calloc(TOTALUSER,sizeof(HISTORY_T));
     if(histories == NULL)
     {
     	printf("Error allocating memories\n");
@@ -128,6 +134,11 @@ int buildData()
     {
     	/*create new memory for searching array*/
     	PRODUCT_T* p = calloc(1,sizeof(PRODUCT_T));
+    	if(p==NULL)
+    	{
+	    	printf("Error allocating memories\n");
+    		exit(1);
+    	}
     	*p=products[i];
 
     	/*keep products location in list*/
@@ -136,8 +147,8 @@ int buildData()
 
     	insertMinbidSort(p);
     	insertfinalPriceSort(p);
-    	insertOpenDateSort(p);
-    	insertCloseDateSort(p);
+    	// insertOpenDateSort(p);
+    	// insertCloseDateSort(p);
     }
     
     for(i=0;i<TOTALUSER;i++)
@@ -145,9 +156,7 @@ int buildData()
     	insertUserSortByEmail(users_by_id[i]);
     }
 
-    /*check will be delete soon*/
-    printf("total users:%d\n",TOTALUSER);
-    printf("total products:%d\n",TOTALPRODUCT);
+   
 }
 
 /* insert users into data structure
@@ -157,22 +166,39 @@ int insertUser(USER_T user)
 {
     ADDNEWUSER++;
     user.idUser =TOTALUSER+ADDNEWUSER;
-    user.history = NULL;
     users_by_id = realloc(users_by_id,(TOTALUSER+ADDNEWUSER)*sizeof(USER_T));
     users_by_email = realloc(users_by_email,(TOTALUSER+ADDNEWUSER)*sizeof(USER_T));
-    
-    ADDNEWHISTORY++;
+    if(users_by_id == NULL || users_by_email == NULL)
+    {
+		printf("Error reallocating memories\n");
+        exit(0);
+    }
+
     HISTORY_T user_history;
     user_history.idUser = user.idUser;
     user_history.sizeofProductBit = 0;
-    user_history.sizaofSealAuction = 0;
+    user_history.sizeofSealAuction = 0;
     user_history.productBid = calloc(user_history.sizeofProductBit,sizeof(int));
-    user_history.sealAuction = calloc(user_history.sizaofSealAuction,sizeof(int));
+    user_history.sealAuction = calloc(user_history.sizeofSealAuction,sizeof(int));
+    if(user_history.productBid==NULL || user_history.sealAuction==NULL)
+    {
+		printf("Error allocating memories\n");
+		exit(1);
+    }
 
-    histories[TOTALHISTORY+ADDNEWHISTORY-1] = user_history;
+    histories = realloc(histories,(TOTALUSER+ADDNEWUSER)*sizeof(HISTORY_T));
+    if(histories == NULL)
+    {
+		printf("Error reallocating memories\n");
+        exit(0);
+    }
+
+    histories[TOTALUSER+ADDNEWUSER-1] = user_history;
 
     users_by_id[TOTALUSER+ADDNEWUSER-1] = user;
     insertUserSortByEmail(user);
+    writeUser(users_by_id);
+    writeHistory(histories);
 }
 
 /* insert users into data structure sort by name
@@ -232,37 +258,75 @@ int insertProduct(PRODUCT_T product, USER_T * user)
 {
     ADDNEWPRODUCT++;
     product.idProduct = TOTALPRODUCT + ADDNEWPRODUCT;
+    product.hostId = user->idUser;
     product.nowPrice = 0; /*set default bid price*/
+	
 	products = realloc(products,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_T));
+    if(products == NULL)
+    {
+		printf("Error reallocating memories\n");
+        exit(0);
+    }
 
     /*create new memmory for searching*/
 	PRODUCT_T* p = calloc(1,sizeof(PRODUCT_T));
+	if(p==NULL)
+	{
+    	printf("Error allocating memories\n");
+		exit(1);
+	}
 	*p = product;
+
 
     /*dynamic allocation for searching*/
     product_in_cat[product.category].finalPricesort = realloc(product_in_cat[product.category].finalPricesort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_PRICE));
     product_in_cat[product.category].minBidSort = realloc(product_in_cat[product.category].minBidSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_PRICE));
     product_in_cat[product.category].openDateSort = realloc(product_in_cat[product.category].openDateSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_DATE));
     product_in_cat[product.category].closeDateSort = realloc(product_in_cat[product.category].closeDateSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_DATE));
-    
     lProduct = realloc(lProduct,sizeof(PRODUCT_T*));
+    if(product_in_cat[product.category].finalPricesort==NULL || product_in_cat[product.category].minBidSort==NULL || product_in_cat[product.category].openDateSort==NULL || product_in_cat[product.category].closeDateSort==NULL || lProduct==NULL)
+    {
+		printf("Error reallocating memories\n");
+        exit(0);
+    }
 
     products[TOTALPRODUCT+ADDNEWPRODUCT-1] = product;
 
     lProduct[totalProductsLocation] = p;
     totalProductsLocation++;
 
-    user->history->sizaofSealAuction++;
-    user->history->sealAuction = realloc(user->history->sealAuction,user->history->sizaofSealAuction);
-    user->history->sealAuction[user->history->sizaofSealAuction-1] = product.idProduct;
+	histories[user->idUser - 1].sizeofSealAuction++;
+    histories[user->idUser - 1].sealAuction = realloc(histories[user->idUser - 1].sealAuction,histories[user->idUser - 1].sizeofSealAuction*sizeof(int));
+   	
+   	if(histories[user->idUser - 1].sealAuction==NULL)
+   	{
+		printf("Error reallocating memories\n");
+        exit(0);
+    }
 
    	insertMinbidSort(p);
     insertfinalPriceSort(p);
-	insertOpenDateSort(p);
-	insertCloseDateSort(p);
-
+    insertSaleAuctionSort(p->idProduct,user);
+	// insertOpenDateSort(p);
+	// insertCloseDateSort(p);
+	
+	writeProduct(products);
 
 }	
+
+/* insert sale aucion into history
+ * No return
+ */
+int insertSaleAuctionSort(int id, USER_T* user)
+{
+	int i; /*counter*/
+	for(i = histories[user->idUser - 1].sizeofSealAuction-2;(i >= 0 && histories[user->idUser - 1].sealAuction[i] > id); i--)
+	{
+		histories[user->idUser - 1].sealAuction[i+1] = histories[user->idUser - 1].sealAuction[i];
+	}
+	histories[user->idUser - 1].sealAuction[i+1] = id;
+}
+
 
 /* insert product for searching by min bid price.
  * No return
@@ -553,6 +617,37 @@ PRODUCT_T* searchByOpenDate(int cat, DATE_T date)
 	return NULL;
 }
 
+/* search for sale auction using binary search
+ * Return 1 - if product exist 
+ *        0 - if product does not exist
+ */
+int searchSaleAuction(int id, USER_T* user)
+{
+	int l = 0; /*lowest*/
+	int h = histories[user->idUser -1].sizeofSealAuction -1; /*heighest*/
+	int m = h/2; /*middle*/
+
+	while(l <= h)
+	{
+		if(histories[user->idUser -1].sealAuction[m] < id)
+		{
+			l = m +1;
+		}
+		else if(histories[user->idUser -1].sealAuction[m] == id)
+		{
+			return 1;
+		}
+		else 
+		{
+			h = m -1;
+		}
+
+		m = (l+h)/2;
+
+	}
+	return 0;
+}
+
 /* this function bid product by insert price and user
  * into product struct
  *
@@ -562,28 +657,92 @@ PRODUCT_T* searchByOpenDate(int cat, DATE_T date)
  *
  * Return  1 if bid auction success
  * 		  -1 if the auction is expired
- *        -2 if bid price is less than or equal to current price
+ *        -2 if bid price is less than minmum bid
+ *        -3 if bid price is less than or equal to current price
+ *        -4 if user try to bid his/her product
  */
 int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double price)
 {	
-	if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
-					  product->dateClose.year,product->dateClose.month,product->dateClose.day,product->dateClose.hour,product->dateClose.minute) == 1)
-	{
-		return -1;
-	}
-	if(price <= product->nowPrice)
+	// if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
+	// 				  product->dateClose.year,product->dateClose.month,product->dateClose.day,product->dateClose.hour,product->dateClose.minute) == 1)
+	// {
+	// 	return -1;
+	// }
+	if(price < product->minbid)
 	{
 		return -2;
 	}
-
+	if(price <= product->nowPrice)
+	{
+		return -3;
+	}
+	if(searchSaleAuction(product->idProduct,user)==1)
+	{
+		return -4;
+	}
+	if(searchProductBid(product->idProduct,user)==0)
+	{
+		histories[user->idUser - 1].sizeofProductBit++;
+    	histories[user->idUser - 1].productBid = realloc(histories[user->idUser - 1].productBid,histories[user->idUser - 1].sizeofProductBit*sizeof(int));
+	    if(histories[user->idUser - 1].productBid == NULL)
+    	{
+			printf("Error reallocating memories\n");
+		    exit(0);
+   	 	}
+		insertProductBidSort(product->idProduct,user);
+	}
 	product->nowPrice = price;
-	product->userAuthority = user;
 	product->userAuthorityId = user->idUser;
 
-	products[product->idProduct].nowPrice = price;
-	products[product->idProduct].userAuthorityId = user->idUser;
+	products[product->idProduct -1].nowPrice = price;
+	products[product->idProduct -1].userAuthorityId = user->idUser;
 
+	writeProduct(products);
 	return 1;
+}
+
+/* insert product bit into history
+ * No return
+ */
+int insertProductBidSort(int id, USER_T* user)
+{
+	int i; /*counter*/
+	for(i = histories[user->idUser - 1].sizeofProductBit-2;(i >= 0 && histories[user->idUser - 1].productBid[i] > id); i--)
+	{
+		histories[user->idUser - 1].productBid[i+1] = histories[user->idUser - 1].productBid[i];
+	}
+	histories[user->idUser - 1].productBid[i+1] = id;
+}
+
+/* search for product bid using binary search
+ * Return 1 - if product exist 
+ *        0 - if product does not exist
+ */
+int searchProductBid(int id, USER_T* user)
+{
+	int l = 0; /*lowest*/
+	int h = histories[user->idUser -1].sizeofProductBit -1; /*heighest*/
+	int m = h/2; /*middle*/
+
+	while(l <= h)
+	{
+		if(histories[user->idUser -1].productBid[m] < id)
+		{
+			l = m +1;
+		}
+		else if(histories[user->idUser -1].productBid[m] == id)
+		{
+			return 1;
+		}
+		else 
+		{
+			h = m -1;
+		}
+
+		m = (l+h)/2;
+
+	}
+	return 0;
 }
 
 /* Compares two dates. Returns 1 if the 
@@ -698,32 +857,22 @@ USER_T* login(char *email, char* password, int* status)
 		}
 	}
 	*status = 1;
-	user->history = &histories[user->idUser - 1];
 	return user;
 }
+
 /*This function display all products in lists*/
 int showProductByCat(int cat)
 {    
 	int i;
     for (i = 0; i < totalProductsLocation; i++)
     {
-    	printf("Id: %d\n", lProduct[i]->idProduct);
+    	/**  ADD YOUR CODE HERE
+     	printf("Id: %d\n", lProduct[i]->idProduct);
         printf("Name: %s\n",lProduct[i]->name);
         printf("Minbid %.2f\n", lProduct[i]->minbid);
         printf("Now price: %.2f \n\n",lProduct[i]->nowPrice );
+        */
     }
-}
-
-int showUsers()
-{
-	int i;
-	for(i=0;i<TOTALUSER+ADDNEWUSER;i++)
-	{
-		printf("Id: %d\n",users_by_id[i].idUser);
-		printf("Name: %s\n",users_by_id[i].name );
-		printf("Email: %s\n", users_by_id[i].email);
-		printf("Password: %s\n\n", users_by_id[i].password);
-	}
 }
 
 /*close program and write all file into data
@@ -731,12 +880,26 @@ int showUsers()
  */
 int closeProgram()
 {
-    writProduct(products);
-    writeUser(users_by_id);
-    writeHistory(histories);
-}
-
-USER_T* testUser(int id)
-{
-	return &users_by_id[id-1];
+    free(products);
+    int i;
+    for(i=0;i<totalProductsLocation;i++)
+    {
+    	free(lProduct[i]);
+    }
+    free(lProduct);
+    
+    for(i=0;i<7;i++)
+    {
+	    free(product_in_cat[i].minBidSort);
+	    free(product_in_cat[i].finalPricesort);
+	    free(product_in_cat[i].closeDateSort);
+	    free(product_in_cat[i].openDateSort);
+    }
+    
+    for(i=0;i<TOTALHISTORY;i++)
+    {
+    	free(histories[i].productBid);
+    	free(histories[i].sealAuction);
+    }
+    free(histories);
 }

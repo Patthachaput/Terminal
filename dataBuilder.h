@@ -55,6 +55,16 @@ int insertOpenDateSort(PRODUCT_T* product);
  */
 int insertCloseDateSort(PRODUCT_T* product);
 
+/* insert sale aucion into history
+ * No return
+ */
+int insertSaleAuctionSort(int id, USER_T* user);
+
+/* insert product bit into history
+ * No return
+ */
+int insertProductBidSort(int id, USER_T* user);
+
 /* searching for product by product id
  * Return  PRODUCT_T - in case found
  * 		   NULL - in case not found 
@@ -101,6 +111,18 @@ PRODUCT_T* searchByCloseDate(int cat, DATE_T date);
  */
 PRODUCT_T* searchByOpenDate(int cat, DATE_T date);
 
+/* search for sale auction using binary search
+ * Return 1 - if product exist 
+ *        0 - if product does not exist
+ */
+int searchSaleAuction(int id, USER_T* user);
+
+/* search for product bid using binary search
+ * Return 1 - if product exist 
+ *        0 - if product does not exist
+ */
+int searchProductBid(int id, USER_T* user);
+
 /* this function bid product by insert price and user
  * into product struct
  *
@@ -114,7 +136,7 @@ PRODUCT_T* searchByOpenDate(int cat, DATE_T date);
  */
 int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double price);
 
-/* close program and write all file into data
+/* free all memories all close program
  * return 1- if close program and write file success
  * No return - in case error program will be closed automatically
  */
@@ -161,8 +183,3 @@ int registerNewUser(USER_T user);
  *        -2 - password does not match
  *         1 - if login success */
 USER_T* login(char *email, char* password, int* status);
-
-
-int showUsers();
-
-USER_T* testUser(int id);
