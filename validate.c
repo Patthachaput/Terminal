@@ -625,12 +625,11 @@ int validateAddress(char* address)
 
 	int i; /*counter*/
 	sscanf(address,"%s %s %s %s",number,streetName,optional,postalCode);
-
 	if(!isdigit(number[0]))
 	{
 		return -1;
 	}
-	
+
 	for(i=0;i<strlen(number);i++)
 	{
 		if(!isdigit(number[i]))
@@ -652,26 +651,44 @@ int validateAddress(char* address)
 
 	if(!(strcmp(optional,"Road")==0 || strcmp(optional,"Street")==0 || strcmp(optional,"Lane")==0))
 	{
-		return -3;
-	}
+		for(i=0;i<strlen(optional);i++)
+        {
+            if(!isdigit(optional[i]))
+            {
+                return -4;
+            }
+        }
 
-	for(i=0;i<strlen(postalCode);i++)
-	{
-		if(!isdigit(postalCode[i]))
-		{
-			return -4;
-		}
-	}
+        if(!(optional[0] == '1' && optional[1] == '0'))
+        {
+            return -4;
+        }
 
-	if(!(postalCode[0] == '1' && postalCode[1] == '0'))
-	{
-		return -4;
+        if(strlen(optional)!=5)
+        {
+            return -4;
+        }
 	}
+    else
+    {
+        for(i=0;i<strlen(postalCode);i++)
+        {
+            if(!isdigit(postalCode[i]))
+            {
+                return -4;
+            }
+        }
 
-	if(strlen(postalCode)!=5)
-	{
-		return -4;
-	}
+        if(!(postalCode[0] == '1' && postalCode[1] == '0'))
+        {
+            return -4;
+        }
+
+        if(strlen(postalCode)!=5)
+        {
+            return -4;
+        }
+    }
 
 	return 1;
 
