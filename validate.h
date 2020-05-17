@@ -63,7 +63,7 @@ int checkUpperCase(char password[MAXLEN]);
  */
 int checkLowerCase(char password[MAXLEN]);
 
-/******************************************************************************************
+/**********************************************************************************
  * checkSymbol.
  * - A function to check how many upper case alphabetic character does it have.
  * - 'password' is the password put in by the user.
@@ -89,6 +89,24 @@ int validateName(char nameInput[]);
 /* This is checkPhoneNumThai function. It use for check Thai mobile phone number is valid or not.
  */
 int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[]);
+
+/*********************************************************************************
+ * Control email function that check email result from the
+ * email validation and it will be return 1 if it true.
+ * and 0 if it not following the condition.(passing to the
+ * validate function in validation.c(source file)
+ * created by Natacha Punyathanasub 62070503415
+ */
+int validateEmail(char email[]);
+
+/*********************************************************************************
+ *
+ *
+ *
+ *
+ *  created by Natacha Punyathanasub 62070503415
+ */
+int validateAddress(char address[]);
 
 /*********************************************************************************
  * CheckDashs

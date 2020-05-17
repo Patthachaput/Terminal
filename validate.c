@@ -184,7 +184,7 @@ int checkSymbol(char password[MAXLEN])
  *
  *
  * created by Natacha Punyathanasub 62070503415
- *
+ */
 int checkEmail(char email[])
 {
     int i;
@@ -227,11 +227,11 @@ int checkEmail(char email[])
     return valid;
 }
 
- *
+/*
  * Continue function from Check email This function is
  * checking for case of special character in email.
  * created by Natacha Punyathanasub 62070503415
- *
+ */
 int validEmail(char email[])
 {
     int i;
@@ -281,16 +281,17 @@ int validEmail(char email[])
     {
         valid=checkEmail(email);
     }
-return valid;
+    
+    return valid;
 }
 
- * Control email function that check email result from the
+/* Control email function that check email result from the
  * email validation and it will be return 1 if it true.
  * and 0 if it not following the condition.(passing to the
  * validate function in validation.c(source file)
  * created by Natacha Punyathanasub 62070503415
- *
-int controlEmail(char email[])
+ */
+int validateEmail(char email[])
 {
     int valid;
     int emailResult=0;
@@ -302,15 +303,18 @@ int controlEmail(char email[])
     valid=validEmail(email);
     if (valid==1)
     {
+        printf("\tValid\n");
         emailResult = 1;
     }
     else
     {
+        printf("\tInvalid\n");
         emailResult = 0;
     }
-return emailResult;
+    
+    return emailResult;
 }
-*/
+
 
 /**********************************************************************************
  * validatePassword.
@@ -547,19 +551,23 @@ int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[])
     return 0;
 }
 
-/*
- *
- *
- *
- *  created by Natacha Punyathanasub 62070503415
- *
+/*=========================== address validation ===========================*/
+
+/**********************************************************************************
+ * addressCheck
+ * - check is all the house numbers are correct
+ * - and does not contain anything other than number and '/'
+ * - return 1 if invalid 0 if valid
+ * Created by Natacha Punyathanasub 62070503415
+ * Edited by Narapathra Morakrant 62070503464
+ */
 int addressCheck(char address[])
 {
     int i = 0;
     int invalid=0;
     int midValue = 0;
     int slashCount=0;
-    if( isdigit(address[0]) != 1)
+    if(isdigit(address[0]) != 1)
     {
              invalid = 1;
     }
@@ -597,36 +605,39 @@ int addressCheck(char address[])
     return invalid;
 }
 
- *
- *
- *
- *
- *  created by Natacha Punyathanasub 62070503415
- *
+/**********************************************************************************
+ * streetCheck
+ * - check is all the street numbers are correct
+ * - and does not contain anything other than number
+ * - return 1 if invalid 0 if valid
+ * Created by Natacha Punyathanasub 62070503415
+ * Edited by Narapathra Morakrant 62070503464
+ */
 int streetCheck(char streetName[])
 {
     int i = 0;
     for(i=0;i<strlen(streetName);i++)
     {
-        if( (isalnum(streetName[i])==0))
+        if((isalnum(streetName[i])==0))
         {
             return 1;
         }
     }
     return 0;
-
 }
 
- *
- *
- *
- *
- *  created by Natacha Punyathanasub 62070503415
- *
-int LaneAndPostal(char thirdArgument[],char forthArgument[])
+/**********************************************************************************
+ * laneAndPostal
+ * - check is all the lane and postal code are correct
+ * - return 1 if invalid 0 if valid
+ * Created by Natacha Punyathanasub 62070503415
+ * Edited by Narapathra Morakrant 62070503464
+ */
+int laneAndPostal(char thirdArgument[],char forthArgument[])
 {
-    int invalid = 0;
+    int validate = 1;
     char postalCode[32] = "";
+    
     if( strcmp(forthArgument,"") == 0)
     {
         strcpy(postalCode,thirdArgument);
@@ -635,109 +646,96 @@ int LaneAndPostal(char thirdArgument[],char forthArgument[])
     {
         strcpy(postalCode,forthArgument);
 
-        if( !((strcmp(thirdArgument,"Road") == 0) || (strcmp(thirdArgument,"Street") == 0) || (strcmp(thirdArgument,"Lane") == 0)) )
+        if( ((strcmp(thirdArgument,"Road") == 0) || (strcmp(thirdArgument,"Street") == 0) || (strcmp(thirdArgument,"Lane") == 0)) )
         {
-                      invalid = 1;
+            validate = 0;
         }
     }
 
-    if(  ( postalCode[0] != '1'   )  || (  postalCode[1] !=  '0'  ) || ( strlen(postalCode) != 5)  )
+    if((postalCode[0] != '1')||(postalCode[1] != '0')||(strlen(postalCode) != 5))
     {
-               invalid = 1;
+        validate = 1;
     }
-    return invalid;
+    
+    return validate;
 }
 
- *
- *
- *
- *
- *  created by Natacha Punyathanasub 62070503415
- *
-int validateAddress()
+/**********************************************************************************
+ * validateAddress
+ * - controlFunction for all address validation
+ * - return 1 if invalid 0 if invalid
+ * Created by Natacha Punyathanasub 62070503415
+ * Edited by Narapathra Morakrant 62070503464
+ */
+int validateAddress(char address[])
 {
     char returnAddress[128];
     int loop = 1;
-    char address1[128] = "";
-    char address2[128] = "";
-    char address3[128] = "";
-    char address4[128] = "";
-    char address5[128] = "";
+    char address1[128]; /* house number */
+    char address2[128]; /* street number */
+    char address3[128]; /* street name */
+    char address4[128];
+    char address5[128]; /* in case that have 5 argrument */
+    int validate = 1;   /* assume invalid */
 
+    sscanf(address,"%s %s %s %s %s",address1,address2,address3,address4,address5);
 
-    while(loop)
+    if(validate == 0)
     {
-        char stringInput[128];
-        loop = 0;
-        printf("   Please Enter Address :");
-        fgets(stringInput,sizeof(stringInput),stdin);
-        sscanf(stringInput,"%[^\n]",returnAddress);
-        sscanf(stringInput,"%s %s %s %s %s",address1,address2,address3,address4,address5);
-        //printf("aaaa%s\n",address1);
-        //printf("bbbb%s\n",address2);
-        //printf("cccc%s\n",address3);
-        //printf("dddd%s\n",address4);
-        //printf("eeee%s\n",address5);
-       
-
-        if(loop == 0)
+        validate = addressCheck(address1);
+        if(strlen(address2) > 1)
         {
-            //printf("Address is valid\n");
-          loop = addressCheck(address1);
-            //printf("Address is valid 1\n");
-            if(strlen(address2) > 1)
+            if(validate == 0)
             {
-                if(loop == 0)
+                validate = streetCheck(address2);
+                if(validate == 0)
                 {
-                    loop = streetCheck(address2);
-                    //printf("Address is valid 2\n");
-                    if(loop == 0)
+                    validate = laneAndPostal(address3,address4);
+                    if(validate == 1)
                     {
-                        loop = LaneAndPostal(address3,address4);
-                        //printf("Address is valid 3\n");
-                        if(loop != 0)
-                        {
-                            printf("invalid\n");
-                        }
-                        else
-                        {
-                            if(strcmp(address5,"") == 0)
-                            {
-                                printf("valid\n");
-                            }
-                            else
-                            {
-                                printf("invalid\n");
-                            }
-                        }
+                        printf("\tInvalid\n");
                     }
                     else
                     {
-                    printf("invalid\n");
+                        if(strcmp(address5,"")==1)
+                        {
+                            validate = 0;
+                            printf("\tValid\n");
+                        }
+                        else
+                        {
+                            printf("\tInvalid\n");
+                        }
                     }
                 }
                 else
                 {
-                    printf("invalid\n");
+                printf("\tInvalid - street number\n");
                 }
             }
             else
             {
-                printf("Invalid : please add more detail \n");
+                printf("\tInvalid - house number\n");
             }
         }
         else
         {
-            printf("Invalid Address\n");
+            /*printf("\t\t%s\n",address1);
+            printf("\t\t%s\n",address2);
+            printf("\t\t%s\n",address3);
+            printf("\t\t%s\n",address4);*/
+            printf("\tInvalid - please add more detail \n");
         }
-
     }
-
+    else
+    {
+        printf("\tInvalid Address\n");
+    }
+    
+    return validate;
 }
 
-*/
-
-
+/*=========================== bankAccount validation ===========================*/
 
 /*********************************************************************************
  * CheckDashs

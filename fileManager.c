@@ -192,7 +192,7 @@ int init()
 	return status;
 }
 
-/* this function will savw all file return 1 if done else return 0 */
+/* this function will save all file return 1 if done else return 0 */
 int saveAllDatas(USER_T* user, PRODUCT_T* product, HISTORY_T* history)
 {
 	int status = 0;

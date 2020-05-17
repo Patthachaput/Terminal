@@ -9,7 +9,7 @@
  *          Supakorn Srisawas           (Field)     62070503464
  *          Narapathra Morakrant        (Foremost)  62070503464
  */
-
+#ifndef mainAuction_h
 
 int TOTALUSER;
 int TOTALPRODUCT;
@@ -149,3 +149,5 @@ HISTORY_T* getHistory();
 int allFilesExist(); /* local function */
 
 int saveAllDatas(USER_T* user, PRODUCT_T* product, HISTORY_T* history);
+
+#endif

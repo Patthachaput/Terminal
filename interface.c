@@ -20,7 +20,6 @@
 #include <time.h>
 
 #include "validate.h"
-#include "mainAuction.h"
 #include "dataBuilder.h"
 
 #define NLOGIN 0
@@ -67,13 +66,15 @@ int logInMenu()
     return choice;
 }
 
-int login()
+int loginInput()
 {
     char buffer[64];
     char email[64];
     char password[64];
     int len = 0;
     int validate = 0;
+    USER_T* bufferUser;
+    
     
     do
     {
@@ -87,30 +88,45 @@ int login()
         
         if ((strcmp(email,"\0")==1)&&(strcmp(password,"\0")==1))
         {
-            validate = -1;
+            loginStatus = NLOGIN;
             break;
         }
         
-        //validate = checkUser(email,password);
-        
-        validate = 1; /* we will assume that we log in now */
-        
+        validate = validateEmail(email);
         if(validate == 1)
         {
-            loginStatus = LOGIN;
-            printf("Successful login!\n\n");
-            break;
-        }
-        else
-        {
-            printf("Incorrect email or password! please try again\n");
+            bufferUser = searchUserByEmail(email);
+            
+            if(strcmp(bufferUser->password,password)==0)
+            {
+                loginStatus = LOGIN;
+                loginUser = bufferUser;
+                printf("Successful login!\n\n");
+                break;
+            }
+            else
+            {
+                loginUser = NULL;
+                printf("Incorrect email or password! please try again\n");
+            }
+
         }
         
-    }while (validate != 1);
+    }while (loginStatus != 1);
     
+    /*
+    printf("=========== Personal Info =========\n\n");
+    printf("\t Email: %s\n",loginUser->email);
+    printf("\t Password: %s\n",loginUser->password);
+    printf("\t Full name (No title): %s\n",loginUser->name);
+    printf("\t Address: %s\n",loginUser->address);
+    printf("\t Phone Number (Thai): %s\n",loginUser->phoneNumber);
+    printf("\t Bank Account: %s\n",loginUser->bankAccNumber);
     printf("\n");
-    
-    return validate;
+    printf("===================================\n\n");
+    printf("\n");
+    */
+    return loginStatus;
 }
 
 int registration()
@@ -128,14 +144,33 @@ int registration()
     do
     {
         printf("Please enter your information\n");
-        printf("Email: ");
-        fgets(buffer,sizeof(buffer),stdin);
-        sscanf(buffer,"%s", email);
-        strcpy(newUser.email,email);
+
+        do
+        {
+            printf("\n");
+            memset(email,0, sizeof(email));
+            printf("Email: ");
+            fgets(buffer,sizeof(buffer),stdin);
+            sscanf(buffer,"%s", email);
+            validate = validateEmail(email);
+            if(validate == 1)
+            {
+                strcpy(newUser.email,email);
+                break;
+            }
+        }while (validate != 1);
     
         do
         {
+            printf("\n");
             memset(password,0, sizeof(password));
+            printf("Please enter password following to these rules\n");
+            printf("- At least 8 characters long and no longer than 12 characters\n");
+            printf("- MUST contain at least one upper case letter\n");
+            printf("- MUST contain at least one lower case letter\n");
+            printf("- MUST contain at least two digits\n");
+            printf("- MUST contain at least one of the following special characters: ? @ % $ #\n");
+            printf("- MUST not contain any other special characters not in the list above\n");
             printf("Password: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", password);
@@ -149,23 +184,42 @@ int registration()
         
         do
         {
+            printf("\n");
             memset(name,0, sizeof(name));
             printf("Full name (No title): ");
             fgets(name,sizeof(name),stdin);
             validate = validateName(name);
             if(validate == 1)
             {
+                printf("\t\t%s\n",name);
                 strcpy(newUser.name,name);
                 break;
             }
         }while (validate != 1);
-            
-        printf("Address: ");
-        fgets(buffer,sizeof(buffer),stdin);
-        sscanf(buffer,"%s", address);
         
         do
         {
+            printf("\n");
+            memset(address,0, sizeof(address));
+            printf("Please enter address following to these rules\n");
+            printf("- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
+            printf("but must have at least one digit before and one digit after the slash.\n");
+            printf("- Next a street name which can include numbers as well as letters\n");
+            printf("- Next an optional label “Road”, “Street” or “Lane”\n");
+            printf("- a postal code must be five digits and which must begin with “10”\n");
+            printf("Address (Bangkok): ");
+            fgets(address,sizeof(address),stdin);
+            validate = validateAddress(address);
+            if(validate == 1)
+            {
+                strcpy(newUser.address,address);
+                break;
+            }
+        }while (validate != 1);
+        
+        do
+        {
+            printf("\n");
             memset(phoneNumber,0, sizeof(phoneNumber));
             printf("Phone Number (Thai): ");
             fgets(buffer,sizeof(buffer),stdin);
@@ -180,6 +234,7 @@ int registration()
         
         do
         {
+            printf("\n");
             memset(bankAccNumber,0, sizeof(bankAccNumber));
             printf("Bank Account: ");
             fgets(buffer,sizeof(buffer),stdin);
@@ -194,6 +249,7 @@ int registration()
         
         if(validate == 1)
         {
+            printf("\n");
             insertUser(newUser);
             printf("\nThis your information\n");
             printf("\tEmail: %s\n",email);
@@ -403,7 +459,7 @@ int createAuction()
         
         if(validate == 1)
         {
-            insertProduct(newProduct);
+            insertProduct(newProduct,loginUser);
             printf("\nThis is your product information\n");
             printf("\tName: %s\n",name);
             printf("\tDescription: %s\n",description);
@@ -423,20 +479,14 @@ int personalInfo()
 {
     char buffer[32];
     int choice = 0;
-    char email[64];
-    char password[64];
-    char name[64];
-    char address[64];
-    char phoneNumber[64];
-    char bankAccNumber[64];
     
     printf("=========== Personal Info =========\n\n");
-    printf("\t1. Email: %s\n",email);
-    printf("\t2. Password: %s\n",password);
-    printf("\t3. Full name (No title): %s\n",name);
-    printf("\t4. Address: %s\n",address);
-    printf("\t5. Phone Number (Thai): %s\n",phoneNumber);
-    printf("\t6. Bank Account: %s\n",bankAccNumber);
+    printf("\t1. Email: %s\n",loginUser->email);
+    printf("\t2. Password: %s\n",loginUser->password);
+    printf("\t3. Full name (No title): %s\n",loginUser->name);
+    printf("\t4. Address: %s\n",loginUser->address);
+    printf("\t5. Phone Number (Thai): %s\n",loginUser->phoneNumber);
+    printf("\t6. Bank Account: %s\n",loginUser->bankAccNumber);
     printf("\t7. Back to homepage\n");
     printf("\n");
     printf("===================================\n\n");
@@ -461,6 +511,134 @@ int personalInfo()
            
     return choice;
 
+}
+
+int editInfo(int choice)
+{
+    char buffer[64];
+    char email[64];
+    char password[64];
+    char name[64];
+    char address[64];
+    char phoneNumber[64];
+    char bankAccNumber[64];
+    int validate = 0;
+    
+    switch (choice) {
+        case 1:
+            do
+            {
+                printf("\n");
+                memset(email,0, sizeof(email));
+                printf("Email: ");
+                fgets(buffer,sizeof(buffer),stdin);
+                sscanf(buffer,"%s", email);
+                validate = validateEmail(email);
+                if(validate == 1)
+                {
+                    strcpy(loginUser->email,email);
+                    break;
+                }
+            }while (validate != 1);
+            break;
+        case 2:
+            do
+            {
+                printf("\n");
+                memset(password,0, sizeof(password));
+                printf("Please enter password following to these rules\n");
+                printf("- At least 8 characters long and no longer than 12 characters\n");
+                printf("- MUST contain at least one upper case letter\n");
+                printf("- MUST contain at least one lower case letter\n");
+                printf("- MUST contain at least two digits\n");
+                printf("- MUST contain at least one of the following special characters: ? @ % $ #\n");
+                printf("- MUST not contain any other special characters not in the list above\n");
+                printf("Password: ");
+                fgets(buffer,sizeof(buffer),stdin);
+                sscanf(buffer,"%s", password);
+                validate = validatePassword(password);
+                if(validate == 1)
+                {
+                    strcpy(loginUser->password,password);
+                    break;
+                }
+            }while (validate != 1);
+            break;
+        case 3:
+            do
+            {
+                printf("\n");
+                memset(name,0, sizeof(name));
+                printf("Full name (No title): ");
+                fgets(name,sizeof(name),stdin);
+                validate = validateName(name);
+                if(validate == 1)
+                {
+                    printf("\t\t%s\n",name);
+                    strcpy(loginUser->name,name);
+                    break;
+                }
+            }while (validate != 1);
+            break;
+        case 4:
+            do
+            {
+                printf("\n");
+                memset(address,0, sizeof(address));
+                printf("Please enter address following to these rules\n");
+                printf("- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
+                printf("but must have at least one digit before and one digit after the slash.\n");
+                printf("- Next a street name which can include numbers as well as letters\n");
+                printf("- Next an optional label “Road”, “Street” or “Lane”\n");
+                printf("- a postal code must be five digits and which must begin with “10”\n");
+                printf("Address (Bangkok): ");
+                fgets(address,sizeof(address),stdin);
+                validate = validateAddress(address);
+                if(validate == 1)
+                {
+                    strcpy(loginUser->address,address);
+                    break;
+                }
+            }while (validate != 1);
+            break;
+        case 5:
+            do
+            {
+                printf("\n");
+                memset(phoneNumber,0, sizeof(phoneNumber));
+                printf("Phone Number (Thai): ");
+                fgets(buffer,sizeof(buffer),stdin);
+                sscanf(buffer,"%s", phoneNumber);
+                validate = validatePhoneNumThai(phoneNumber,buffer);
+                if(validate == 1)
+                {
+                    strcpy(loginUser->phoneNumber,phoneNumber);
+                    break;
+                }
+            }while (validate != 1);
+            break;
+        case 6:
+            do
+            {
+                printf("\n");
+                memset(bankAccNumber,0, sizeof(bankAccNumber));
+                printf("Bank Account: ");
+                fgets(buffer,sizeof(buffer),stdin);
+                sscanf(buffer,"%s", bankAccNumber);
+                validate = validateBankAcc(bankAccNumber,buffer);
+                if(validate == 1)
+                {
+                    strcpy(loginUser->bankAccNumber,bankAccNumber);
+                    break;
+                }
+            }while (validate != 1);
+            break;
+        default:
+            break;
+
+    }
+    
+    return 0;
 }
 
 int homePage()
@@ -504,12 +682,7 @@ int main()
 {
     int choice = 0;
     
-    if(init()==0)
-    {
-        printf("Initial process failed\n");
-        exit(1);
-    }
-    buildData();
+    buildData();   /* build data structure by reading data in the file */
     
     do
     {
@@ -517,7 +690,7 @@ int main()
         
         if (choice == 1)
         {
-            choice = login();
+            choice = loginInput();
             do
             {
                 if(choice == LOGIN)
@@ -545,7 +718,8 @@ int main()
                             }
                             break;
                         case 5:
-                            personalInfo();
+                            choice = personalInfo();
+                            editInfo(choice);
                             choice = 1;
                             break;
                         default:

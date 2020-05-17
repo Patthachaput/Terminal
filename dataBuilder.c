@@ -6,35 +6,9 @@
  */
 
 #include "dataBuilder.h"
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
-/*this structure sort by price*/
-typedef struct{
-    double price;
-    PRODUCT_T* pProduct;
-}PRODUCT_PRICE;
-
-/*this structure sort by date time*/
-typedef struct{
-    DATE_T date;
-    PRODUCT_T* pProduct;
-}PRODUCT_DATE;
-
-/*keep product in category*/
-typedef struct {
-    PRODUCT_PRICE * minBidSort;
-    PRODUCT_PRICE * finalPricesort;
-    PRODUCT_DATE * openDateSort;
-    PRODUCT_DATE * closeDateSort;
-
-    /*counter for 4 sorts*/
-    int minBidCount;
-    int finalPriceCount;
-    int openDateCount;
-    int closeDateCount;
-}PRODUCT_IN_CAT;
 
 USER_T * users_by_id; /*keep entire users sort by id*/
 USER_T * users_by_email; /*keep entire users sort by email*/
@@ -156,7 +130,7 @@ int buildData()
     	insertUserSortByEmail(users_by_id[i]);
     }
 
-   
+   return 0;
 }
 
 /* insert users into data structure
@@ -199,6 +173,8 @@ int insertUser(USER_T user)
     insertUserSortByEmail(user);
     writeUser(users_by_id);
     writeHistory(histories);
+    
+    return 0;
 }
 
 /* insert users into data structure sort by name
@@ -213,6 +189,8 @@ int insertUserSortByEmail(USER_T user)
     	users_by_email[i+1] = users_by_email[i];
     }
     users_by_email[i+1] = user;
+    
+    return 0;
 }
 
 /* serch for users by email 
@@ -223,29 +201,29 @@ int insertUserSortByEmail(USER_T user)
  */
 USER_T * searchUserByEmail(char* email)
 {
-	int l = 0; /*lowest*/
-	int h = TOTALUSER+ADDNEWUSER-1; /*heighest*/
-	int m = h/2; /*middle*/
-	USER_T *u = NULL;
+	int lowest = 0;
+	int highest = TOTALUSER+ADDNEWUSER-1;
+	int middle = highest/2;
+	USER_T *user = NULL;
 	
-	while(l <= h)
+	while(lowest <= highest)
 	{
-		if(strcmp(users_by_email[m].email,email)<0)
+		if(strcmp(users_by_email[middle].email,email)<0)
 		{
-			l = m +1;
+			lowest = middle +1;
 
 		}
-		else if(strcmp(users_by_email[m].email,email)==0)
+		else if(strcmp(users_by_email[middle].email,email)==0)
 		{
-			u = &users_by_email[m];
-			return u;
+			user = &users_by_email[middle];
+			return user;
 		}
 		else 
 		{
-			h = m -1;
+			highest = middle -1;
 		}
 
-		m = (l+h)/2;
+		middle = (lowest+highest)/2;
 
 	}
 	return NULL;
@@ -312,6 +290,7 @@ int insertProduct(PRODUCT_T product, USER_T * user)
 	
 	writeProduct(products);
 
+    return 0;
 }	
 
 /* insert sale aucion into history
@@ -325,6 +304,8 @@ int insertSaleAuctionSort(int id, USER_T* user)
 		histories[user->idUser - 1].sealAuction[i+1] = histories[user->idUser - 1].sealAuction[i];
 	}
 	histories[user->idUser - 1].sealAuction[i+1] = id;
+    
+    return 0;
 }
 
 
@@ -341,6 +322,8 @@ int insertMinbidSort(PRODUCT_T* product)
     product_in_cat[product->category].minBidSort[i+1].pProduct = product;
     product_in_cat[product->category].minBidSort[i+1].price = product->minbid;
     product_in_cat[product->category].minBidCount++;
+    
+    return 0;
 }
 
 /* insert product for searching by final price.
@@ -357,6 +340,7 @@ int insertfinalPriceSort(PRODUCT_T* product)
     product_in_cat[product->category].finalPricesort[i+1].price = product->finalPrice;
     product_in_cat[product->category].finalPriceCount++;
 
+    return 0;
 }
 
 /* insert product for searching by open date.
@@ -382,7 +366,9 @@ int insertOpenDateSort(PRODUCT_T* product)
     }
     product_in_cat[product->category].openDateSort[i+1].pProduct = product;
     product_in_cat[product->category].openDateSort[i+1].date = product->dateOpen;
-    product_in_cat[product->category].openDateCount++;	
+    product_in_cat[product->category].openDateCount++;
+    
+    return 0;
 }
 
 /* insert product for searching by close date. 
@@ -409,6 +395,8 @@ int insertCloseDateSort(PRODUCT_T* product)
     product_in_cat[product->category].closeDateSort[i+1].pProduct = product;
     product_in_cat[product->category].closeDateSort[i+1].date = product->dateClose;
     product_in_cat[product->category].closeDateCount++;	
+    
+    return 0;
 }
 
 /* searching for product by product id
@@ -712,6 +700,8 @@ int insertProductBidSort(int id, USER_T* user)
 		histories[user->idUser - 1].productBid[i+1] = histories[user->idUser - 1].productBid[i];
 	}
 	histories[user->idUser - 1].productBid[i+1] = id;
+    
+    return 0;
 }
 
 /* search for product bid using binary search
@@ -873,6 +863,8 @@ int showProductByCat(int cat)
         printf("Now price: %.2f \n\n",lProduct[i]->nowPrice );
         */
     }
+    
+    return 0;
 }
 
 /*close program and write all file into data
@@ -902,4 +894,6 @@ int closeProgram()
     	free(histories[i].sealAuction);
     }
     free(histories);
+    
+    return 0;
 }
