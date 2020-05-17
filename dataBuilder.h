@@ -173,7 +173,7 @@ int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double pric
 int closeProgram();
 
 /* This function display all products in lists*/
-int showProductByCat(int cat);
+int showProductByCat(int cat,DATE_T currentDate);
 
 /* Compares two dates. Returns 1 if the 
  * first date is later than the second, -1 if the 

@@ -1,5 +1,5 @@
 /**
-  *  dataBuilder.h
+  *  dataBuilder.c
   *
   *  This file build data structure for
   *  entire project
@@ -285,8 +285,8 @@ int insertProduct(PRODUCT_T product, USER_T * user)
    	insertMinbidSort(p);
     insertfinalPriceSort(p);
     insertSaleAuctionSort(p->idProduct,user);
-	// insertOpenDateSort(p);
-	// insertCloseDateSort(p);
+	insertOpenDateSort(p);
+	insertCloseDateSort(p);
 	
 	writeProduct(products);
 
@@ -651,11 +651,11 @@ int searchSaleAuction(int id, USER_T* user)
  */
 int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double price)
 {	
-	// if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
-	// 				  product->dateClose.year,product->dateClose.month,product->dateClose.day,product->dateClose.hour,product->dateClose.minute) == 1)
-	// {
-	// 	return -1;
-	// }
+	if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
+	 				  product->dateClose.year,product->dateClose.month,product->dateClose.day,product->dateClose.hour,product->dateClose.minute) == 1)
+    {
+	 	return -1;
+	}
 	if(price < product->minbid)
 	{
 		return -2;
@@ -851,16 +851,17 @@ USER_T* login(char *email, char* password, int* status)
 }
 
 /*This function display all products in lists*/
-int showProductByCat(int cat)
+int showProductByCat(int cat,DATE_T currentDate)
 {    
 	int i;
     for (i = 0; i < totalProductsLocation; i++)
     {
     	/**  ADD YOUR CODE HERE
+        
      	printf("Id: %d\n", lProduct[i]->idProduct);
         printf("Name: %s\n",lProduct[i]->name);
         printf("Minbid %.2f\n", lProduct[i]->minbid);
-        printf("Now price: %.2f \n\n",lProduct[i]->nowPrice );
+        printf("Now price: %.2f \n\n",lProduct[i]->nowPrice);
         */
     }
     

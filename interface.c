@@ -93,7 +93,8 @@ int loginInput()
             break;
         }
         
-        validate = validateEmail(email);
+        //validate = validateEmail(email);
+        validate = 1;
         if(validate == 1)
         {
             bufferUser = searchUserByEmail(email);
@@ -153,7 +154,8 @@ int registration()
             printf("Email: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", email);
-            validate = validateEmail(email);
+            //validate = validateEmail(email);
+            validate = 1;
             if(validate == 1)
             {
                 strcpy(newUser.email,email);
@@ -314,6 +316,9 @@ int browse()
 
 int browseByCatagory()
 {
+    char buffer[32];
+    int choice = 0;
+    
     printf("===================== Browse by catagory ====================\n\n");
     printf("                      1.Home & Garden                        \n");
     printf("                      2.Collectibles                         \n");
@@ -342,8 +347,10 @@ int browseByCatagory()
        
     }while ((choice > 4)||(choice < 1));
     
-    dateTimeToday(currentDate.day,currentDate.month,currentDate.year,currentDate.hour,currentDate.minute);
-    showProductByCat(choice);
+    dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+    showProductByCat(choice,currentDate);
+    
+    return 0;
 }
 
 void bidHistory()
@@ -574,7 +581,8 @@ int editInfo(int choice)
                 printf("Email: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", email);
-                validate = validateEmail(email);
+                //validate = validateEmail(email);
+                validate = 1;
                 if(validate == 1)
                 {
                     strcpy(loginUser->email,email);
@@ -726,7 +734,7 @@ int main()
     buildData();   /* build data structure by reading data in the file */
     
     printf("=============================================================\n\n");
-    printf("                     ONLINE AUCTION PROGRAM                  \n\n")
+    printf("                     ONLINE AUCTION PROGRAM                  \n\n");
     printf("=============================================================\n\n");
     do
     {

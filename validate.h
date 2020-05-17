@@ -90,23 +90,18 @@ int validateName(char nameInput[]);
  */
 int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[]);
 
-/*********************************************************************************
- * Control email function that check email result from the
- * email validation and it will be return 1 if it true.
- * and 0 if it not following the condition.(passing to the
- * validate function in validation.c(source file)
- * created by Natacha Punyathanasub 62070503415
- */
-// int validateEmail(char email[]);
-
-/*********************************************************************************
+/***********************************************************
+ * validateAddress
+ *     - this function validate address
  *
- *
- *
- *
- *  created by Natacha Punyathanasub 62070503415
- */
-// int validateAddress(char address[]);
+ * Argument address - address of user
+ * RETURN -1 - house number fail
+ *           -2 - street name fail
+ *           -3 - optional fail
+ *           -4 - postalCode fail
+ *         1 - if success
+ **/
+int validateAddress(char* address);
 
 /*********************************************************************************
  * CheckDashs
@@ -151,6 +146,14 @@ int checkBankAccLenght(char bankAcc[MAXLEN]);
  *  - return 0 for invalid date and 1 for valid date
  */
 int validateBankAcc(char bankAcc[MAXLEN], char buffer[MAXLEN]);
+
+/*********************************************************************************
+ * dateTimeToday
+ *  - Sets the pointer for day, month, year and
+ *    to the correct values for today.
+ *  created by Narapathra Morakrant 62070503464
+ */
+void dateTimeToday(int* pDay, int *pMonth, int* pYear, int* pHour, int* pMinute);
 
 /*********************************************************************************
  * validateDateTime
