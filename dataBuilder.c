@@ -986,15 +986,29 @@ USER_T* login(char *email, char* password, int* status)
 int showProductByCat(int cat,DATE_T currentDate)
 {    
 	int i;
+    int status = 1;
     for (i = 0; i < totalProductsLocation; i++)
     {
-    	/**  ADD YOUR CODE HERE
+        if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
+        lProduct[i]->dateClose.year,lProduct[i]->dateClose.month,lProduct[i]->dateClose.day,lProduct[i]->dateClose.hour,lProduct[i]->dateClose.minute) == 1)
+        {
+            status = 0;
+        }
         
      	printf("Id: %d\n", lProduct[i]->idProduct);
+        printf("Status: ");
+        if(status == 0)
+        {
+            printf("Auction CLOSED\n");
+        }
+        else
+        {
+            printf("Auction CURRENTLY OPEN\n");
+            printf("Close date: %d/%d/%d %d:%d\n",lProduct[i]->dateClose.day,lProduct[i]->dateClose.month,lProduct[i]->dateClose.year,lProduct[i]->dateClose.hour,lProduct[i]->dateClose.minute);
+        }
         printf("Name: %s\n",lProduct[i]->name);
         printf("Minbid %.2f\n", lProduct[i]->minbid);
-        printf("Now price: %.2f \n\n",lProduct[i]->nowPrice);
-        */
+        printf("Current price: %.2f \n\n",lProduct[i]->nowPrice);
     }
     
     return 0;
