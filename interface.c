@@ -279,41 +279,6 @@ int registration()
     return validate;
 }
 
-int browse()
-{
-    char buffer[32];
-    int choice = 0;
-    
-    printf("============================ Browse ==========================\n\n");
-    printf("                         1.Categories                         \n");
-    printf("                         2.Date                               \n");
-    printf("                         3.Bid Price                          \n");
-    printf("                         4.Back                               \n\n");
-    printf("==============================================================\n\n");
-
-    do
-    {
-        choice = 0;
-        printf("How do you want to browse? ");
-        fgets(buffer,sizeof(buffer),stdin);
-        sscanf(buffer,"%d", &choice);
-       
-        if((choice > 4)||(choice < 1))
-        {
-            printf("Invalid choice! please try again\n\n");
-        }
-        else
-        {
-            break;
-        }
-       
-    }while ((choice > 4)||(choice < 1));
-    
-    printf("\n");
-    
-    return choice;
-}
-
 int browseByCatagory()
 {
     char buffer[32];
@@ -351,6 +316,58 @@ int browseByCatagory()
     showProductByCat(choice,currentDate);
     
     return 0;
+}
+
+int subBrowse(int choice)
+{
+    switch (choice) {
+        case 1:
+            browseByCatagory();
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            break;
+    }
+    
+    return 0;
+}
+
+int browse()
+{
+    char buffer[32];
+    int choice = 0;
+    
+    printf("=========================== Browse ==========================\n\n");
+    printf("                         1.Categories                         \n");
+    printf("                         2.Date                               \n");
+    printf("                         3.Bid Price                          \n");
+    printf("                         4.Back                               \n\n");
+    printf("=============================================================\n\n");
+
+    do
+    {
+        choice = 0;
+        printf("How do you want to browse? ");
+        fgets(buffer,sizeof(buffer),stdin);
+        sscanf(buffer,"%d", &choice);
+       
+        if((choice > 4)||(choice < 1))
+        {
+            printf("Invalid choice! please try again\n\n");
+        }
+        else
+        {
+            break;
+        }
+        
+    }while ((choice > 4)||(choice < 1));
+    
+    printf("\n");
+    
+    return choice;
 }
 
 void bidHistory()
@@ -530,13 +547,13 @@ int personalInfo()
     int choice = 0;
     
     printf("======================== Personal Info ======================\n\n");
-    printf("               1. Email: %s                                  \n",loginUser->email);
-    printf("               2. Password: %s                               \n",loginUser->password);
-    printf("               3. Full name (No title): %s                   \n",loginUser->name);
-    printf("               4. Address: %s                                \n",loginUser->address);
-    printf("               5. Phone Number (Thai): %s                    \n",loginUser->phoneNumber);
-    printf("               6. Bank Account: %s                           \n",loginUser->bankAccNumber);
-    printf("               7. Back to homepage                           \n\n");
+    printf("          1. Email: %s                                  \n",loginUser->email);
+    printf("          2. Password: %s                               \n",loginUser->password);
+    printf("          3. Full name (No title): %s                   \n",loginUser->name);
+    printf("          4. Address: %s                                \n",loginUser->address);
+    printf("          5. Phone Number (Thai): %s                    \n",loginUser->phoneNumber);
+    printf("          6. Bank Account: %s                           \n",loginUser->bankAccNumber);
+    printf("          7. Back to homepage                           \n\n");
     printf("=============================================================\n\n");
    
     do
@@ -733,8 +750,8 @@ int main()
     
     buildData();   /* build data structure by reading data in the file */
     
-    printf("=============================================================\n\n");
-    printf("                     ONLINE AUCTION PROGRAM                  \n\n");
+    printf("=============================================================\n");
+    printf("                     ONLINE AUCTION PROGRAM                  \n");
     printf("=============================================================\n\n");
     do
     {
@@ -750,10 +767,12 @@ int main()
                     choice = homePage();
                     switch (choice) {
                         case 1:
-                            if (browse() == 4)
+                            choice = browse();
+                            if(choice != 4)
                             {
-                                choice = 1;
+                                subBrowse(choice);
                             }
+                            choice = 1;
                             break;
                         case 2:
                             bidHistory();
