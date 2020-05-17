@@ -179,141 +179,141 @@ int checkSymbol(char password[MAXLEN])
     return countSymbol;
 }
 
-// check Email function
-//  *
-//  *
-//  *
-//  * created by Natacha Punyathanasub 62070503415
- 
-// int checkEmail(char email[])
-// {
-//     int i;
-//     int valid=1;
-//     char *after;
-//     char *tld;
+/*check Email function
+ *
+ *
+ *
+ * created by Natacha Punyathanasub 62070503415
+ */
+int checkEmail(char email[])
+{
+    int i;
+    int valid=1;
+    char *after;
+    char *tld;
 
-//     //after variable is use for the @ (at-sign symbol) to cut into the two section
-//     //before-at and after-at by the way after at will be use to correct the tld that is 4-6
-//     //from the last position of input information.
-//     after = strrchr(email,'@');
-//     tld=&after[strlen(after)-6];
+    //after variable is use for the @ (at-sign symbol) to cut into the two section
+    //before-at and after-at by the way after at will be use to correct the tld that is 4-6
+    //from the last position of input information.
+    after = strrchr(email,'@');
+    tld=&after[strlen(after)-6];
 
-//     //check for tld process.
-//     if (strcmp(tld,".ac.th")==0 || strcmp(tld,".co.th")==0 || strcmp(&tld[2],".com")==0 || strcmp(&tld[2],".net")==0)
-//     {
-//         valid=1;
-//     }
-//     else
-//     {
-//         printf("%s",tld);
-//         valid=-6;
-//     }
+    //check for tld process.
+    if (strcmp(tld,".ac.th")==0 || strcmp(tld,".co.th")==0 || strcmp(&tld[2],".com")==0 || strcmp(&tld[2],".net")==0)
+    {
+        valid=1;
+    }
+    else
+    {
+        printf("%s",tld);
+        valid=-6;
+    }
 
-//     for (i=0;i<strlen(after)-1;i++)
-//     {
-//         //check double period.
-//         if(after[i]=='.' && after[i+1]=='.')
-//         {
-//             valid=-7;
-//             break;
-//         }
-//         //check _ in after @ section.
-//         else if(after[i]=='_')
-//         {
-//             valid=-8;
-//             break;
-//         }
-//     }
-//     return valid;
-// }
+    for (i=0;i<strlen(after)-1;i++)
+    {
+        //check double period.
+        if(after[i]=='.' && after[i+1]=='.')
+        {
+            valid=-7;
+            break;
+        }
+        //check _ in after @ section.
+        else if(after[i]=='_')
+        {
+            valid=-8;
+            break;
+        }
+    }
+    return valid;
+}
 
-// /*
-//  * Continue function from Check email This function is
-//  * checking for case of special character in email.
-//  * created by Natacha Punyathanasub 62070503415
-//  */
-// int validEmail(char email[])
-// {
-//     int i;
-//     int at=0;
-//     int valid=0;
+/*
+ * Continue function from Check email This function is
+ * checking for case of special character in email.
+ * created by Natacha Punyathanasub 62070503415
+ */
+int validEmail(char email[])
+{
+    int i;
+    int at=0;
+    int valid=0;
 
-//     for (i=0;i<strlen(email)-1;i++)
-//     {
-//         if (isspace(email[i])!=0)
-//         {
-//             valid=-1;
-//             break;
-//         }
-//         else if (ispunct(email[i]) != 0)
-//         {
-//             if (i == 0)
-//             {
-//                 valid=-2;
-//                 break;
-//             }
-//             else if (email[i]=='.'||email[i]=='_'||email[i]=='-'||email[i]=='/')
-//             {
-//                 valid=0;
-//             }
-//             else if (email[i] =='@')
-//             {
-//                 valid=0;
-//                 at++;
-//                 if (isalpha(email[i-1])==0 && isalpha(email[i+1])==0)
-//                 {
-//                     valid=-3;
-//                     break;
-//                 }
-//             }
-//             else
-//             {
-//                 valid=-4;
-//                 break;
-//             }
-//         }
-//     }
-//     if (valid == 0 && at != 1)
-//     {
-//         valid=-5;
-//     }
-//     if (valid==0)
-//     {
-//         valid=checkEmail(email);
-//     }
+    for (i=0;i<strlen(email)-1;i++)
+    {
+        if (isspace(email[i])!=0)
+        {
+            valid=-1;
+            break;
+        }
+        else if (ispunct(email[i]) != 0)
+        {
+            if (i == 0)
+            {
+                valid=-2;
+                break;
+            }
+            else if (email[i]=='.'||email[i]=='_'||email[i]=='-'||email[i]=='/')
+            {
+                valid=0;
+            }
+            else if (email[i] =='@')
+            {
+                valid=0;
+                at++;
+                if (isalpha(email[i-1])==0 && isalpha(email[i+1])==0)
+                {
+                    valid=-3;
+                    break;
+                }
+            }
+            else
+            {
+                valid=-4;
+                break;
+            }
+        }
+    }
+    if (valid == 0 && at != 1)
+    {
+        valid=-5;
+    }
+    if (valid==0)
+    {
+        valid=checkEmail(email);
+    }
     
-//     return valid;
-// }
+    return valid;
+}
 
-// /* Control email function that check email result from the
-//  * email validation and it will be return 1 if it true.
-//  * and 0 if it not following the condition.(passing to the
-//  * validate function in validation.c(source file)
-//  * created by Natacha Punyathanasub 62070503415
-//  */
-// int validateEmail(char email[])
-// {
-//     int valid;
-//     int emailResult=0;
-//     char input[MAXLEN];
-//     if (strlen(email)<2)
-//     {
-//         exit(0);
-//     }
-//     valid=validEmail(email);
-//     if (valid==1)
-//     {
-//         printf("\tValid\n");
-//         emailResult = 1;
-//     }
-//     else
-//     {
-//         printf("\tInvalid\n");
-//         emailResult = 0;
-//     }
+/* Control email function that check email result from the
+ * email validation and it will be return 1 if it true.
+ * and 0 if it not following the condition.(passing to the
+ * validate function in validation.c(source file)
+ * created by Natacha Punyathanasub 62070503415
+ */
+int validateEmail(char email[])
+{
+    int valid;
+    int emailResult=0;
+    char input[MAXLEN];
+    if (strlen(email)<2)
+    {
+        return emailResult;
+    }
+    valid=validEmail(email);
+    if (valid==1)
+    {
+        printf("\tValid\n");
+        emailResult = 1;
+    }
+    else
+    {
+        printf("\tInvalid\n");
+        emailResult = 0;
+    }
     
-//     return emailResult;
-// }
+    return emailResult;
+}
 
 /**********************************************************************************
  * validatePassword.
@@ -444,6 +444,7 @@ int validateName(char nameInput[])
         else
         {
             printf("\tValid\n");
+            nameInput[countFirstName] = ' ';
             return 1;
         }
     }
