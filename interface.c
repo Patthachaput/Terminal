@@ -8,7 +8,7 @@
  *  Project CPE111 Data structure - TEAM TERMINAL
  *  Member: Natacha Punyathanasub       (Nut)       62070503415
  *          Patthachaput Thanesmaneerat (Jui)       62070503432
- *          Supakorn Srisawas           (Field)     62070503464
+ *          Supakorn Srisawas           (Field)     62070503449
  *          Narapathra Morakrant        (Foremost)  62070503464
  */
 
@@ -29,18 +29,19 @@
 
 int loginStatus = 0; /* 0 for not log in, 1 for login with account, 2 for guest */
 USER_T* loginUser;
+DATE_T currentDate;
 
 int logInMenu()
 {
     char buffer[32];
     int choice = 0;
     
-    printf("=============== Login =============\n\n");
-    printf("           1.Log in                \n");
-    printf("           2.Log in as guest       \n");
-    printf("           3.Register              \n");
-    printf("           4.Exit program          \n\n");
-    printf("===================================\n\n");
+    printf("============================ Login ==========================\n\n");
+    printf("                        1.Log in                             \n");
+    printf("                        2.Log in as guest                    \n");
+    printf("                        3.Register                           \n");
+    printf("                        4.Exit program                       \n\n");
+    printf("=============================================================\n\n");
 
     do
     {
@@ -169,7 +170,7 @@ int registration()
             printf("- MUST contain at least one upper case letter\n");
             printf("- MUST contain at least one lower case letter\n");
             printf("- MUST contain at least two digits\n");
-            printf("- MUST contain at least one of the following special characters: ? @ % $ #\n");
+            printf("- MUST contain at least one of the following special characters: ? @ %% $ #\n");
             printf("- MUST not contain any other special characters not in the list above\n");
             printf("Password: ");
             fgets(buffer,sizeof(buffer),stdin);
@@ -250,16 +251,23 @@ int registration()
         if(validate == 1)
         {
             printf("\n");
-            insertUser(newUser);
-            printf("\nThis your information\n");
-            printf("\tEmail: %s\n",email);
-            printf("\tPassword: %s\n",password);
-            printf("\tFull name (No title): %s\n",name);
-            printf("\tAddress: %s\n",address);
-            printf("\tPhone Number (Thai): %s\n",phoneNumber);
-            printf("\tBank Account: %s\n",bankAccNumber);
-            printf("Successful registered!\n\n");
-            break;
+            if(registerNewUser(newUser) == 0)
+            {
+                printf("The user with this email is already exist\n");
+                printf("Please try again\n");
+            }
+            else
+            {
+                printf("\nThis your information\n");
+                printf("\tEmail: %s\n",email);
+                printf("\tPassword: %s\n",password);
+                printf("\tFull name (No title): %s\n",name);
+                printf("\tAddress: %s\n",address);
+                printf("\tPhone Number (Thai): %s\n",phoneNumber);
+                printf("\tBank Account: %s\n",bankAccNumber);
+                printf("Successful registered!\n\n");
+                break;
+            }
         }
         
     }while (validate != 1);
@@ -274,13 +282,13 @@ int browse()
     char buffer[32];
     int choice = 0;
     
-    printf("=============== Browse ============\n\n");
-    printf("           1.Categories            \n");
-    printf("           2.Date                  \n");
-    printf("           3.Bid Price             \n");
-    printf("           4.Back                  \n\n");
-    printf("===================================\n\n");
-    
+    printf("============================ Browse ==========================\n\n");
+    printf("                         1.Categories                         \n");
+    printf("                         2.Date                               \n");
+    printf("                         3.Bid Price                          \n");
+    printf("                         4.Back                               \n\n");
+    printf("==============================================================\n\n");
+
     do
     {
         choice = 0;
@@ -302,6 +310,40 @@ int browse()
     printf("\n");
     
     return choice;
+}
+
+int browseByCatagory()
+{
+    printf("===================== Browse by catagory ====================\n\n");
+    printf("                      1.Home & Garden                        \n");
+    printf("                      2.Collectibles                         \n");
+    printf("                      3.Sport                                \n");
+    printf("                      4.Electronic                           \n");
+    printf("                      5.Fashion                              \n");
+    printf("                      6.Health & Beauty                      \n");
+    printf("                      7.Motor                                \n\n");
+    printf("=============================================================\n\n");
+    
+    do
+    {
+        choice = 0;
+        printf("Choose your category to browse : ");
+        fgets(buffer,sizeof(buffer),stdin);
+        sscanf(buffer,"%d", &choice);
+       
+        if((choice > 7)||(choice < 1))
+        {
+            printf("Invalid choice! please try again\n\n");
+        }
+        else
+        {
+            break;
+        }
+       
+    }while ((choice > 4)||(choice < 1));
+    
+    dateTimeToday(currentDate.day,currentDate.month,currentDate.year,currentDate.hour,currentDate.minute);
+    showProductByCat(choice);
 }
 
 void bidHistory()
@@ -480,17 +522,16 @@ int personalInfo()
     char buffer[32];
     int choice = 0;
     
-    printf("=========== Personal Info =========\n\n");
-    printf("\t1. Email: %s\n",loginUser->email);
-    printf("\t2. Password: %s\n",loginUser->password);
-    printf("\t3. Full name (No title): %s\n",loginUser->name);
-    printf("\t4. Address: %s\n",loginUser->address);
-    printf("\t5. Phone Number (Thai): %s\n",loginUser->phoneNumber);
-    printf("\t6. Bank Account: %s\n",loginUser->bankAccNumber);
-    printf("\t7. Back to homepage\n");
-    printf("\n");
-    printf("===================================\n\n");
-    
+    printf("======================== Personal Info ======================\n\n");
+    printf("               1. Email: %s                                  \n",loginUser->email);
+    printf("               2. Password: %s                               \n",loginUser->password);
+    printf("               3. Full name (No title): %s                   \n",loginUser->name);
+    printf("               4. Address: %s                                \n",loginUser->address);
+    printf("               5. Phone Number (Thai): %s                    \n",loginUser->phoneNumber);
+    printf("               6. Bank Account: %s                           \n",loginUser->bankAccNumber);
+    printf("               7. Back to homepage                           \n\n");
+    printf("=============================================================\n\n");
+   
     do
     {
         choice = 0;
@@ -551,7 +592,7 @@ int editInfo(int choice)
                 printf("- MUST contain at least one upper case letter\n");
                 printf("- MUST contain at least one lower case letter\n");
                 printf("- MUST contain at least two digits\n");
-                printf("- MUST contain at least one of the following special characters: ? @ % $ #\n");
+                printf("- MUST contain at least one of the following special characters: ? @ %% $ #\n");
                 printf("- MUST not contain any other special characters not in the list above\n");
                 printf("Password: ");
                 fgets(buffer,sizeof(buffer),stdin);
@@ -646,19 +687,19 @@ int homePage()
     char buffer[32];
     int choice = 0;
 
-    printf("============== Homepage ===========\n\n");
-    printf("           1.Browse                \n");
-    printf("           2.Bid history           \n");
-    printf("           3.Sale history          \n");
-    printf("           4.Create new auction    \n");
-    printf("           5.Edit personal info    \n");
-    printf("           6.Log out               \n\n");
-    printf("===================================\n\n");
-
+    printf("========================== Homepage =========================\n\n");
+    printf("                       1.Browse                              \n");
+    printf("                       2.Bid history                         \n");
+    printf("                       3.Sale history                        \n");
+    printf("                       4.Create new auction                  \n");
+    printf("                       5.Edit personal info                  \n");
+    printf("                       6.Log out                             \n\n");
+    printf("=============================================================\n\n");
+    
     do
     {
         choice = 0;
-        printf("How do you want to login? ");
+        printf("What do you want to do? ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
         
@@ -684,6 +725,9 @@ int main()
     
     buildData();   /* build data structure by reading data in the file */
     
+    printf("=============================================================\n\n");
+    printf("                     ONLINE AUCTION PROGRAM                  \n\n")
+    printf("=============================================================\n\n");
     do
     {
         choice = logInMenu();
@@ -738,7 +782,7 @@ int main()
         }
         else
         {
-            //writProduct(product);
+            closeProgram();
             break;
         }
         
