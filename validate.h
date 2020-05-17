@@ -97,7 +97,7 @@ int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[]);
  * validate function in validation.c(source file)
  * created by Natacha Punyathanasub 62070503415
  */
-int validateEmail(char email[]);
+// int validateEmail(char email[]);
 
 /*********************************************************************************
  *
@@ -106,7 +106,7 @@ int validateEmail(char email[]);
  *
  *  created by Natacha Punyathanasub 62070503415
  */
-int validateAddress(char address[]);
+// int validateAddress(char address[]);
 
 /*********************************************************************************
  * CheckDashs
@@ -161,5 +161,19 @@ int validateBankAcc(char bankAcc[MAXLEN], char buffer[MAXLEN]);
  * created by Narapathra Morakrant 62070503464
  */
 int validateDateTime(char input[MAXLEN]);
+
+
+/***********************************************************
+ * validateAddress
+ * 	- this function validate address
+ *
+ * Argument address - address of user
+ * RETURN -1 - house number fail
+ * 		  -2 - street name fail
+ * 		  -3 - optional fail
+ * 		  -4 - postalCode fail 
+ *  	   1 - if success
+ **/
+int validateAddress(char* address);
 
 #endif /* validate_h */
