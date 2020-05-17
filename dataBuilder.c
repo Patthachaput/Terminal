@@ -421,188 +421,320 @@ PRODUCT_T* searchProductById(int id)
  * using binary search
  *
  * Arguments cat - category of product
- * 			 bid - amount of bid price 
- * 			 
- * Return  PRODUCT_T* - in case found
- * 		   NULL - in case not found 
+ *           bid - amount of bid price 
+ *           
+ * Return NULL - in case not found 
  */
-PRODUCT_T* searchByMinbid(int cat, double bid)
+PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate)
 {
-	int l = 0; /*lowest*/
-	int h = product_in_cat[cat].minBidCount-1; /*heighest*/
-	int m = h/2; /*middle*/
-	PRODUCT_T *p = NULL;
-	
-	while(l <= h)
-	{
-		if(product_in_cat[cat].minBidSort[m].price < bid)
-		{
-			l = m +1;
-		}
-		else if(product_in_cat[cat].minBidSort[m].price == bid)
-		{
-			p = product_in_cat[cat].minBidSort[m].pProduct;
-			return p;
-		}
-		else 
-		{
-			h = m -1;
-		}
+    int l = 0; /*lowest*/
+    int i; /*counter*/
+    int h = product_in_cat[cat].minBidCount-1; /*heighest*/
+    int m = h/2; /*middle*/
+    PRODUCT_T *p = NULL;
+    
+    while(l <= h)
+    {
+        if(product_in_cat[cat].minBidSort[m].price < bid)
+        {
+            l = m +1;
+        }
+        else if(product_in_cat[cat].minBidSort[m].price == bid)
+        {
+            for(i=m;i>=0;i--)
+            {
+                if(product_in_cat[cat].minBidSort[i].price == bid)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i=-1;
+                }
 
-		m = (l+h)/2;
+            }
+            for(i=m+1;i<product_in_cat[cat].minBidCount;i++)
+            {
+                if(product_in_cat[cat].minBidSort[i].price == bid)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i= product_in_cat[cat].minBidCount;
+                }
+            }
 
-	}
-	return NULL;
+            // p = product_in_cat[cat].minBidSort[m].pProduct;
+            // return p;
+        }
+        else 
+        {
+            h = m -1;
+        }
+
+        m = (l+h)/2;
+
+    }
+    return NULL;
 }
 
 /* searching for product by final price
  * using binary search
  *
  * Arguments cat - category of product
- * 			 bid - amount of bid price 
- * 	
- * Return  PRODUCT_T - in case found
- * 		   NULL - in case not found 
+ *           bid - amount of bid price 
+ *  
+ * Return  NULL - in case not found
  */
-PRODUCT_T* searchByFinalPrice(int cat, double bid)
+PRODUCT_T* searchByFinalPrice(int cat, double bid, DATE_T currentDate)
 {
-	int l = 0; /*lowest*/
-	int h = product_in_cat[cat].finalPriceCount-1; /*heighest*/
-	int m = h/2; /*middle*/
-	PRODUCT_T *p = NULL;
-	
-	while(l <= h)
-	{
-		if(product_in_cat[cat].finalPricesort[m].price < bid)
-		{
-			l = m +1;
-		}
-		else if(product_in_cat[cat].finalPricesort[m].price == bid)
-		{
-			p = product_in_cat[cat].finalPricesort[m].pProduct;
-			return p;
-		}
-		else 
-		{
-			h = m -1;
-		}
+    int l = 0; /*lowest*/
+    int i; /*counter*/
+    int h = product_in_cat[cat].finalPriceCount-1; /*heighest*/
+    int m = h/2; /*middle*/
+    PRODUCT_T *p = NULL;
+    
+    while(l <= h)
+    {
+        if(product_in_cat[cat].finalPricesort[m].price < bid)
+        {
+            l = m +1;
+        }
+        else if(product_in_cat[cat].finalPricesort[m].price == bid)
+        {
+            for(i=m;i>=0;i--)
+            {
+                if(product_in_cat[cat].finalPricesort[i].price == bid)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i=-1;
+                }
 
-		m = (l+h)/2;
+            }
+            for(i=m+1;i<product_in_cat[cat].finalPriceCount;i++)
+            {
+                if(product_in_cat[cat].finalPricesort[i].price == bid)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i= product_in_cat[cat].finalPriceCount;
+                }
+            }
+            // p = product_in_cat[cat].finalPricesort[m].pProduct;
+            // return p;
+        }
+        else 
+        {
+            h = m -1;
+        }
 
-	}
-	return NULL;
+        m = (l+h)/2;
+
+    }
+    return NULL;
 }
 
 /* searching for product by close date
  * using binary search
  *
  * Arguments cat - category of product
- * 			 bid - amount of bid price 
- * 	
- * Return  PRODUCT_T - in case found
- * 		   NULL - in case not found 
+ *           bid - amount of bid price 
+ *  
+ * Return  NULL - in case not found 
  */
-PRODUCT_T* searchByCloseDate(int cat, DATE_T date)
+PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
 {
-	int l = 0; /*lowest*/
-	int h = product_in_cat[cat].closeDateCount -1; /*heighest*/
-	int m = h/2; /*middle*/
-	PRODUCT_T *p = NULL;
-	
-	while(l <= h)
-	{
-		if(bidTimeCompare(product_in_cat[cat].closeDateSort[m].date.year,
-    							product_in_cat[cat].closeDateSort[m].date.month,
-    							product_in_cat[cat].closeDateSort[m].date.day,
-    							product_in_cat[cat].closeDateSort[m].date.hour,
-    							product_in_cat[cat].closeDateSort[m].date.minute,
-    							date.year,
-    							date.month,
-    							date.day,
-    							date.hour,
-    							date.minute) < 0)
-		{
-			l = m +1;
-		}
-		else if(bidTimeCompare(product_in_cat[cat].closeDateSort[m].date.year,
-    							product_in_cat[cat].closeDateSort[m].date.month,
-    							product_in_cat[cat].closeDateSort[m].date.day,
-    							product_in_cat[cat].closeDateSort[m].date.hour,
-    							product_in_cat[cat].closeDateSort[m].date.minute,
-    							date.year,
-    							date.month,
-    							date.day,
-    							date.hour,
-    							date.minute) == 0)
-		{
-			p = product_in_cat[cat].closeDateSort[m].pProduct;
-			return p;
-		}
-		else 
-		{
-			h = m -1;
-		}
+    int l = 0; /*lowest*/
+    int h = product_in_cat[cat].closeDateCount -1; /*heighest*/
+    int m = h/2; /*middle*/
+    int i;/*counter*/
 
-		m = (l+h)/2;
+    PRODUCT_T *p = NULL;
+    
+    while(l <= h)
+    {
+        if(bidTimeCompare(product_in_cat[cat].closeDateSort[m].date.year,
+                                product_in_cat[cat].closeDateSort[m].date.month,
+                                product_in_cat[cat].closeDateSort[m].date.day,
+                                product_in_cat[cat].closeDateSort[m].date.hour,
+                                product_in_cat[cat].closeDateSort[m].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) < 0)
+        {
+            l = m +1;
+        }
+        else if(bidTimeCompare(product_in_cat[cat].closeDateSort[m].date.year,
+                                product_in_cat[cat].closeDateSort[m].date.month,
+                                product_in_cat[cat].closeDateSort[m].date.day,
+                                product_in_cat[cat].closeDateSort[m].date.hour,
+                                product_in_cat[cat].closeDateSort[m].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) == 0)
+        {
+            for(i=m;i>=0;i--)
+            {
+                if(bidTimeCompare(product_in_cat[cat].closeDateSort[i].date.year,
+                                product_in_cat[cat].closeDateSort[i].date.month,
+                                product_in_cat[cat].closeDateSort[i].date.day,
+                                product_in_cat[cat].closeDateSort[i].date.hour,
+                                product_in_cat[cat].closeDateSort[i].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) == 0)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i=-1;
+                }
+            }
 
-	}
-	return NULL;
+            for(i=m+1;i<product_in_cat[cat].closeDateCount;i++)
+            {
+                if(bidTimeCompare(product_in_cat[cat].closeDateSort[i].date.year,
+                                product_in_cat[cat].closeDateSort[i].date.month,
+                                product_in_cat[cat].closeDateSort[i].date.day,
+                                product_in_cat[cat].closeDateSort[i].date.hour,
+                                product_in_cat[cat].closeDateSort[i].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) == 0)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i=product_in_cat[cat].closeDateCount;
+                }
+            }
+
+            // p = product_in_cat[cat].closeDateSort[m].pProduct;
+            // return p;
+        }
+        else 
+        {
+            h = m -1;
+        }
+
+        m = (l+h)/2;
+
+    }
+    return NULL;
 }
 
 /* searching for product by open date
  * using binary search
  *
  * Arguments cat - category of product
- * 			 bid - amount of bid price 
- * 	
- * Return  PRODUCT_T - in case found
- * 		   NULL - in case not found 
+ *           bid - amount of bid price 
+ *  
+ * Return  NULL - in case not found 
  */
-PRODUCT_T* searchByOpenDate(int cat, DATE_T date)
+PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
 {
-	int l = 0; /*lowest*/
-	int h = product_in_cat[cat].openDateCount -1; /*heighest*/
-	int m = h/2; /*middle*/
-	PRODUCT_T *p = NULL;
-	
-	while(l <= h)
-	{
-		if(bidTimeCompare(product_in_cat[cat].openDateSort[m].date.year,
-    							product_in_cat[cat].openDateSort[m].date.month,
-    							product_in_cat[cat].openDateSort[m].date.day,
-    							product_in_cat[cat].openDateSort[m].date.hour,
-    							product_in_cat[cat].openDateSort[m].date.minute,
-    							date.year,
-    							date.month,
-    							date.day,
-    							date.hour,
-    							date.minute) < 0)
-		{
-			l = m +1;
-		}
-		else if(bidTimeCompare(product_in_cat[cat].openDateSort[m].date.year,
-    							product_in_cat[cat].openDateSort[m].date.month,
-    							product_in_cat[cat].openDateSort[m].date.day,
-    							product_in_cat[cat].openDateSort[m].date.hour,
-    							product_in_cat[cat].openDateSort[m].date.minute,
-    							date.year,
-    							date.month,
-    							date.day,
-    							date.hour,
-    							date.minute) == 0)
-		{
-			p = product_in_cat[cat].openDateSort[m].pProduct;
-			return p;
-		}
-		else 
-		{
-			h = m -1;
-		}
+    int l = 0; /*lowest*/
+    int i;/*counter*/
+    int h = product_in_cat[cat].openDateCount -1; /*heighest*/
+    int m = h/2; /*middle*/
+    PRODUCT_T *p = NULL;
+    
+    while(l <= h)
+    {
+        if(bidTimeCompare(product_in_cat[cat].openDateSort[m].date.year,
+                                product_in_cat[cat].openDateSort[m].date.month,
+                                product_in_cat[cat].openDateSort[m].date.day,
+                                product_in_cat[cat].openDateSort[m].date.hour,
+                                product_in_cat[cat].openDateSort[m].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) < 0)
+        {
+            l = m +1;
+        }
+        else if(bidTimeCompare(product_in_cat[cat].openDateSort[m].date.year,
+                                product_in_cat[cat].openDateSort[m].date.month,
+                                product_in_cat[cat].openDateSort[m].date.day,
+                                product_in_cat[cat].openDateSort[m].date.hour,
+                                product_in_cat[cat].openDateSort[m].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) == 0)
+        {
+            for(i=m;i>=0;i--)
+            {
+                if(bidTimeCompare(product_in_cat[cat].openDateSort[i].date.year,
+                                product_in_cat[cat].openDateSort[i].date.month,
+                                product_in_cat[cat].openDateSort[i].date.day,
+                                product_in_cat[cat].openDateSort[i].date.hour,
+                                product_in_cat[cat].openDateSort[i].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) == 0)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i=-1;
+                }
+            }
 
-		m = (l+h)/2;
+            for(i=m+1;i<product_in_cat[cat].openDateCount;i++)
+            {
+                                if(bidTimeCompare(product_in_cat[cat].openDateSort[i].date.year,
+                                product_in_cat[cat].openDateSort[i].date.month,
+                                product_in_cat[cat].openDateSort[i].date.day,
+                                product_in_cat[cat].openDateSort[i].date.hour,
+                                product_in_cat[cat].openDateSort[i].date.minute,
+                                date.year,
+                                date.month,
+                                date.day,
+                                date.hour,
+                                date.minute) == 0)
+                {
+                    /*show product*/
+                }
+                else
+                {
+                    i=product_in_cat[cat].openDateCount;
+                }
+            }
 
-	}
-	return NULL;
+            // p = product_in_cat[cat].openDateSort[m].pProduct;
+            // return p;
+        }
+        else 
+        {
+            h = m -1;
+        }
+
+        m = (l+h)/2;
+
+    }
+    return NULL;
 }
 
 /* search for sale auction using binary search

@@ -101,45 +101,47 @@ int insertProductBidSort(int id, USER_T* user);
  */
 PRODUCT_T* searchProductById(int id);
 
+
 /* searching for product by minimum bid
  * using binary search
- * Return  PRODUCT_T - in case found
- * 		   NULL - in case not found 
+ *
+ * Arguments cat - category of product
+ *       bid - amount of bid price 
+ *       
+ * Return NULL - in case not found 
  */
-PRODUCT_T* searchByMinbid(int cat, double bid);
+PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate);
+
 
 /* searching for product by final price
  * using binary search
  *
  * Arguments cat - category of product
- * 			 bid - amount of bid price 
- * 	
- * Return  PRODUCT_T - in case found
- * 		   NULL - in case not found 
+ *       bid - amount of bid price 
+ *  
+ * Return  NULL - in case not found
  */
-PRODUCT_T* searchByFinalPrice(int cat, double bid);
+PRODUCT_T* searchByFinalPrice(int cat, double bid, DATE_T currentDate);
 
 /* searching for product by close date
  * using binary search
  *
  * Arguments cat - category of product
- * 			 bid - amount of bid price 
- * 	
- * Return  PRODUCT_T - in case found
- * 		   NULL - in case not found 
+ *       bid - amount of bid price 
+ *  
+ * Return  NULL - in case not found 
  */
-PRODUCT_T* searchByCloseDate(int cat, DATE_T date);
+PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate);
 
 /* searching for product by open date
  * using binary search
  *
  * Arguments cat - category of product
- * 			 bid - amount of bid price 
- * 	
- * Return  PRODUCT_T - in case found
- * 		   NULL - in case not found 
+ *       bid - amount of bid price 
+ *  
+ * Return  NULL - in case not found 
  */
-PRODUCT_T* searchByOpenDate(int cat, DATE_T date);
+PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate);
 
 /* search for sale auction using binary search
  * Return 1 - if product exist 
