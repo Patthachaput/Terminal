@@ -868,6 +868,42 @@ int showProductByCat(int cat,DATE_T currentDate)
     return 0;
 }
 
+void showbidHistory(int userId)
+{
+    int lproductId;
+
+    HISTORY_T thisHistory = histories[userId - 1];
+
+    for(int i = 0; i < thisHistory.sizeofProductBit; i++)
+    {
+        lproductId = thisHistory.productBid[i] - 1;
+        /**ADD YOUR CODE HERE
+        printf("Id: %d\n", products[lproductId]->idProduct);
+        printf("Name: %s\n",products[lproductId]->name);
+        printf("Minbid %.2f\n", products[lproductId]->minbid);
+        printf("Now price: %.2f \n\n",products[lproductId]->nowPrice);
+        */
+    }
+}
+
+void showsellHistory(int userId)
+{
+    int lproductId;
+
+    HISTORY_T thisHistory = histories[userId - 1];
+
+    for(int i = 0; i < thisHistory.sizeofSealAuction; i++)
+    {
+        lproductId = thisHistory.sealAuction[i] - 1;
+        /**ADD YOUR CODE HERE
+        printf("Id: %d\n", products[lproductId]->idProduct);
+        printf("Name: %s\n",products[lproductId]->name);
+        printf("Minbid %.2f\n", products[lproductId]->minbid);
+        printf("Now price: %.2f \n\n",products[lproductId]->nowPrice);
+        */
+    }
+}
+
 /*close program and write all file into data
  * No return
  */
