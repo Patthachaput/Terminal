@@ -100,25 +100,25 @@ void printCategory(int category)
 {
     switch (category) {
         case 1:
-            printf("Category: Home & Garden\n");
+            printf("\tCategory: Home & Garden\n");
             break;
         case 2:
-            printf("Category: Collectibles\n");
+            printf("\tCategory: Collectibles\n");
             break;
         case 3:
-            printf("Category: Sport\n");
+            printf("\tCategory: Sport\n");
             break;
         case 4:
-            printf("Category: Electronic\n");
+            printf("\tCategory: Electronic\n");
             break;
         case 5:
-            printf("Category: Fashion\n");
+            printf("\tCategory: Fashion\n");
             break;
         case 6:
-            printf("Category: Health & Beauty\n");
+            printf("\tCategory: Health & Beauty\n");
             break;
         case 7:
-            printf("Category: Motor\n");
+            printf("\tCategory: Motor\n");
             break;
         default:
             break;
@@ -133,13 +133,15 @@ void printCategory(int category)
 */
 int checkProductStatus(PRODUCT_T* product,DATE_T currentDate)
 {
+    int status = 1;
+    
     if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
     product->dateClose.year,product->dateClose.month,product->dateClose.day,product->dateClose.hour,product->dateClose.minute) == 1)
     {
-        return 0;
+        status = 0;
     }
     
-    return 1;
+    return status;
 }
 
 /***********************************************************************
@@ -162,7 +164,7 @@ void printProduct(PRODUCT_T* product,DATE_T currentDate)
     else
     {
         printf("\t>> CURRENTLY OPEN <<\n");
-        printf("\tClose date: %d/%d/%d %d:%d\n",product->dateClose.day,product->dateClose.month,product->dateClose.year,product->dateClose.hour,product->dateClose.minute);
+        printf("\tClose date: %d-%d-%d %d:%d\n",product->dateClose.day,product->dateClose.month,product->dateClose.year,product->dateClose.hour,product->dateClose.minute);
         printf("\tCurrent price: %.2f \n",product->nowPrice);
     }
     printf("\tProduct id: %d\n", product->idProduct);
@@ -170,6 +172,7 @@ void printProduct(PRODUCT_T* product,DATE_T currentDate)
     printf("\tDescription: %s\n",product->description);
     printCategory(product->category);
     printf("\tMinimum bid %.2f\n", product->minbid);
+    printf("\tOpen date: %d-%d-%d %d:%d\n",product->dateOpen.day,product->dateOpen.month,product->dateOpen.year,product->dateOpen.hour,product->dateOpen.minute);
     printf("\n");
 }
 
@@ -345,6 +348,20 @@ int insertUserSortByEmail(USER_T user)
     return 0;
 }
 
+/* serch for users by ID
+ * using binary search
+ *
+ * Return USER_T - if user is exist
+ *        NULL - if user is not exist
+ */
+USER_T * searchUserById(int userId)
+{
+    USER_T* user = NULL;
+    user = &users_by_id[userId-1];
+    
+    return user;
+}
+
 /* serch for users by email 
  * using binary search
  *
@@ -385,13 +402,14 @@ USER_T * searchUserByEmail(char* email)
 /* insert product into data structure
  * No return
  */
-int insertProduct(PRODUCT_T product, USER_T * user)
+int insertProduct(PRODUCT_T product, USER_T * user, DATE_T currentDate)
 {
     ADDNEWPRODUCT++;
     product.idProduct = TOTALPRODUCT + ADDNEWPRODUCT;
     product.hostId = user->idUser;
     product.nowPrice = 0; /*set default bid price*/
-    product.finalPrice = 0; 
+    product.finalPrice = 0;
+    product.dateOpen = currentDate;
 
 	products = realloc(products,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_T));
     if(products == NULL)
@@ -929,6 +947,7 @@ int searchProductBid(int id, USER_T* user, DATE_T currentDate)
  *        -2 if bid price is less than minmum bid
  *        -3 if bid price is less than or equal to current price
  *        -4 if user try to bid his/her product
+ *        -5 if user try to bid when he/she is current highest bid
  */
 int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double price)
 {	
@@ -949,17 +968,19 @@ int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double pric
 	{
 		return -4;
 	}
-	if(searchProductBid(product->idProduct,user,currentDate)==0)
+	if(products->userAuthorityId == user->idUser)
 	{
-		histories[user->idUser - 1].sizeofProductBit++;
-    	histories[user->idUser - 1].productBid = realloc(histories[user->idUser - 1].productBid,histories[user->idUser - 1].sizeofProductBit*sizeof(int));
-	    if(histories[user->idUser - 1].productBid == NULL)
-    	{
-			printf("Error reallocating memories\n");
-		    exit(0);
-   	 	}
-		insertProductBidSort(product->idProduct,user);
+        return -5;
 	}
+
+    histories[user->idUser - 1].sizeofProductBit++;
+    histories[user->idUser - 1].productBid = realloc(histories[user->idUser - 1].productBid,histories[user->idUser - 1].sizeofProductBit*sizeof(int));
+    if(histories[user->idUser - 1].productBid == NULL)
+    {
+        printf("Error reallocating memories\n");
+        exit(0);
+    }
+    insertProductBidSort(product->idProduct,user);
 	product->nowPrice = price;
 	product->userAuthorityId = user->idUser;
 
@@ -1078,6 +1099,8 @@ void showsellHistory(int userId,DATE_T currentDate)
  */
 int closeProgram()
 {
+    saveAllDatas(users_by_id,products,histories);
+    
     free(products);
     int i;
     for(i=0;i<totalProductsLocation;i++)

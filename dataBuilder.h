@@ -97,6 +97,14 @@ int insertUser(USER_T user);
  */
 int insertUserSortByEmail(USER_T user);
 
+/* serch for users by ID
+ * using binary search
+ *
+ * Return USER_T - if user is exist
+ *        NULL - if user is not exist
+ */
+USER_T * searchUserById(int userId);
+
 /* serch for users by email 
  * using binary search
  *
@@ -108,7 +116,7 @@ USER_T * searchUserByEmail(char* email);
 /* insert product into data structure
  * No return
  */
-int insertProduct(PRODUCT_T product, USER_T * user);
+int insertProduct(PRODUCT_T product, USER_T * user, DATE_T currentDate);
 
 /* insert product and sort by minbid
  * No return

@@ -111,7 +111,7 @@ int loginInput()
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", password);
         
-        if ((strlen(email)==0)&&(strlen(password)==0))
+        if((strlen(email)==0)||(strlen(password)==0))
         {
             loginStatus = NLOGIN;
             break;
@@ -375,6 +375,10 @@ int bidMenu()
                     else if(validate == -4)
                     {
                         printf("\tUnsuccesful, You cannot bid your our product.\n\n");
+                    }
+                    else if(validate == -5)
+                    {
+                        printf("\tUnsuccesful, You are the current highest bid.\n\n");
                     }
                     break;
                 }
@@ -801,9 +805,11 @@ int createAuction()
             }
         }while (validate != 1);
         
+        dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+        
         if(validate == 1)
         {
-            insertProduct(newProduct,loginUser);
+            insertProduct(newProduct,loginUser,currentDate);
             printf("\n>>>>> This is your product information\n");
             printf("\tName: %s\n",name);
             printf("\tDescription: %s\n",description);
@@ -858,6 +864,7 @@ int personalInfo()
 
 int editInfo(int choice)
 {
+    USER_T* bufferUser;
     char buffer[64];
     char email[64];
     char password[64];
@@ -980,6 +987,16 @@ int editInfo(int choice)
         default:
             break;
 
+    }
+    
+    bufferUser = searchUserById(loginUser->idUser);
+    if(bufferUser == NULL)
+    {
+        printf("\tCannot find user by ID\n");
+    }
+    else
+    {
+        bufferUser = loginUser;
     }
     
     return 0;
