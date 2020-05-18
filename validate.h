@@ -92,7 +92,7 @@ int validateName(char nameInput[]);
  * validate function in validation.c(source file)
  * created by Natacha Punyathanasub 62070503415
  */
-int validateEmail(char email[])
+int validateEmail(char email[]);
 
 /* This is checkPhoneNumThai function. It use for check Thai mobile phone number is valid or not.
  */
