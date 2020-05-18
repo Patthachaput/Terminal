@@ -276,10 +276,10 @@ int buildData()
     	insertOpenDateSort(p);
     	insertCloseDateSort(p);
     }
-
-    for(i=0;i<TOTALPRODUCT;i++)
+    
+    for(i=0;i<TOTALUSER;i++)
     {
-    	printf("%d %s\n",lProduct[i]->idProduct,lProduct[i]->name );
+        insertUserSortByEmail(users_by_id[i]);
     }
 
    return 0;
@@ -378,6 +378,7 @@ USER_T * searchUserByEmail(char* email)
 		middle = (lowest+highest)/2;
 
 	}
+    
 	return NULL;
 }
 
