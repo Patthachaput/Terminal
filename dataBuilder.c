@@ -127,6 +127,23 @@ void printCategory(int category)
 }
 
 /***********************************************************************
+*  checkProductStatus
+*  - check does this auction are not close or currently open
+*  - 0 for close auction, 1 for open auction
+* created by Narapathra Morakrant 62070503464
+*/
+int checkProductStatus(PRODUCT_T* product,DATE_T currentDate)
+{
+    if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
+    product->dateClose.year,product->dateClose.month,product->dateClose.day,product->dateClose.hour,product->dateClose.minute) == 1)
+    {
+        return 0;
+    }
+    
+    return 1;
+}
+
+/***********************************************************************
  *  printProduct
  *  - for display product in the terminal
  *  - no return
@@ -136,11 +153,7 @@ void printProduct(PRODUCT_T* product,DATE_T currentDate)
 {
     int status = 1;
     
-    if(bidTimeCompare(currentDate.year,currentDate.month,currentDate.day,currentDate.hour,currentDate.minute,
-    product->dateClose.year,product->dateClose.month,product->dateClose.day,product->dateClose.hour,product->dateClose.minute) == 1)
-    {
-        status = 0;
-    }
+    status = checkProductStatus(product,currentDate);
     
     if(status == 0)
     {
@@ -881,7 +894,7 @@ PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
  * Return 1 - if product exist 
  *        0 - if product does not exist
  */
-int searchSaleAuction(int id, USER_T* user)
+int searchSaleAuction(int id, USER_T* user,DATE_T currentDate)
 {
 	int l = 0; /*lowest*/
 	int h = histories[user->idUser -1].sizeofSealAuction -1; /*heighest*/
@@ -895,6 +908,7 @@ int searchSaleAuction(int id, USER_T* user)
 		}
 		else if(histories[user->idUser -1].sealAuction[m] == id)
 		{
+            printProduct(lProduct[id],currentDate);
 			return 1;
 		}
 		else 
@@ -908,6 +922,37 @@ int searchSaleAuction(int id, USER_T* user)
 	return 0;
 }
 
+/* search for product bid using binary search
+ * Return 1 - if product exist
+ *        0 - if product does not exist
+ */
+int searchProductBid(int id, USER_T* user, DATE_T currentDate)
+{
+    int l = 0; /*lowest*/
+    int h = histories[user->idUser -1].sizeofProductBit -1; /*heighest*/
+    int m = h/2; /*middle*/
+
+    while(l <= h)
+    {
+        if(histories[user->idUser -1].productBid[m] < id)
+        {
+            l = m +1;
+        }
+        else if(histories[user->idUser -1].productBid[m] == id)
+        {
+            printProduct(lProduct[id],currentDate);
+            return 1;
+        }
+        else
+        {
+            h = m -1;
+        }
+
+        m = (l+h)/2;
+
+    }
+    return 0;
+}
 /* this function bid product by insert price and user
  * into product struct
  *
@@ -936,11 +981,11 @@ int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double pric
 	{
 		return -3;
 	}
-	if(searchSaleAuction(product->idProduct,user)==1)
+	if(product->hostId == user->idUser)
 	{
 		return -4;
 	}
-	if(searchProductBid(product->idProduct,user)==0)
+	if(searchProductBid(product->idProduct,user,currentDate)==0)
 	{
 		histories[user->idUser - 1].sizeofProductBit++;
     	histories[user->idUser - 1].productBid = realloc(histories[user->idUser - 1].productBid,histories[user->idUser - 1].sizeofProductBit*sizeof(int));
@@ -974,37 +1019,6 @@ int insertProductBidSort(int id, USER_T* user)
 	histories[user->idUser - 1].productBid[i+1] = id;
     
     return 0;
-}
-
-/* search for product bid using binary search
- * Return 1 - if product exist 
- *        0 - if product does not exist
- */
-int searchProductBid(int id, USER_T* user)
-{
-	int l = 0; /*lowest*/
-	int h = histories[user->idUser -1].sizeofProductBit -1; /*heighest*/
-	int m = h/2; /*middle*/
-
-	while(l <= h)
-	{
-		if(histories[user->idUser -1].productBid[m] < id)
-		{
-			l = m +1;
-		}
-		else if(histories[user->idUser -1].productBid[m] == id)
-		{
-			return 1;
-		}
-		else 
-		{
-			h = m -1;
-		}
-
-		m = (l+h)/2;
-
-	}
-	return 0;
 }
 
 

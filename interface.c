@@ -312,6 +312,83 @@ int registration()
     return validate;
 }
 
+int bidMenu()
+{
+    PRODUCT_T* product;
+    char buffer[64];
+    int productId= -1;
+    int validate = 0;
+    double bidAmount = 0;
+    
+    do
+    {
+        productId = -1;
+        printf("Type the product ID that you want to bid (if none, type negative number) : ");
+        fgets(buffer,sizeof(buffer),stdin);
+        sscanf(buffer,"%d", &productId);
+        printf("\n");
+        if(productId <= 0)
+        {
+            return 0;
+        }
+          
+    }while (productId <= 0);
+    
+    product = searchProductById(productId);
+    if(product == NULL)
+    {
+        printf("Cannot find any product with this ID\n");
+    }
+    else
+    {
+        dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+        if(checkProductStatus(product,currentDate) == 0)
+        {
+            printProduct(product,currentDate);
+            printf("Sorry, you cannot bid this auction. It is already close.\n");
+        }
+        else
+        {
+            printProduct(product,currentDate);
+            do
+            {
+                bidAmount = 0;
+                printf("Type the amount that you want to bid : ");
+                fgets(buffer,sizeof(buffer),stdin);
+                sscanf(buffer,"%lf", &bidAmount);
+                
+                dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+                validate = bidProduct(product,loginUser,currentDate,bidAmount);
+                
+                if(bidAmount > 0 )
+                {
+                    if(validate == 1)
+                    {
+                        printf("Bid Success!\n\n");
+                    }
+                    else if(validate == -1)
+                    {
+                        printf("Unsuccesful, The bid price is less than minimum bid.\n\n");
+                    }
+                    else if(validate == -2)
+                    {
+                        printf("Unsuccesful, The bid price is less than or equal to current bid.\n\n");
+                    }
+                    else if(validate == -4)
+                    {
+                        printf("Unsuccesful, You cannot bid your our product.\n\n");
+                    }
+                    break;
+                }
+
+            } while (bidAmount <= 0);
+        }
+    }
+    
+    return 0;
+    
+}
+
 int subBrowse(int category)
 {
     DATE_T inputDate;
@@ -366,6 +443,7 @@ int subBrowse(int category)
                     dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
                     inputDate = createDateStruct(date);
                     searchByOpenDate(category, inputDate, currentDate);
+                    bidMenu();
                     break;
                 }
             } while (validate == 0);
@@ -433,6 +511,11 @@ int subBrowse(int category)
             break;
     }
     
+    if(choice != 5)
+    {
+        bidMenu();
+    }
+    
     return 0;
 }
 
@@ -479,6 +562,7 @@ int browseByCategory()
     else if (choice == 8)
     {
         showProductByCat(choice,currentDate);  /* print all the product in ID sequence */
+        bidMenu();
     }
     else
     {
@@ -534,12 +618,104 @@ int browse()
 
 void bidHistory()
 {
+    char buffer[32];
+    int choice = 0;
+    int userId = -1;
+    int productId = -1;
+    int validate = 0;
     
+    printf("================================================= BID HISTORY =====================================================\n\n");
+    printf("                                          1.View all bid history                                              \n");
+    printf("                                          2.Search bid history by product ID                                  \n");
+    printf("                                          3.Back to homepage                                                  \n\n");
+    printf("===================================================================================================================\n\n");
+    
+    do
+    {
+        choice = 0;
+        printf("How do you want to view your bid history : ");
+        fgets(buffer,sizeof(buffer),stdin);
+        sscanf(buffer,"%d", &choice);
+          
+        if((choice > 3)||(choice < 1))
+        {
+            printf("Invalid choice! please try again\n\n");
+        }
+        else
+        {
+            break;
+        }
+          
+    }while ((choice > 5)||(choice < 1));
+    
+    userId = loginUser->idUser;
+    dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+    
+    if(choice == 1)
+    {
+        showbidHistory(userId,currentDate);
+    }
+    else if(choice == 2)
+    {
+        printf("Please type the product ID : ");
+        fgets(buffer,sizeof(buffer),stdin);
+        sscanf(buffer,"%d", &productId);
+        if(searchProductBid(productId,loginUser,currentDate) == 0)
+        {
+            printf("You haven't bid this product yet\n\n");
+        }
+    }
 }
 
 void saleHistory()
 {
+    char buffer[32];
+    int choice = 0;
+    int userId = -1;
+    int productId = -1;
+    int validate = 0;
     
+    printf("================================================= BID HISTORY =====================================================\n\n");
+    printf("                                          1.View all sell history                                              \n");
+    printf("                                          2.Search sell history by product ID                                  \n");
+    printf("                                          3.Back to homepage                                                  \n\n");
+    printf("===================================================================================================================\n\n");
+    
+    do
+    {
+        choice = 0;
+        printf("How do you want to view your sell history : ");
+        fgets(buffer,sizeof(buffer),stdin);
+        sscanf(buffer,"%d", &choice);
+          
+        if((choice > 3)||(choice < 1))
+        {
+            printf("Invalid choice! please try again\n\n");
+        }
+        else
+        {
+            break;
+        }
+          
+    }while ((choice > 5)||(choice < 1));
+    
+    userId = loginUser->idUser;
+    dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+    
+    if(choice == 1)
+    {
+        showsellHistory(userId,currentDate);
+    }
+    else if(choice == 2)
+    {
+        printf("Please type the product ID : ");
+        fgets(buffer,sizeof(buffer),stdin);
+        sscanf(buffer,"%d", &productId);
+        if(searchSaleAuction(productId,loginUser,currentDate) == 0)
+        {
+            printf("You are not selling any product with this ID\n\n");
+        }
+    }
 }
 
 int createAuction()
@@ -557,7 +733,7 @@ int createAuction()
     
     do
     {
-        printf("Please enter the product infomation\n");
+        printf("Please enter the product information\n");
         memset(name,0, sizeof(name));
         printf("Name: ");
         fgets(buffer,sizeof(buffer),stdin);
@@ -626,10 +802,6 @@ int createAuction()
                 break;
             }
         }while (validate != 1);
-        
-        /* we assumed, we are logged in but not really have a user id yet */
-        //newProduct.hostId = loginUser->idUser;
-        //newProduct.host = loginUser;
         
         if(validate == 1)
         {
@@ -865,7 +1037,6 @@ int main()
     printf("                                          ONLINE    AUCTION    PROGRAM                                             \n");
     printf("===================================================================================================================\n");
     printf("+ + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +\n\n");
-    
     printf("                                     !! WELCOME TO ONLINE AUCTION PROGRAM !!                                       \n\n");
     printf("                      An online market for you to open auctions or you can be the one to bid!                      \n");
     printf("                 Hope you like our program, instruction guidelines are down below. Have fun bidding                \n\n");

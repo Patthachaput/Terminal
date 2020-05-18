@@ -7,7 +7,6 @@
 
 #ifndef dataBuilder_h
 #include "mainAuction.h"
-#include "display.h"
 
 /*this structure sort by price*/
 typedef struct
@@ -58,6 +57,14 @@ typedef struct
  *            min2   - minute of second date */
 int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1,
                    int year2, int month2, int day2, int hour2, int min2);
+
+/***********************************************************************
+*  checkProductStatus
+*  - check does this auction are not close or currently open
+*  - 0 for close auction, 1 for open auction
+* created by Narapathra Morakrant 62070503464
+*/
+int checkProductStatus(PRODUCT_T* product,DATE_T currentDate);
 
 /***********************************************************************
 *  printCatagory
@@ -185,13 +192,13 @@ PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate);
  * Return 1 - if product exist 
  *        0 - if product does not exist
  */
-int searchSaleAuction(int id, USER_T* user);
+int searchSaleAuction(int id, USER_T* user,DATE_T currentDate);
 
 /* search for product bid using binary search
  * Return 1 - if product exist 
  *        0 - if product does not exist
  */
-int searchProductBid(int id, USER_T* user);
+int searchProductBid(int id, USER_T* user, DATE_T currentDate);
 
 /* this function bid product by insert price and user
  * into product struct
@@ -215,7 +222,7 @@ int closeProgram();
 /* This function display all products in lists*/
 int showProductByCat(int cat,DATE_T currentDate);
 
-void showBidHistory(int userId,DATE_T currentDate);
+void showbidHistory(int userId,DATE_T currentDate);
 
 void showsellHistory(int userId,DATE_T currentDate);
 

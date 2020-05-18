@@ -423,16 +423,16 @@ int validateName(char nameInput[])
         }
     }
 
-    if(countSpace - 1 == 1)
+    if(countSpace == 1)
     {
         firstName = strtok(nameInput, " ");
         countFirstName = strlen(firstName);
         lastName = strtok(NULL, " ");
         countLastName = strlen(lastName);
         
-        if((checkAlphabet(firstName) != countFirstName) || (checkAlphabet(lastName) != countLastName-1))
+        if((checkAlphabet(firstName) != countFirstName) || (checkAlphabet(lastName) != countLastName))
         {
-            printf("%d %d\n", countFirstName, countLastName);
+            //printf("%d %d\n", countFirstName, countLastName);
             printf("\tNot valid - Must contains only alphabet\n");
             return 0;
         }
@@ -1010,7 +1010,7 @@ int checkDay(int day ,int month, int leapyear)
  * dateCompare
  *  - function which check the date getting from user is not in past
  *  - get the string input from the user day, month, year
- *  - return 0 for invalid day and 1 for valid date and 2 for the same date
+ *  - return 0 for invalid date and 1 for future date, 2 for the same date and 3 for past
  * created by Narapathra Morakrant 62070503464
  */
 int dateCompare(int day, int month, int year)
@@ -1044,6 +1044,10 @@ int dateCompare(int day, int month, int year)
             {
                 validity = 2;
             }
+            else if (day < dayToday)
+            {
+                validity = 3;
+            }
         }
     }
     
@@ -1059,7 +1063,7 @@ int dateCompare(int day, int month, int year)
  * timeCompare
  *  - function which check the time getting from user is not in past
  *  - get the string input from the user hh:tt
- *  - return 0 for invalid day and 1 for valid date and 2 for the same date
+ *  - return 0 for invalid time and 1 for future time, 2 for the same date and 3 for the past
  * created by Narapathra Morakrant 62070503464
  */
 int timeCompare (char time[MAXLEN])
@@ -1083,9 +1087,17 @@ int timeCompare (char time[MAXLEN])
     }
     else if (hrs == hrsToday)
     {
-        if (min >= minToday)
+        if (min > minToday)
         {
             correctness = 1;
+        }
+        else if( min == minToday)
+        {
+            correctness = 2;
+        }
+        else
+        {
+            correctness = 3;
         }
     }
     
@@ -1219,13 +1231,14 @@ int validateTime(char time[MAXLEN])
  *  - function which check the date and time is valid
  *  - get the string input from the user
  *  - call others function to print error message if it is invalid
- *  - return 0 for invalid and 1 for valid
+ *  - return 0 for invalid, 1 for future, 2 for valid past
  * created by Narapathra Morakrant 62070503464
  */
 int validateDateTime(char input[MAXLEN])
 {
     char time[MAXLEN];
     char date[MAXLEN];
+    int validate = 0;
     int correctness =0;
     int day=0;
     int month=0;
@@ -1233,21 +1246,28 @@ int validateDateTime(char input[MAXLEN])
     
     sscanf(input,"%s %s",date,time);
     sscanf(date,"%d-%d-%d",&day,&month,&year);
-    if (validateDate(date) == 1)
+    if ((validateDate(date) == 1)&&(validateTime(time)==1))
     {
-        if(validateTime(time)==1)
+        validate = dateCompare(day,month,year);
+        if (validate == 1)
         {
-            if (dateCompare(day,month,year) == 1)
+            correctness = 1;
+        }
+        else if (validate == 2)
+        {
+            validate = timeCompare(time);
+            if(validate == 1)
             {
                 correctness = 1;
             }
-            else if (dateCompare(day,month,year) == 2)
+            else if(validate == 3)
             {
-                if(timeCompare(time) == 1)
-                {
-                    correctness = 1;
-                }
+                correctness = 2;
             }
+        }
+        else if (validate == 3)
+        {
+            correctness = 2;
         }
     }
     
