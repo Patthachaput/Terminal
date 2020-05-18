@@ -403,6 +403,11 @@ int validateName(char nameInput[])
     char *firstName, *lastName; /* for hold title,firstname,lastname in char */
     
     countNameInput = strlen(nameInput); /* measure length of name input */
+    if( nameInput[countNameInput - 1] == '\n')
+    {
+        nameInput[countNameInput - 1] = '\0';
+    }
+   
     
     if(checkSpace(nameInput) != 1)
     {
@@ -569,7 +574,7 @@ int addressCheck(char address[])
     int slashCount=0;
     if(isdigit(address[0]) != 1)
     {
-             invalid = 1;
+        invalid = 1;
     }
 
     for(i=1;i<(strlen(address)-1);i++)
@@ -596,11 +601,11 @@ int addressCheck(char address[])
     }
     if(isdigit(address[ strlen(address) -1 ])!=1 )
     {
-          invalid = 1;
+        invalid = 1;
     }
     if(slashCount>1)
     {
-          invalid = 1;
+        invalid = 1;
     }
     return invalid;
 }
@@ -624,6 +629,12 @@ int validateAddress(char* address)
 	char postalCode[10];
 
 	int i; /*counter*/
+
+    if(address[strlen(address) - 1] == '\n')
+    {
+        address[strlen(address) - 1] = '\0';
+    }
+
 	sscanf(address,"%s %s %s %s",number,streetName,optional,postalCode);
 
 	if(!isdigit(number[0]))
