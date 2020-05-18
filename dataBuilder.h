@@ -151,11 +151,12 @@ PRODUCT_T* searchProductById(int id);
  * using binary search
  *
  * Arguments cat - category of product
- *       bid - amount of bid price 
- *       
- * Return NULL - in case not found 
+ *           bid - amount of bid price 
+ *           
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate);
+int searchByMinbid(int cat, double bid, DATE_T currentDate);
 
 
 /* searching for product by final price
@@ -164,9 +165,10 @@ PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate);
  * Arguments cat - category of product
  *       bid - amount of bid price 
  *  
- * Return  NULL - in case not found
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByFinalPrice(int cat, double bid, DATE_T currentDate);
+int searchByFinalPrice(int cat, double bid, DATE_T currentDate);
 
 /* searching for product by close date
  * using binary search
@@ -174,9 +176,10 @@ PRODUCT_T* searchByFinalPrice(int cat, double bid, DATE_T currentDate);
  * Arguments cat - category of product
  *       bid - amount of bid price 
  *  
- * Return  NULL - in case not found 
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate);
+int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate);
 
 /* searching for product by open date
  * using binary search
@@ -184,9 +187,10 @@ PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate);
  * Arguments cat - category of product
  *       bid - amount of bid price 
  *  
- * Return  NULL - in case not found 
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate);
+int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate);
 
 /* search for sale auction using binary search
  * Return 1 - if product exist 
