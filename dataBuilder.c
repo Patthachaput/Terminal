@@ -158,7 +158,7 @@ void printProduct(PRODUCT_T* product,DATE_T currentDate)
     if(status == 0)
     {
         printf("\t>> CLOSED NOW <<\n");
-        printf("\tFinal Price: %.2f\n", product->finalPrice);
+        printf("\tFinal Price: %.2f\n", product->nowPrice);
     }
     else
     {
@@ -274,13 +274,13 @@ int buildData()
 
     	insertMinbidSort(p);
     	insertfinalPriceSort(p);
-    	// insertOpenDateSort(p);
-    	// insertCloseDateSort(p);
+    	insertOpenDateSort(p);
+    	insertCloseDateSort(p);
     }
-    
-    for(i=0;i<TOTALUSER;i++)
+
+    for(i=0;i<TOTALPRODUCT;i++)
     {
-    	insertUserSortByEmail(users_by_id[i]);
+    	printf("%d %s\n",lProduct[i]->idProduct,lProduct[i]->name );
     }
 
    return 0;
@@ -326,7 +326,7 @@ int insertUser(USER_T user)
     insertUserSortByEmail(user);
     writeUser(users_by_id);
     writeHistory(histories);
-    
+
     return 0;
 }
 
@@ -391,7 +391,8 @@ int insertProduct(PRODUCT_T product, USER_T * user)
     product.idProduct = TOTALPRODUCT + ADDNEWPRODUCT;
     product.hostId = user->idUser;
     product.nowPrice = 0; /*set default bid price*/
-	
+    product.finalPrice = 0; 
+
 	products = realloc(products,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_T));
     if(products == NULL)
     {
@@ -414,7 +415,7 @@ int insertProduct(PRODUCT_T product, USER_T * user)
     product_in_cat[product.category].minBidSort = realloc(product_in_cat[product.category].minBidSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_PRICE));
     product_in_cat[product.category].openDateSort = realloc(product_in_cat[product.category].openDateSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_DATE));
     product_in_cat[product.category].closeDateSort = realloc(product_in_cat[product.category].closeDateSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_DATE));
-     lProduct = realloc(lProduct,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_T*));
+    lProduct = realloc(lProduct,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_T*));
     if(product_in_cat[product.category].finalPricesort==NULL || product_in_cat[product.category].minBidSort==NULL || product_in_cat[product.category].openDateSort==NULL || product_in_cat[product.category].closeDateSort==NULL || lProduct==NULL)
     {
 		printf("Error reallocating memories\n");
@@ -428,7 +429,7 @@ int insertProduct(PRODUCT_T product, USER_T * user)
 
 	histories[user->idUser - 1].sizeofSealAuction++;
     histories[user->idUser - 1].sealAuction = realloc(histories[user->idUser - 1].sealAuction,histories[user->idUser - 1].sizeofSealAuction*sizeof(int));
-   	
+
    	if(histories[user->idUser - 1].sealAuction==NULL)
    	{
 		printf("Error reallocating memories\n");
@@ -437,12 +438,12 @@ int insertProduct(PRODUCT_T product, USER_T * user)
 
    	insertMinbidSort(p);
     insertfinalPriceSort(p);
-    insertSaleAuctionSort(p->idProduct,user);
 	insertOpenDateSort(p);
 	insertCloseDateSort(p);
 	
-	writeProduct(products);
+	insertSaleAuctionSort(p->idProduct,user);
 
+	writeProduct(products);
     return 0;
 }	
 
@@ -451,16 +452,11 @@ int insertProduct(PRODUCT_T product, USER_T * user)
  */
 int insertSaleAuctionSort(int id, USER_T* user)
 {
-	int i; /*counter*/
-	for(i = histories[user->idUser - 1].sizeofSealAuction-2;(i >= 0 && histories[user->idUser - 1].sealAuction[i] > id); i--)
-	{
-		histories[user->idUser - 1].sealAuction[i+1] = histories[user->idUser - 1].sealAuction[i];
-	}
-	histories[user->idUser - 1].sealAuction[i+1] = id;
-    
+	histories[user->idUser - 1].sealAuction[histories[user->idUser - 1].sizeofSealAuction-1] = id;
+    writeHistory(histories);
+
     return 0;
 }
-
 
 /* insert product for searching by min bid price.
  * No return
@@ -484,13 +480,8 @@ int insertMinbidSort(PRODUCT_T* product)
  */
 int insertfinalPriceSort(PRODUCT_T* product)
 {
-	int i; /*counter*/
-    for (i = product_in_cat[product->category].finalPriceCount-1;(i >=0 && product_in_cat[product->category].finalPricesort[i].price > product->finalPrice); i--)
-    {
-    	product_in_cat[product->category].finalPricesort[i+1] = product_in_cat[product->category].finalPricesort[i];
-    }
-    product_in_cat[product->category].finalPricesort[i+1].pProduct = product;
-    product_in_cat[product->category].finalPricesort[i+1].price = product->finalPrice;
+    product_in_cat[product->category].finalPricesort[product_in_cat[product->category].finalPriceCount].pProduct = product;
+    product_in_cat[product->category].finalPricesort[product_in_cat[product->category].finalPriceCount].price = product->nowPrice;
     product_in_cat[product->category].finalPriceCount++;
 
     return 0;
@@ -576,9 +567,10 @@ PRODUCT_T* searchProductById(int id)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *           
- * Return NULL - in case not found 
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate)
+int searchByMinbid(int cat, double bid, DATE_T currentDate)
 {
     int l = 0; /*lowest*/
     int i; /*counter*/
@@ -617,7 +609,7 @@ PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate)
                     i= product_in_cat[cat].minBidCount;
                 }
             }
-
+            return 1;
             // p = product_in_cat[cat].minBidSort[m].pProduct;
             // return p;
         }
@@ -629,7 +621,7 @@ PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return NULL;
+    return 0;
 }
 
 /* searching for product by final price
@@ -638,59 +630,27 @@ PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *  
- * Return  NULL - in case not found
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByFinalPrice(int cat, double bid, DATE_T currentDate)
-{
-    int l = 0; /*lowest*/
-    int i; /*counter*/
-    int h = product_in_cat[cat].finalPriceCount-1; /*heighest*/
-    int m = h/2; /*middle*/
-    PRODUCT_T *p = NULL;
-    
-    while(l <= h)
-    {
-        if(product_in_cat[cat].finalPricesort[m].price < bid)
-        {
-            l = m +1;
-        }
-        else if(product_in_cat[cat].finalPricesort[m].price == bid)
-        {
-            for(i=m;i>=0;i--)
-            {
-                if(product_in_cat[cat].finalPricesort[i].price == bid)
-                {
-                    printProduct(product_in_cat[cat].finalPricesort[i].pProduct,currentDate);
-                }
-                else
-                {
-                    i=-1;
-                }
-
-            }
-            for(i=m+1;i<product_in_cat[cat].finalPriceCount;i++)
-            {
-                if(product_in_cat[cat].finalPricesort[i].price == bid)
-                {
-                    printProduct(product_in_cat[cat].finalPricesort[i].pProduct,currentDate);
-                }
-                else
-                {
-                    i= product_in_cat[cat].finalPriceCount;
-                }
-            }
-            // p = product_in_cat[cat].finalPricesort[m].pProduct;
-            // return p;
-        }
-        else 
-        {
-            h = m -1;
-        }
-
-        m = (l+h)/2;
-
-    }
-    return NULL;
+int searchByFinalPrice(int cat, double bid, DATE_T currentDate)
+{	
+	int i;
+	for(i=0;i<product_in_cat[cat].finalPriceCount;i++)
+	{
+		if(bid == product_in_cat[cat].finalPricesort[i].pProduct->nowPrice)
+		{
+			printProduct(product_in_cat[cat].finalPricesort[i].pProduct,currentDate);
+		}
+	}
+	if(i==0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 
 /* searching for product by close date
@@ -699,9 +659,10 @@ PRODUCT_T* searchByFinalPrice(int cat, double bid, DATE_T currentDate)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *  
- * Return  NULL - in case not found 
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
+int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
 {
     int l = 0; /*lowest*/
     int h = product_in_cat[cat].closeDateCount -1; /*heighest*/
@@ -778,6 +739,7 @@ PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
                 }
             }
 
+            return 1;
             // p = product_in_cat[cat].closeDateSort[m].pProduct;
             // return p;
         }
@@ -789,7 +751,7 @@ PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return NULL;
+    return 0;
 }
 
 /* searching for product by open date
@@ -798,9 +760,10 @@ PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *  
- * Return  NULL - in case not found 
+ * Return NULL - 1 success
+ * 			   - 0 in case fail 
  */
-PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
+int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
 {
     int l = 0; /*lowest*/
     int i;/*counter*/
@@ -876,6 +839,7 @@ PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
                 }
             }
 
+            return 1;
             // p = product_in_cat[cat].openDateSort[m].pProduct;
             // return p;
         }
@@ -887,7 +851,7 @@ PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return NULL;
+    return 0;
 }
 
 /* search for sale auction using binary search
@@ -1018,6 +982,7 @@ int insertProductBidSort(int id, USER_T* user)
 	}
 	histories[user->idUser - 1].productBid[i+1] = id;
     
+    writeHistory(histories);
     return 0;
 }
 
@@ -1102,7 +1067,7 @@ void showsellHistory(int userId,DATE_T currentDate)
     HISTORY_T thisHistory = histories[userId - 1];
 
     for(int i = 0; i < thisHistory.sizeofSealAuction; i++)
-    {
+    {         
         lproductId = thisHistory.sealAuction[i] - 1;
         printProduct(lProduct[lproductId],currentDate);
     }
