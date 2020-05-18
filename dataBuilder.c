@@ -274,8 +274,8 @@ int buildData()
 
     	insertMinbidSort(p);
     	insertfinalPriceSort(p);
-    	insertOpenDateSort(p);
-    	insertCloseDateSort(p);
+    	// insertOpenDateSort(p);
+    	// insertCloseDateSort(p);
     }
     
     for(i=0;i<TOTALUSER;i++)
@@ -391,8 +391,7 @@ int insertProduct(PRODUCT_T product, USER_T * user)
     product.idProduct = TOTALPRODUCT + ADDNEWPRODUCT;
     product.hostId = user->idUser;
     product.nowPrice = 0; /*set default bid price*/
-	product.finalPrice = 0;
-
+	
 	products = realloc(products,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_T));
     if(products == NULL)
     {
@@ -415,7 +414,7 @@ int insertProduct(PRODUCT_T product, USER_T * user)
     product_in_cat[product.category].minBidSort = realloc(product_in_cat[product.category].minBidSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_PRICE));
     product_in_cat[product.category].openDateSort = realloc(product_in_cat[product.category].openDateSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_DATE));
     product_in_cat[product.category].closeDateSort = realloc(product_in_cat[product.category].closeDateSort,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_DATE));
-    lProduct = realloc(lProduct,sizeof(PRODUCT_T*));
+     lProduct = realloc(lProduct,(TOTALPRODUCT+ADDNEWPRODUCT)*sizeof(PRODUCT_T*));
     if(product_in_cat[product.category].finalPricesort==NULL || product_in_cat[product.category].minBidSort==NULL || product_in_cat[product.category].openDateSort==NULL || product_in_cat[product.category].closeDateSort==NULL || lProduct==NULL)
     {
 		printf("Error reallocating memories\n");
@@ -452,15 +451,12 @@ int insertProduct(PRODUCT_T product, USER_T * user)
  */
 int insertSaleAuctionSort(int id, USER_T* user)
 {
-	printf("%d\n",id );
 	int i; /*counter*/
 	for(i = histories[user->idUser - 1].sizeofSealAuction-2;(i >= 0 && histories[user->idUser - 1].sealAuction[i] > id); i--)
 	{
 		histories[user->idUser - 1].sealAuction[i+1] = histories[user->idUser - 1].sealAuction[i];
 	}
 	histories[user->idUser - 1].sealAuction[i+1] = id;
-    
-    writeHistory(histories);
     
     return 0;
 }
@@ -580,10 +576,9 @@ PRODUCT_T* searchProductById(int id)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *           
- * Return NULL - 1 success
- * 			   - 0 in case fail 
+ * Return NULL - in case not found 
  */
-int searchByMinbid(int cat, double bid, DATE_T currentDate)
+PRODUCT_T* searchByMinbid(int cat, double bid, DATE_T currentDate)
 {
     int l = 0; /*lowest*/
     int i; /*counter*/
@@ -622,7 +617,7 @@ int searchByMinbid(int cat, double bid, DATE_T currentDate)
                     i= product_in_cat[cat].minBidCount;
                 }
             }
-            return 1;
+
             // p = product_in_cat[cat].minBidSort[m].pProduct;
             // return p;
         }
@@ -634,7 +629,7 @@ int searchByMinbid(int cat, double bid, DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return 0;
+    return NULL;
 }
 
 /* searching for product by final price
@@ -643,10 +638,9 @@ int searchByMinbid(int cat, double bid, DATE_T currentDate)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *  
- * Return NULL - 1 success
- * 			   - 0 in case fail 
+ * Return  NULL - in case not found
  */
-int searchByFinalPrice(int cat, double bid, DATE_T currentDate)
+PRODUCT_T* searchByFinalPrice(int cat, double bid, DATE_T currentDate)
 {
     int l = 0; /*lowest*/
     int i; /*counter*/
@@ -685,8 +679,8 @@ int searchByFinalPrice(int cat, double bid, DATE_T currentDate)
                     i= product_in_cat[cat].finalPriceCount;
                 }
             }
-            return 1;
-          
+            // p = product_in_cat[cat].finalPricesort[m].pProduct;
+            // return p;
         }
         else 
         {
@@ -696,7 +690,7 @@ int searchByFinalPrice(int cat, double bid, DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return 0;
+    return NULL;
 }
 
 /* searching for product by close date
@@ -705,10 +699,9 @@ int searchByFinalPrice(int cat, double bid, DATE_T currentDate)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *  
- * Return NULL - 1 success
- * 			   - 0 in case fail 
+ * Return  NULL - in case not found 
  */
-int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
+PRODUCT_T* searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
 {
     int l = 0; /*lowest*/
     int h = product_in_cat[cat].closeDateCount -1; /*heighest*/
@@ -785,7 +778,6 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
                 }
             }
 
-            return 1;
             // p = product_in_cat[cat].closeDateSort[m].pProduct;
             // return p;
         }
@@ -797,7 +789,7 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return 0;
+    return NULL;
 }
 
 /* searching for product by open date
@@ -806,10 +798,9 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *  
- * Return NULL - 1 success
- * 			   - 0 in case fail 
+ * Return  NULL - in case not found 
  */
-int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
+PRODUCT_T* searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
 {
     int l = 0; /*lowest*/
     int i;/*counter*/
@@ -885,7 +876,6 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
                 }
             }
 
-            return 1;
             // p = product_in_cat[cat].openDateSort[m].pProduct;
             // return p;
         }
@@ -897,7 +887,7 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return 0;
+    return NULL;
 }
 
 /* search for sale auction using binary search
@@ -1027,7 +1017,7 @@ int insertProductBidSort(int id, USER_T* user)
 		histories[user->idUser - 1].productBid[i+1] = histories[user->idUser - 1].productBid[i];
 	}
 	histories[user->idUser - 1].productBid[i+1] = id;
-    writeHistory(histories);
+    
     return 0;
 }
 

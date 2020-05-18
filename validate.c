@@ -303,7 +303,7 @@ int validateEmail(char email[])
     valid=validEmail(email);
     if (valid==1)
     {
-        //printf("\tValid\n");
+        printf("\tValid\n");
         emailResult = 1;
     }
     else
@@ -352,7 +352,7 @@ int validatePassword(char password[MAXLEN])
                     {
                         if (stringLength-digit-upperCase-lowerCase-symbol == 0)
                         {
-                            //printf("\tValid\n");
+                            printf("\tValid\n");
                             correctness = 1;
                         }
                         else
@@ -448,7 +448,7 @@ int validateName(char nameInput[])
         }
         else
         {
-            //printf("\tValid\n");
+            printf("\tValid\n");
             nameInput[countFirstName] = ' ';
             return 1;
         }
@@ -533,7 +533,7 @@ int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[])
                 }
                 else
                 {
-                    //printf("\tValid\n");
+                    printf("\tValid\n");
                     return 1;
                 }
             }
@@ -858,7 +858,7 @@ int validateBankAcc(char bankAcc[MAXLEN], char buffer[MAXLEN])
                     if (checkLast3Digits(bankAcc) == 1)
                     {
                         correctness = 1;
-                        //printf("\tValid\n");
+                        printf("\tValid\n");
                     }
                 }
             }

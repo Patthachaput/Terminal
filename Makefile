@@ -30,13 +30,13 @@ validate.o :	validate.c validate.h
 fileManager.o :	fileManager.c mainAuction.h
 	gcc -c fileManager.c
 
-dataBuilder.o :	dataBuilder.c dataBuilder.h mainAuction.h 
+dataBuilder.o :	dataBuilder.c dataBuilder.h mainAuction.h
 	gcc -c databuilder.c
 
 interface.o :	interface.c validate.h dataBuilder.h
 	gcc -c interface.c
 
-onlineAuction$(EXECEXT) : interface.o validate.o dataBuilder.o fileManager.o 
+onlineAuction$(EXECEXT) : interface.o validate.o dataBuilder.o fileManager.o
 	gcc -o onlineAuction$(EXECEXT) interface.o validate.o dataBuilder.o fileManager.o
 
 
