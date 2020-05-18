@@ -98,8 +98,7 @@ int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1,
 */
 void printCategory(int category)
 {
-    int choice = 0;
-    switch (choice) {
+    switch (category) {
         case 1:
             printf("Category: Home & Garden\n");
             break;
