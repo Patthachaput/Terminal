@@ -559,12 +559,12 @@ int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[])
 /*=========================== address validation ===========================*/
 
 /**********************************************************************************
- * addressCheck
+ * ha Punyathanasub 62070503415
+ * Edited by Narapathra MoraddressCheck
  * - check is all the house numbers are correct
  * - and does not contain anything other than number and '/'
- * - return 1 if invalid 0 if valid
- * Created by Natacha Punyathanasub 62070503415
- * Edited by Narapathra Morakrant 62070503464
+ * - return 1 if invalid 60 if valid
+ * Created by Natacakrant 2070503464
  */
 int addressCheck(char address[])
 {
@@ -574,7 +574,7 @@ int addressCheck(char address[])
     int slashCount=0;
     if(isdigit(address[0]) != 1)
     {
-        invalid = 1;
+             invalid = 1;
     }
 
     for(i=1;i<(strlen(address)-1);i++)
@@ -601,91 +601,101 @@ int addressCheck(char address[])
     }
     if(isdigit(address[ strlen(address) -1 ])!=1 )
     {
-        invalid = 1;
+          invalid = 1;
     }
     if(slashCount>1)
     {
-        invalid = 1;
+          invalid = 1;
     }
     return invalid;
 }
 
 /***********************************************************
  * validateAddress
- * 	- this function validate address
+ *  - this function validate address
  *
  * Argument address - address of user
  * RETURN -1 - house number fail
- * 		  -2 - street name fail
- * 		  -3 - optional fail
- * 		  -4 - postalCode fail 
- *  	   1 - if success
+ *        -2 - street name fail
+ *        -3 - optional fail
+ *        -4 - postalCode fail 
+ *         1 - if success
  **/
 int validateAddress(char* address)
 {
-	char number[10];
-	char streetName[32];
-	char optional[32];
-	char postalCode[10];
+    char number[10];
+    char streetName[32];
+    char optional[32];
+    char postalCode[10];
 
-	int i; /*counter*/
-
-    if(address[strlen(address) - 1] == '\n')
+    int i; /*counter*/
+    sscanf(address,"%s %s %s %s",number,streetName,optional,postalCode);
+    if(!isdigit(number[0]))
     {
-        address[strlen(address) - 1] = '\0';
+        return -1;
     }
 
-	sscanf(address,"%s %s %s %s",number,streetName,optional,postalCode);
+    for(i=0;i<strlen(number);i++)
+    {
+        if(!isdigit(number[i]))
+        {
+            if(number[i] != '/')
+            {
+                return -1;
+            }
+        }
+    }
 
-	if(!isdigit(number[0]))
-	{
-		return -1;
-	}
-	
-	for(i=0;i<strlen(number);i++)
-	{
-		if(!isdigit(number[i]))
-		{
-			if(number[i] != '/')
-			{
-				return -1;
-			}
-		}
-	}
+    for(i=0;i<strlen(streetName);i++)
+    {
+        if(ispunct(streetName[i]))
+        {
+            return -2;
+        }
+    }
 
-	for(i=0;i<strlen(streetName);i++)
-	{
-		if(ispunct(streetName[i]))
-		{
-			return -2;
-		}
-	}
+    if(!(strcmp(optional,"Road")==0 || strcmp(optional,"Street")==0 || strcmp(optional,"Lane")==0))
+    {
+        for(i=0;i<strlen(optional);i++)
+        {
+            if(!isdigit(optional[i]))
+            {
+                return -4;
+            }
+        }
 
-	if(!(strcmp(optional,"Road")==0 || strcmp(optional,"Street")==0 || strcmp(optional,"Lane")==0))
-	{
-		return -3;
-	}
+        if(!(optional[0] == '1' && optional[1] == '0'))
+        {
+            return -4;
+        }
 
-	for(i=0;i<strlen(postalCode);i++)
-	{
-		if(!isdigit(postalCode[i]))
-		{
-			return -4;
-		}
-	}
+        if(strlen(optional)!=5)
+        {
+            return -4;
+        }
+    }
+    else
+    {
+        for(i=0;i<strlen(postalCode);i++)
+        {
+            if(!isdigit(postalCode[i]))
+            {
+                return -4;
+            }
+        }
 
-	if(!(postalCode[0] == '1' && postalCode[1] == '0'))
-	{
-		return -4;
-	}
+        if(!(postalCode[0] == '1' && postalCode[1] == '0'))
+        {
+            return -4;
+        }
 
-	if(strlen(postalCode)!=5)
-	{
-		return -4;
-	}
+        if(strlen(postalCode)!=5)
+        {
+            return -4;
+        }
+    }
 
-	return 1;
-
+    return 1;
 }
 
 
