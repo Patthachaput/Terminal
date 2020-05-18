@@ -98,8 +98,7 @@ int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1,
 */
 void printCategory(int category)
 {
-    int choice = 0;
-    switch (choice) {
+    switch (category) {
         case 1:
             printf("Category: Home & Garden\n");
             break;
@@ -282,6 +281,10 @@ int buildData()
     for(i=0;i<TOTALUSER;i++)
     {
     	insertUserSortByEmail(users_by_id[i]);
+    
+    for(i=0;i<TOTALUSER;i++)
+    {
+        insertUserSortByEmail(users_by_id[i]);
     }
 
    return 0;
@@ -380,6 +383,7 @@ USER_T * searchUserByEmail(char* email)
 		middle = (lowest+highest)/2;
 
 	}
+    
 	return NULL;
 }
 
