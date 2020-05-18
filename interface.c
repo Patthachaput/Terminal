@@ -117,8 +117,7 @@ int loginInput()
             break;
         }
         
-        //validate = validateEmail(email);
-        validate = 1;
+        validate = validateEmail(email);
         if(validate == 1)
         {
             bufferUser = searchUserByEmail(email);
@@ -185,8 +184,7 @@ int registration()
             printf("Email: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", email);
-            //validate = validateEmail(email);
-            validate = 1;
+            validate = validateEmail(email);
             if(validate == 1)
             {
                 strcpy(newUser.email,email);
@@ -580,12 +578,12 @@ int browse()
     
     printf("====================================================== BROWSE =====================================================\n\n");
     printf("                Browse Instruction                                                                                 \n");
-    printf("                1. Choose your categories or print all the products in ID sequence                                 \n");
-    printf("                2. Choose how you want to seach the product in that category                                       \n");
-    printf("                    - Open Date                                                                                    \n");
-    printf("                    - Close Date                                                                                   \n");
-    printf("                    - Minimum Bid                                                                                  \n");
-    printf("                    - Final Price (Closed Auction only)                                                            \n\n");
+    printf("                Firstly  - Choose your categories or print all the products in ID sequence                         \n");
+    printf("                Secondly - Choose how you want to seach the product in that category                               \n");
+    printf("                                > Open Date                                                                        \n");
+    printf("                                > Close Date                                                                       \n");
+    printf("                                > Minimum Bid                                                                      \n");
+    printf("                                > Final Price (Closed Auction only)                                                \n\n");
     printf("===================================================================================================================\n\n");
 
     do
@@ -878,8 +876,7 @@ int editInfo(int choice)
                 printf("Email: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", email);
-                //validate = validateEmail(email);
-                validate = 1;
+                validate = validateEmail(email);
                 if(validate == 1)
                 {
                     strcpy(loginUser->email,email);
