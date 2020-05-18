@@ -71,7 +71,7 @@ int logInMenu()
     {
         loginStatus = NLOGIN;
         choice = 0;
-        printf("How do you want to login? ");
+        printf(">>>>> How do you want to login? ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
 
@@ -103,15 +103,15 @@ int loginInput()
     
     do
     {
-        printf("Please enter your email and password to login\n");
-        printf("Email: ");
+        printf(">>>>> Please enter your email and password to login (leave blank to go back to login page)\n");
+        printf("\tEmail: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", email);
-        printf("Password: ");
+        printf("\tPassword: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", password);
         
-        if ((strcmp(email,"\0")==1)&&(strcmp(password,"\0")==1))
+        if ((strlen(email)==0)&&(strlen(password)==0))
         {
             loginStatus = NLOGIN;
             break;
@@ -124,7 +124,8 @@ int loginInput()
             
             if(bufferUser == NULL)
             {
-                printf("There is no assosiate account with this email! Please go to register\n\n");
+                printf("\n\tThere is no assosiate account with this email! Please go to register\n\n");
+                break;
             }
             else
             {
@@ -132,13 +133,13 @@ int loginInput()
                 {
                     loginStatus = LOGIN;
                     loginUser = bufferUser;
-                    printf("Successful login!\n\n");
+                    printf("\n\tSuccessful login!\n\n");
                     break;
                 }
                 else
                 {
                     loginUser = NULL;
-                    printf("Incorrect email or password! please try again\n\n");
+                    printf("\n\tIncorrect email or password! please try again\n\n");
                 }
             }
 
@@ -175,13 +176,13 @@ int registration()
     
     do
     {
-        printf("Please enter your information\n");
+        printf(">>>>> Please enter your information\n");
 
         do
         {
             printf("\n");
             memset(email,0, sizeof(email));
-            printf("Email: ");
+            printf("\tEmail: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", email);
             validate = validateEmail(email);
@@ -196,14 +197,14 @@ int registration()
         {
             printf("\n");
             memset(password,0, sizeof(password));
-            printf("Please enter password following to these rules\n");
-            printf("- At least 8 characters long and no longer than 12 characters\n");
-            printf("- MUST contain at least one upper case letter\n");
-            printf("- MUST contain at least one lower case letter\n");
-            printf("- MUST contain at least two digits\n");
-            printf("- MUST contain at least one of the following special characters: ? @ %% $ #\n");
-            printf("- MUST not contain any other special characters not in the list above\n");
-            printf("Password: ");
+            printf("\tPlease enter password following to these rules\n");
+            printf("\t- At least 8 characters long and no longer than 12 characters\n");
+            printf("\t- MUST contain at least one upper case letter\n");
+            printf("\t- MUST contain at least one lower case letter\n");
+            printf("\t- MUST contain at least two digits\n");
+            printf("\t- MUST contain at least one of the following special characters: ? @ %% $ #\n");
+            printf("\t- MUST not contain any other special characters not in the list above\n");
+            printf("\n\tPassword: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", password);
             validate = validatePassword(password);
@@ -218,13 +219,12 @@ int registration()
         {
             printf("\n");
             memset(name,0, sizeof(name));
-            printf("Full name (No title): ");
+            printf("\tFull name (No title): ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%[^\n]", name);
             validate = validateName(name);
             if(validate == 1)
             {
-                printf("\t\t%s\n",name);
                 strcpy(newUser.name,name);
                 break;
             }
@@ -234,13 +234,13 @@ int registration()
         {
             printf("\n");
             memset(address,0, sizeof(address));
-            printf("Please enter address following to these rules\n");
-            printf("- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
-            printf("but must have at least one digit before and one digit after the slash.\n");
-            printf("- Next a street name which can include numbers as well as letters\n");
-            printf("- Next an optional label “Road”, “Street” or “Lane”\n");
-            printf("- a postal code must be five digits and which must begin with “10”\n");
-            printf("Address (Bangkok): ");
+            printf("\tPlease enter address following to these rules\n");
+            printf("\t- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
+            printf("\tbut must have at least one digit before and one digit after the slash.\n");
+            printf("\t- Next a street name which can include numbers as well as letters\n");
+            printf("\t- Next an optional label “Road”, “Street” or “Lane”\n");
+            printf("\t- a postal code must be five digits and which must begin with “10”\n");
+            printf("\n\tAddress (Bangkok): ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%[^\n]", address);
             validate = validateAddress(address);
@@ -255,7 +255,7 @@ int registration()
         {
             printf("\n");
             memset(phoneNumber,0, sizeof(phoneNumber));
-            printf("Phone Number (Thai): ");
+            printf("\tPhone Number (Thai): ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", phoneNumber);
             validate = validatePhoneNumThai(phoneNumber,buffer);
@@ -270,7 +270,7 @@ int registration()
         {
             printf("\n");
             memset(bankAccNumber,0, sizeof(bankAccNumber));
-            printf("Bank Account: ");
+            printf("\tBank Account: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", bankAccNumber);
             validate = validateBankAcc(bankAccNumber,buffer);
@@ -286,19 +286,19 @@ int registration()
             printf("\n");
             if(registerNewUser(newUser) == 0)
             {
-                printf("The user with this email is already exist\n");
-                printf("Please try again\n");
+                printf("\tThe user with this email is already exist\n");
+                printf("\tPlease try again\n");
             }
             else
             {
-                printf("\nThis your information\n");
+                printf("\n>>>>> This your information\n");
                 printf("\tEmail: %s\n",email);
                 printf("\tPassword: %s\n",password);
                 printf("\tFull name (No title): %s\n",name);
                 printf("\tAddress: %s\n",address);
                 printf("\tPhone Number (Thai): %s\n",phoneNumber);
                 printf("\tBank Account: %s\n",bankAccNumber);
-                printf("Successful registered!\n\n");
+                printf("\n\tSuccessful registered!\n\n");
                 break;
             }
         }
@@ -321,7 +321,7 @@ int bidMenu()
     do
     {
         productId = -1;
-        printf("Type the product ID that you want to bid (if none, type negative number) : ");
+        printf(">>>>> Type the product ID that you want to bid (if none, type negative number) : ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &productId);
         printf("\n");
@@ -335,7 +335,7 @@ int bidMenu()
     product = searchProductById(productId);
     if(product == NULL)
     {
-        printf("Cannot find any product with this ID\n");
+        printf("\tCannot find any product with this ID\n");
     }
     else
     {
@@ -343,7 +343,7 @@ int bidMenu()
         if(checkProductStatus(product,currentDate) == 0)
         {
             printProduct(product,currentDate);
-            printf("Sorry, you cannot bid this auction. It is already close.\n");
+            printf("\tSorry, you cannot bid this auction. It is already close.\n");
         }
         else
         {
@@ -351,7 +351,7 @@ int bidMenu()
             do
             {
                 bidAmount = 0;
-                printf("Type the amount that you want to bid : ");
+                printf(">>>>> Type the amount that you want to bid : ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%lf", &bidAmount);
                 
@@ -362,19 +362,19 @@ int bidMenu()
                 {
                     if(validate == 1)
                     {
-                        printf("Bid Success!\n\n");
+                        printf("\tBid Success!\n\n");
                     }
                     else if(validate == -1)
                     {
-                        printf("Unsuccesful, The bid price is less than minimum bid.\n\n");
+                        printf("\tUnsuccesful, The bid price is less than minimum bid.\n\n");
                     }
                     else if(validate == -2)
                     {
-                        printf("Unsuccesful, The bid price is less than or equal to current bid.\n\n");
+                        printf("\tUnsuccesful, The bid price is less than or equal to current bid.\n\n");
                     }
                     else if(validate == -4)
                     {
-                        printf("Unsuccesful, You cannot bid your our product.\n\n");
+                        printf("\tUnsuccesful, You cannot bid your our product.\n\n");
                     }
                     break;
                 }
@@ -408,13 +408,13 @@ int subBrowse(int category)
     do
     {
         choice = 0;
-        printf("Choose your category to browse : ");
+        printf(">>>>> Choose your category to browse : ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
           
         if((choice > 5)||(choice < 1))
         {
-            printf("Invalid choice! please try again\n\n");
+            printf("\tInvalid choice! please try again\n\n");
         }
         else
         {
@@ -428,11 +428,11 @@ int subBrowse(int category)
             do
             {
                 memset(date,0,sizeof(date));
-                printf("Type open date you want to search (dd-mm-yyyy hh:tt) : ");
+                printf(">>>>> Type open date you want to search (dd-mm-yyyy hh:tt) : ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", date);
                 validate = validateDateTime(date);
-                if(validate == 0)
+                if(validate != 2)
                 {
                     printf("\tInvalid Date - please try again\n");
                 }
@@ -450,7 +450,7 @@ int subBrowse(int category)
             do
             {
                 memset(date,0,sizeof(date));
-                printf("Type close date you want to search (dd-mm-yyyy hh:tt) : ");
+                printf(">>>>> Type close date you want to search (dd-mm-yyyy hh:tt) : ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", date);
                 validate = validateDateTime(date);
@@ -471,7 +471,7 @@ int subBrowse(int category)
             do
             {
                 minBid = 0;
-                printf("Type amount of minimum bid you want to searh: ");
+                printf(">>>>> Type amount of minimum bid you want to searh: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%lf", &minBid);
                 if(minBid <= 0)
@@ -490,7 +490,7 @@ int subBrowse(int category)
             do
             {
                 finalPrice = 0;
-                printf("Type amount of final price you want to searh (Closed Auction only): ");
+                printf(">>>>> Type amount of final price you want to searh (Closed Auction only): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%lf", &finalPrice);
                 if(finalPrice <= 0)
@@ -537,14 +537,14 @@ int browseByCategory()
     do
     {
         choice = 0;
-        printf("Choose a category to browse : ");
+        printf(">>>>> Choose a category to browse : ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
         printf("\n");
        
         if((choice > 9)||(choice < 1))
         {
-            printf("Invalid choice! please try again\n\n");
+            printf("\tInvalid choice! please try again\n\n");
         }
         else
         {
@@ -589,13 +589,13 @@ int browse()
     do
     {
         memset(choice,0,sizeof(choice));
-        printf("Do you want to continue (Y/N) ? ");
+        printf(">>>>> Do you want to continue (Y/N) ? ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", choice);
        
         if((choice[0] != 'Y')&&(choice[0] != 'N'))
         {
-            printf("Invalid choice! please try again\n\n");
+            printf("\tInvalid choice! please try again\n\n");
         }
         else if(choice[0] == 'Y')
         {
@@ -631,13 +631,13 @@ void bidHistory()
     do
     {
         choice = 0;
-        printf("How do you want to view your bid history : ");
+        printf(">>>>> How do you want to view your bid history : ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
           
         if((choice > 3)||(choice < 1))
         {
-            printf("Invalid choice! please try again\n\n");
+            printf("\tInvalid choice! please try again\n\n");
         }
         else
         {
@@ -655,12 +655,12 @@ void bidHistory()
     }
     else if(choice == 2)
     {
-        printf("Please type the product ID : ");
+        printf(">>>>> Please type the product ID : ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &productId);
         if(searchProductBid(productId,loginUser,currentDate) == 0)
         {
-            printf("You haven't bid this product yet\n\n");
+            printf("\tYou haven't bid this product yet\n\n");
         }
     }
 }
@@ -682,13 +682,13 @@ void saleHistory()
     do
     {
         choice = 0;
-        printf("How do you want to view your sell history : ");
+        printf(">>>>> How do you want to view your sell history : ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
           
         if((choice > 3)||(choice < 1))
         {
-            printf("Invalid choice! please try again\n\n");
+            printf("\tInvalid choice! please try again\n\n");
         }
         else
         {
@@ -706,12 +706,12 @@ void saleHistory()
     }
     else if(choice == 2)
     {
-        printf("Please type the product ID : ");
+        printf(">>>>> Please type the product ID : ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &productId);
         if(searchSaleAuction(productId,loginUser,currentDate) == 0)
         {
-            printf("You are not selling any product with this ID\n\n");
+            printf("\tYou are not selling any product with this ID\n\n");
         }
     }
 }
@@ -731,15 +731,15 @@ int createAuction()
     
     do
     {
-        printf("Please enter the product information\n");
+        printf(">>>>> Please enter the product information\n");
         memset(name,0, sizeof(name));
-        printf("Name: ");
+        printf("\tName: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%[^\n]", name);
         strcpy(newProduct.name,name);
         
         memset(description,0, sizeof(description));
-        printf("Description: ");
+        printf("\tDescription: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%[^\n]", description);
         strcpy(newProduct.description,description);
@@ -747,21 +747,21 @@ int createAuction()
         do
         {
             category = 0;
-            printf("Category: \n");
-            printf("\t1.Home & Garden\n");
-            printf("\t2.Collectibles\n");
-            printf("\t3.Sport\n");
-            printf("\t4.Electronic\n");
-            printf("\t5.Fashion\n");
-            printf("\t6.Health & Beauty\n");
-            printf("\t7.Motor\n");
-            printf("Choose your category ");
+            printf("\tCategory: \n");
+            printf("\t\t1.Home & Garden\n");
+            printf("\t\t2.Collectibles\n");
+            printf("\t\t3.Sport\n");
+            printf("\t\t4.Electronic\n");
+            printf("\t\t5.Fashion\n");
+            printf("\t\t6.Health & Beauty\n");
+            printf("\t\t7.Motor\n");
+            printf("\tChoose your category ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%d", &category);
             if((category > 7)||(category < 1))
             {
                validate = 0;
-               printf("Invalid choice! please try again\n\n");
+               printf("\tInvalid choice! please try again\n\n");
             }
             else
             {
@@ -774,7 +774,7 @@ int createAuction()
         {
             memset(buffer2,0, sizeof(buffer2));
             minBid =0;
-            printf("Minimum Bid: ");
+            printf("\tMinimum Bid: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", buffer2);
             validate = 0;
@@ -790,7 +790,7 @@ int createAuction()
         do
         {
             memset(dateClose,0, sizeof(dateClose));
-            printf("Date Close (dd-mm-yyyy hh:tt) : ");
+            printf("\tDate Close (dd-mm-yyyy hh:tt) : ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%[^\n]", dateClose);
             validate = validateDateTime(dateClose);
@@ -804,13 +804,14 @@ int createAuction()
         if(validate == 1)
         {
             insertProduct(newProduct,loginUser);
-            printf("\nThis is your product information\n");
+            printf("5\n");
+            printf("\n>>>>> This is your product information\n");
             printf("\tName: %s\n",name);
             printf("\tDescription: %s\n",description);
             printCategory(category);
             printf("\tMinimum Bid: %0.2lf\n",minBid);
             printf("\tDate Close: %s\n",dateClose);
-            printf("Successful created the auction!\n\n");
+            printf("\n\tSuccessful created the auction!\n\n");
             break;
         }
         
@@ -837,13 +838,13 @@ int personalInfo()
     do
     {
         choice = 0;
-        printf("What do you want to edit? ");
+        printf(">>>>> What do you want to edit? ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
        
         if((choice > 7)||(choice < 1))
         {
-            printf("Invalid choice! please try again\n\n");
+            printf("\tInvalid choice! please try again\n\n");
         }
         else
         {
@@ -873,7 +874,7 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(email,0, sizeof(email));
-                printf("Email: ");
+                printf("\tEmail: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", email);
                 validate = validateEmail(email);
@@ -889,14 +890,14 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(password,0, sizeof(password));
-                printf("Please enter password following to these rules\n");
-                printf("- At least 8 characters long and no longer than 12 characters\n");
-                printf("- MUST contain at least one upper case letter\n");
-                printf("- MUST contain at least one lower case letter\n");
-                printf("- MUST contain at least two digits\n");
-                printf("- MUST contain at least one of the following special characters: ? @ %% $ #\n");
-                printf("- MUST not contain any other special characters not in the list above\n");
-                printf("Password: ");
+                printf("\tPlease enter password following to these rules\n");
+                printf("\t- At least 8 characters long and no longer than 12 characters\n");
+                printf("\t- MUST contain at least one upper case letter\n");
+                printf("\t- MUST contain at least one lower case letter\n");
+                printf("\t- MUST contain at least two digits\n");
+                printf("\t- MUST contain at least one of the following special characters: ? @ %% $ #\n");
+                printf("\t- MUST not contain any other special characters not in the list above\n");
+                printf("\tPassword: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", password);
                 validate = validatePassword(password);
@@ -912,13 +913,12 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(name,0, sizeof(name));
-                printf("Full name (No title): ");
+                printf("\tFull name (No title): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", name);
                 validate = validateName(name);
                 if(validate == 1)
                 {
-                    printf("\t\t%s\n",name);
                     strcpy(loginUser->name,name);
                     break;
                 }
@@ -929,13 +929,13 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(address,0, sizeof(address));
-                printf("Please enter address following to these rules\n");
-                printf("- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
-                printf("but must have at least one digit before and one digit after the slash.\n");
-                printf("- Next a street name which can include numbers as well as letters\n");
-                printf("- Next an optional label “Road”, “Street” or “Lane”\n");
-                printf("- a postal code must be five digits and which must begin with “10”\n");
-                printf("Address (Bangkok): ");
+                printf("\tPlease enter address following to these rules\n");
+                printf("\t- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
+                printf("\tbut must have at least one digit before and one digit after the slash.\n");
+                printf("\t- Next a street name which can include numbers as well as letters\n");
+                printf("\t- Next an optional label “Road”, “Street” or “Lane”\n");
+                printf("\t- a postal code must be five digits and which must begin with “10”\n");
+                printf("\tAddress (Bangkok): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", address);
                 validate = validateAddress(address);
@@ -951,7 +951,7 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(phoneNumber,0, sizeof(phoneNumber));
-                printf("Phone Number (Thai): ");
+                printf("\tPhone Number (Thai): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", phoneNumber);
                 validate = validatePhoneNumThai(phoneNumber,buffer);
@@ -967,7 +967,7 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(bankAccNumber,0, sizeof(bankAccNumber));
-                printf("Bank Account: ");
+                printf("\tBank Account: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", bankAccNumber);
                 validate = validateBankAcc(bankAccNumber,buffer);
@@ -1003,13 +1003,13 @@ int homePage()
     do
     {
         choice = 0;
-        printf("What do you want to do? ");
+        printf(">>>>> What do you want to do? ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%d", &choice);
         
         if((choice > 6)||(choice < 1))
         {
-            printf("Invalid choice! please try again\n\n");
+            printf("\tInvalid choice! please try again\n\n");
         }
         else
         {

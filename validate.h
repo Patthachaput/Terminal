@@ -187,13 +187,4 @@ int validateDateTime(char input[MAXLEN]);
  **/
 int validateAddress(char* address);
 
-/***********************************************************
- * Control email function that check email result from the
- * email validation and it will be return 1 if it true.
- * and 0 if it not following the condition.(passing to the
- * validate function in validation.c(source file)
- * created by Natacha Punyathanasub 62070503415
- */
-int validateEmail(char email[]);
-
 #endif /* validate_h */
