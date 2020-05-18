@@ -276,11 +276,12 @@ int buildData()
     	insertfinalPriceSort(p);
     	insertOpenDateSort(p);
     	insertCloseDateSort(p);
+
     }
 
-    for(i=0;i<TOTALPRODUCT;i++)
+    for(i=0;i<TOTALUSER;i++)
     {
-    	printf("%d %s\n",lProduct[i]->idProduct,lProduct[i]->name );
+    	insertUserSortByEmail(users_by_id[i]);
     }
 
    return 0;
@@ -852,38 +853,6 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
 
     }
     return 0;
-}
-
-/* search for sale auction using binary search
- * Return 1 - if product exist 
- *        0 - if product does not exist
- */
-int searchSaleAuction(int id, USER_T* user,DATE_T currentDate)
-{
-	int l = 0; /*lowest*/
-	int h = histories[user->idUser -1].sizeofSealAuction -1; /*heighest*/
-	int m = h/2; /*middle*/
-
-	while(l <= h)
-	{
-		if(histories[user->idUser -1].sealAuction[m] < id)
-		{
-			l = m +1;
-		}
-		else if(histories[user->idUser -1].sealAuction[m] == id)
-		{
-            printProduct(lProduct[id],currentDate);
-			return 1;
-		}
-		else 
-		{
-			h = m -1;
-		}
-
-		m = (l+h)/2;
-
-	}
-	return 0;
 }
 
 /* search for product bid using binary search
