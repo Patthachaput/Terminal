@@ -7,6 +7,7 @@
 
 #ifndef dataBuilder_h
 #include "mainAuction.h"
+#include "display.h"
 
 /*this structure sort by price*/
 typedef struct
@@ -36,6 +37,43 @@ typedef struct
     int openDateCount;
     int closeDateCount;
 }PRODUCT_IN_CAT;
+
+/* Compares two dates. Returns 1 if the
+ * first date is later than the second, -1 if the
+ * first date is earlier than the second, and 0 if
+ * they are the same.
+ *
+ * Created by Sally Goldin (Edit by permission)
+ * Edit by Supakorn Srisawast 3449
+ *
+ * Arguments: day1   - day of first date
+ *            month1 - month of first date
+ *            year1  - year of first date
+ *            hour1  - hour of first date
+ *            min1   - minute of first date
+ *            day2   - day of second date
+ *            month2 - month of second date
+ *            year2  - year of second date
+ *            hour2  - hour of second date
+ *            min2   - minute of second date */
+int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1,
+                   int year2, int month2, int day2, int hour2, int min2);
+
+/***********************************************************************
+*  printCatagory
+*  - for display product category in the terminal
+*  - no return
+* created by Narapathra Morakrant 62070503464
+*/
+void printCategory(int category);
+
+/***********************************************************************
+ *  printProduct
+ *  - for display product in the terminal
+ *  - no return
+ * created by Narapathra Morakrant 62070503464
+ */
+void printProduct(PRODUCT_T* product,DATE_T currentDate);
 
 /* build data structure by reading data in the file
  * No return - if error occur program will be close automatically
@@ -177,26 +215,9 @@ int closeProgram();
 /* This function display all products in lists*/
 int showProductByCat(int cat,DATE_T currentDate);
 
-/* Compares two dates. Returns 1 if the 
- * first date is later than the second, -1 if the 
- * first date is earlier than the second, and 0 if
- * they are the same.
- *
- * Created by Sally Goldin (Edit by permission)
- * Edit by Supakorn Srisawast 3449
- * 
- * Arguments: day1   - day of first date
- *            month1 - month of first date
- *            year1  - year of first date
- *            hour1  - hour of first date
- *            min1   - minute of first date
- *            day2   - day of second date
- *            month2 - month of second date
- *            year2  - year of second date
- *            hour2  - hour of second date
- *            min2   - minute of second date */
-int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1, 
-                   int year2, int month2, int day2, int hour2, int min2);
+void showBidHistory(int userId,DATE_T currentDate);
+
+void showsellHistory(int userId,DATE_T currentDate);
 
 /*This function register new user and add user
  * into data structure 
