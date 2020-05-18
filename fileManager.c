@@ -361,7 +361,7 @@ int writeHistory(HISTORY_T* history)
 			}
 		}
 	    fclose(pHistory);
-	    TOTALHISTORY = newTotalNumOfHis;
+	    //TOTALHISTORY = newTotalNumOfHis;
 	    return 1;
 	}
 
