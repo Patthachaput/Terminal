@@ -1383,7 +1383,6 @@ int showsellHistory(int userId,DATE_T currentDate)
  *        
  *  Created by Narapathra Morakrant 62070503464
  */
-
 int saveEditInfo()
 {
     if(writeUser(users_by_id) == 1)
