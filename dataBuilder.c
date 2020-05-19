@@ -280,10 +280,6 @@ int buildData()
 
     for(i=0;i<TOTALUSER;i++)
     {
-    	insertUserSortByEmail(users_by_id[i]);
-    
-    for(i=0;i<TOTALUSER;i++)
-    {
         insertUserSortByEmail(users_by_id[i]);
     }
 
@@ -866,11 +862,14 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
 int searchProductBid(int id, USER_T* user, DATE_T currentDate)
 {
     int l = 0; /*lowest*/
-    int h = histories[user->idUser -1].sizeofProductBit -1; /*heighest*/
+    int h = histories[user->idUser -1].sizeofProductBit - 1; /*heighest*/
     int m = h/2; /*middle*/
 
     while(l <= h)
     {
+    	printf("l = %d\n", l);
+    	printf("h= %d\n",h );
+    	printf("m = %d\n",m );
         if(histories[user->idUser -1].productBid[m] < id)
         {
             l = m +1;
@@ -1075,4 +1074,8 @@ int closeProgram()
     free(histories);
     
     return 0;
+}
+
+int searchSaleAuction(int id, USER_T* user,DATE_T currentDate){
+	return 0;
 }
