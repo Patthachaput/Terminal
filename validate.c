@@ -867,7 +867,6 @@ int validateBankAcc(char bankAcc[MAXLEN], char buffer[MAXLEN])
                     if (checkLast3Digits(bankAcc) == 1)
                     {
                         correctness = 1;
-                        printf("\tValid\n");
                     }
                 }
             }

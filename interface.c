@@ -132,7 +132,7 @@ int loginInput()
             loginStatus = NLOGIN;
             break;
         }
-        
+
         validate = validateEmail(email);
         if(validate == 1)
         {
@@ -179,6 +179,7 @@ int registration()
     char phoneNumber[64];
     char bankAccNumber[64];
     int validate = 0;
+    int checkBack = 0;
     USER_T newUser;
     
     do
@@ -198,9 +199,16 @@ int registration()
             printf("\t- At least one alphanumeric character between the at­sign and the TLD.\n");
             printf("\t- No underscores after the at­sign.\n");
             printf("\t- At least one alphanumeric character between any periods that occur after the at­sign.\n\n");
+            printf(">>>>> type ""BACK"" to go back to login page\n\n");
             printf("\tEmail: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", email);
+
+            if(strcasecmp(email, "BACK") == 0)
+            {
+                printf("\n");
+                return 0;
+            }
             validate = validateEmail(email);
             if(validate == 1)
             {
@@ -398,23 +406,23 @@ int bidMenu()
                     {
                         if(validate == 1)
                         {
-                            printf("\tBid Success!\n\n");
+                            printf("\n\tBid Success!\n\n");
                         }
                         else if(validate == -2)
                         {
-                            printf("\tUnsuccesful, The bid price is less than minimum bid.\n\n");
+                            printf("\n\tUnsuccesful, The bid price is less than minimum bid.\n\n");
                         }
                         else if(validate == -3)
                         {
-                            printf("\tUnsuccesful, The bid price is less than or equal to current bid.\n\n");
+                            printf("\n\tUnsuccesful, The bid price is less than or equal to current bid.\n\n");
                         }
                         else if(validate == -4)
                         {
-                            printf("\tUnsuccesful, You cannot bid your our product.\n\n");
+                            printf("\n\tUnsuccesful, You cannot bid your our product.\n\n");
                         }
                         else if(validate == -5)
                         {
-                            printf("\tUnsuccesful, You are the current highest bid.\n\n");
+                            printf("\n\tUnsuccesful, You are the current highest bid.\n\n");
                         }
                         break;
                     }
@@ -662,11 +670,11 @@ int browse()
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", choice);
        
-        if((choice[0] != 'Y')&&(choice[0] != 'N'))
+        if((choice[0] != 'Y')&&(choice[0] != 'N') && (choice[0] != 'y')&&(choice[0] != 'n'))
         {
             printf("\tInvalid choice! please try again\n\n");
         }
-        else if(choice[0] == 'Y')
+        else if(choice[0] == 'Y' || choice[0] == 'y')
         {
             continues = 1;
             break;
@@ -676,7 +684,7 @@ int browse()
             break;
         }
         
-    }while ((choice[0] != 'Y')&&(choice[0] != 'N'));
+    }while ((choice[0] != 'Y')&&(choice[0] != 'N') && (choice[0] != 'y')&&(choice[0] != 'n'));
     
     printf("\n");
     
@@ -886,6 +894,13 @@ int editInfo(int choice)
     char bankAccNumber[64];
     int validate = 0;
     
+    bufferUser = searchUserById(loginUser->idUser);
+    if(bufferUser == NULL)
+    {
+        printf("\tCannot find user by ID\n");
+        return 0;
+    }
+
     switch (choice) {
         case 1:
             do
@@ -907,7 +922,7 @@ int editInfo(int choice)
                 validate = validateEmail(email);
                 if(validate == 1)
                 {
-                    strcpy(loginUser->email,email);
+                    strcpy(bufferUser->email,email);
                     break;
                 }
             }while (validate != 1);
@@ -930,7 +945,7 @@ int editInfo(int choice)
                 validate = validatePassword(password);
                 if(validate == 1)
                 {
-                    strcpy(loginUser->password,password);
+                    strcpy(bufferUser->password,password);
                     break;
                 }
             }while (validate != 1);
@@ -949,7 +964,7 @@ int editInfo(int choice)
                 validate = validateName(name);
                 if(validate == 1)
                 {
-                    strcpy(loginUser->name,name);
+                    strcpy(bufferUser->name,name);
                     break;
                 }
             }while (validate != 1);
@@ -971,7 +986,7 @@ int editInfo(int choice)
                 validate = validateAddress(address);
                 if(validate == 1)
                 {
-                    strcpy(loginUser->address,address);
+                    strcpy(bufferUser->address,address);
                     break;
                 }
             }while (validate != 1);
@@ -991,7 +1006,7 @@ int editInfo(int choice)
                 validate = validatePhoneNumThai(phoneNumber,buffer);
                 if(validate == 1)
                 {
-                    strcpy(loginUser->phoneNumber,phoneNumber);
+                    strcpy(bufferUser->phoneNumber,phoneNumber);
                     break;
                 }
             }while (validate != 1);
@@ -1012,7 +1027,7 @@ int editInfo(int choice)
                 validate = validateBankAcc(bankAccNumber,buffer);
                 if(validate == 1)
                 {
-                    strcpy(loginUser->bankAccNumber,bankAccNumber);
+                    strcpy(bufferUser->bankAccNumber,bankAccNumber);
                     break;
                 }
             }while (validate != 1);
@@ -1021,18 +1036,14 @@ int editInfo(int choice)
             break;
 
     }
-    
-    bufferUser = searchUserById(loginUser->idUser);
-    if(bufferUser == NULL)
+
+    loginUser = bufferUser;
+    saveEditInfo();
+    if(validate == 1)
     {
-        printf("\tCannot find user by ID\n");
+        printf("Succressfull Edit!\n");
     }
-    else
-    {
-        bufferUser = loginUser;
-        saveEditInfo();
-    }
-    
+
     return 0;
 }
 
