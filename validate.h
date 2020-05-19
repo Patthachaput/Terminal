@@ -91,6 +91,15 @@ int validateName(char nameInput[]);
 int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[]);
 
 /***********************************************************
+ * Control email function that check email result from the
+ * email validation and it will be return 1 if it true.
+ * and 0 if it not following the condition.(passing to the
+ * validate function in validation.c(source file)
+ * created by Natacha Punyathanasub 62070503415
+ */
+int validateEmail(char email[]);
+
+/***********************************************************
  * validateAddress
  *     - this function validate address
  *
@@ -165,27 +174,14 @@ void dateTimeToday(int* pDay, int *pMonth, int* pYear, int* pHour, int* pMinute)
  */
 int validateDateTime(char input[MAXLEN]);
 
-
-/***********************************************************
- * validateAddress
- * 	- this function validate address
- *
- * Argument address - address of user
- * RETURN -1 - house number fail
- * 		  -2 - street name fail
- * 		  -3 - optional fail
- * 		  -4 - postalCode fail 
- *  	   1 - if success
- **/
-int validateAddress(char* address);
-
-/***********************************************************
- * Control email function that check email result from the
- * email validation and it will be return 1 if it true.
- * and 0 if it not following the condition.(passing to the
- * validate function in validation.c(source file)
- * created by Natacha Punyathanasub 62070503415
+/*********************************************************************************
+ * validateDateTime
+ *  - function which check the date and time is valid
+ *  - get the string input from the user
+ *  - call others function to print error message if it is invalid
+ *  - return 0 for invalid, 1 for future, 2 for valid past
+ * created by Narapathra Morakrant 62070503464
  */
-int validateEmail(char email[]);
+int validateDateTime2(char input[MAXLEN]);
 
 #endif /* validate_h */

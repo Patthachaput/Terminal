@@ -24,8 +24,6 @@
 
 #define NLOGIN 0
 #define LOGIN 1
-#define GUEST 2
-
 
 int loginStatus = 0; /* 0 for not log in, 1 for login with account, 2 for guest */
 USER_T* loginUser;
@@ -55,16 +53,34 @@ DATE_T createDateStruct(char input[64])
     return dateInput;
 }
 
+DATE_T createDateStruct2(char input[64])
+{
+    DATE_T dateInput;
+    int day=0;
+    int month=0;
+    int year=0;
+    int hour=0;
+    int minute=0;
+    
+    dateInput.hour = 0;
+    dateInput.minute = 0;
+    dateInput.day = day;
+    dateInput.month = month;
+    dateInput.year = year;
+    
+    return dateInput;
+}
+
 int logInMenu()
 {
     char buffer[32];
     int choice = 0;
     
     printf("================================================== LOGIN PAGE =====================================================\n\n");
-    printf("                                            1.Log in                             \n");
-    printf("                                            2.Log in as guest                    \n");
-    printf("                                            3.Register                           \n");
-    printf("                                            4.Exit program                       \n\n");
+    printf("                                            1. Log in                             \n");
+    printf("                                            2. Log in as guest                    \n");
+    printf("                                            3. Register                           \n");
+    printf("                                            4. Exit program                       \n\n");
     printf("===================================================================================================================\n\n");
 
     do
@@ -103,7 +119,7 @@ int loginInput()
     
     do
     {
-        printf(">>>>> Please enter your email and password to login (leave blank to go back to login page)\n");
+        printf(">>>>> Please enter your email and password to login (leave blank to go back to login page)\n\n");
         printf("\tEmail: ");
         fgets(buffer,sizeof(buffer),stdin);
         sscanf(buffer,"%s", email);
@@ -142,23 +158,14 @@ int loginInput()
                     printf("\n\tIncorrect email or password! please try again\n\n");
                 }
             }
-
+        }
+        else
+        {
+            printf("\tInvalid email\n");
         }
         
     }while (loginStatus != 1);
-    
-    /*
-    printf("=========== Personal Info =========\n\n");
-    printf("\t Email: %s\n",loginUser->email);
-    printf("\t Password: %s\n",loginUser->password);
-    printf("\t Full name (No title): %s\n",loginUser->name);
-    printf("\t Address: %s\n",loginUser->address);
-    printf("\t Phone Number (Thai): %s\n",loginUser->phoneNumber);
-    printf("\t Bank Account: %s\n",loginUser->bankAccNumber);
-    printf("\n");
-    printf("===================================\n\n");
-    printf("\n");
-    */
+
     return loginStatus;
 }
 
@@ -182,6 +189,15 @@ int registration()
         {
             printf("\n");
             memset(email,0, sizeof(email));
+            printf("\t* Please enter email following to these rules *\n");
+            printf("\t- No embedded spaces or special characters anywhere in the email address, except . - @ _\n");
+            printf("\t- Must begin with an alphanumeric (letter or digit) character.\n");
+            printf("\t- Exactly one occurrence of the at­sign (@).\n");
+            printf("\t- At least one alphabetic character before the at­sign.\n");
+            printf("\t- Address must end in one of: .com, .net, .ac.th, or .co.th (top­level domains or TLD).\n");
+            printf("\t- At least one alphanumeric character between the at­sign and the TLD.\n");
+            printf("\t- No underscores after the at­sign.\n");
+            printf("\t- At least one alphanumeric character between any periods that occur after the at­sign.\n\n");
             printf("\tEmail: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", email);
@@ -191,20 +207,21 @@ int registration()
                 strcpy(newUser.email,email);
                 break;
             }
+                
         }while (validate != 1);
-    
+
         do
         {
             printf("\n");
             memset(password,0, sizeof(password));
-            printf("\tPlease enter password following to these rules\n");
+            printf("\t* Please enter password following to these rules *\n");
             printf("\t- At least 8 characters long and no longer than 12 characters\n");
             printf("\t- MUST contain at least one upper case letter\n");
             printf("\t- MUST contain at least one lower case letter\n");
             printf("\t- MUST contain at least two digits\n");
             printf("\t- MUST contain at least one of the following special characters: ? @ %% $ #\n");
-            printf("\t- MUST not contain any other special characters not in the list above\n");
-            printf("\n\tPassword: ");
+            printf("\t- MUST not contain any other special characters not in the list above\n\n");
+            printf("\tPassword: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", password);
             validate = validatePassword(password);
@@ -219,6 +236,9 @@ int registration()
         {
             printf("\n");
             memset(name,0, sizeof(name));
+            printf("\t* Please enter your name following to these rules *\n");
+            printf("\t- First and last names must be at least 2 characters long and no longer than 30 characters (each)\n");
+            printf("\t- Do NOT include title.\n\n");
             printf("\tFull name (No title): ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%[^\n]", name);
@@ -229,18 +249,18 @@ int registration()
                 break;
             }
         }while (validate != 1);
-        
+
         do
         {
             printf("\n");
             memset(address,0, sizeof(address));
-            printf("\tPlease enter address following to these rules\n");
+            printf("\t* Please enter address following to these rules *\n");
             printf("\t- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
             printf("\tbut must have at least one digit before and one digit after the slash.\n");
             printf("\t- Next a street name which can include numbers as well as letters\n");
             printf("\t- Next an optional label “Road”, “Street” or “Lane”\n");
-            printf("\t- a postal code must be five digits and which must begin with “10”\n");
-            printf("\n\tAddress (Bangkok): ");
+            printf("\t- a postal code must be five digits and which must begin with “10”\n\n");
+            printf("\tAddress (Bangkok): ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%[^\n]", address);
             validate = validateAddress(address);
@@ -250,11 +270,15 @@ int registration()
                 break;
             }
         }while (validate != 1);
-        
+
         do
         {
             printf("\n");
             memset(phoneNumber,0, sizeof(phoneNumber));
+            printf("\t* Please enter phone number following to these rules *\n");
+            printf("\t- Only digits and dashes allowed (no blanks)\n");
+            printf("\t- Must include ten digits.\n");
+            printf("\t- First two digits must be: 01, 05, 06, 08 or 09.\n\n");
             printf("\tPhone Number (Thai): ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", phoneNumber);
@@ -265,11 +289,16 @@ int registration()
                 break;
             }
         }while (validate != 1);
-        
+
         do
         {
             printf("\n");
             memset(bankAccNumber,0, sizeof(bankAccNumber));
+            printf("\t* Please enter bank account number following to these rules *\n");
+            printf("\t- A bank account number is exactly 11 digits, with or without dashes.\n");
+            printf("\t- If there are dashes, they must be type in like this: ddd­ddddd­ddd.\n");
+            printf("\t- The first three digits must be one of the following: 206, 209, 128, 921, 403, 421.\n");
+            printf("\t- The last three digits must include at least one zero.\n\n");
             printf("\tBank Account: ");
             fgets(buffer,sizeof(buffer),stdin);
             sscanf(buffer,"%s", bankAccNumber);
@@ -291,14 +320,14 @@ int registration()
             }
             else
             {
-                printf("\n>>>>> This your information\n");
+                printf("\n>>>>> This your information\n\n");
                 printf("\tEmail: %s\n",email);
                 printf("\tPassword: %s\n",password);
                 printf("\tFull name (No title): %s\n",name);
                 printf("\tAddress: %s\n",address);
                 printf("\tPhone Number (Thai): %s\n",phoneNumber);
                 printf("\tBank Account: %s\n",bankAccNumber);
-                printf("\n\tSuccessful registered!\n\n");
+                printf("\n\tSuccessful registeration!\n\n");
                 break;
             }
         }
@@ -329,61 +358,69 @@ int bidMenu()
         {
             return 0;
         }
-          
+    
     }while (productId <= 0);
     
     product = searchProductById(productId);
     if(product == NULL)
     {
-        printf("\tCannot find any product with this ID\n");
+        printf("\tCannot find any product with this ID\n\n");
     }
     else
     {
-        dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
-        if(checkProductStatus(product,currentDate) == 0)
+        if(loginStatus == NLOGIN)
         {
-            printProduct(product,currentDate);
-            printf("\tSorry, you cannot bid this auction. It is already close.\n");
+            printf("\tSorry, you need to login to bid the product.\n\n");
         }
         else
         {
-            printProduct(product,currentDate);
-            do
+            printf("===================================================== BID PRODUCT =================================================\n\n");
+            dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+            if(checkProductStatus(product,currentDate) == 0)
             {
-                bidAmount = 0;
-                printf(">>>>> Type the amount that you want to bid : ");
-                fgets(buffer,sizeof(buffer),stdin);
-                sscanf(buffer,"%lf", &bidAmount);
-                
-                dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
-                validate = bidProduct(product,loginUser,currentDate,bidAmount);
-                
-                if(bidAmount > 0 )
+                printProduct(product,currentDate);
+                printf("\tSorry, you cannot bid this auction. It is already close.\n\n");
+            }
+            else
+            {
+                printProduct(product,currentDate);
+                do
                 {
-                    if(validate == 1)
+                    bidAmount = 0;
+                    printf(">>>>> Type the amount that you want to bid : ");
+                    fgets(buffer,sizeof(buffer),stdin);
+                    sscanf(buffer,"%lf", &bidAmount);
+                    
+                    dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+                    validate = bidProduct(product,loginUser,currentDate,bidAmount);
+                    
+                    if(bidAmount > 0 )
                     {
-                        printf("\tBid Success!\n\n");
+                        if(validate == 1)
+                        {
+                            printf("\tBid Success!\n\n");
+                        }
+                        else if(validate == -2)
+                        {
+                            printf("\tUnsuccesful, The bid price is less than minimum bid.\n\n");
+                        }
+                        else if(validate == -3)
+                        {
+                            printf("\tUnsuccesful, The bid price is less than or equal to current bid.\n\n");
+                        }
+                        else if(validate == -4)
+                        {
+                            printf("\tUnsuccesful, You cannot bid your our product.\n\n");
+                        }
+                        else if(validate == -5)
+                        {
+                            printf("\tUnsuccesful, You are the current highest bid.\n\n");
+                        }
+                        break;
                     }
-                    else if(validate == -1)
-                    {
-                        printf("\tUnsuccesful, The bid price is less than minimum bid.\n\n");
-                    }
-                    else if(validate == -2)
-                    {
-                        printf("\tUnsuccesful, The bid price is less than or equal to current bid.\n\n");
-                    }
-                    else if(validate == -4)
-                    {
-                        printf("\tUnsuccesful, You cannot bid your our product.\n\n");
-                    }
-                    else if(validate == -5)
-                    {
-                        printf("\tUnsuccesful, You are the current highest bid.\n\n");
-                    }
-                    break;
-                }
 
-            } while (bidAmount <= 0);
+                } while (bidAmount <= 0);
+            }
         }
     }
     
@@ -400,13 +437,14 @@ int subBrowse(int category)
     double finalPrice = 0;
     int choice = 0;
     int validate = 0;
+    int found = 1;
     
     printf("========================================= SERACH FOR SPECIFIC ITEM ===============================================\n\n");
-    printf("                                          1.Date Open                                                         \n");
-    printf("                                          2.Date Close                                                        \n");
-    printf("                                          3.Minimum Bid                                                       \n");
-    printf("                                          4.Final Price (closed auction only)                                 \n");
-    printf("                                          5.Back to homepage                                                  \n\n");
+    printf("                                         1. Date Open                                                         \n");
+    printf("                                         2. Date Close                                                        \n");
+    printf("                                         3. Minimum Bid                                                       \n");
+    printf("                                         4. Final Price (closed auction only)                                 \n");
+    printf("                                         5. Back to homepage                                                  \n\n");
     printf("===================================================================================================================\n\n");
        
     do
@@ -432,32 +470,37 @@ int subBrowse(int category)
             do
             {
                 memset(date,0,sizeof(date));
-                printf(">>>>> Type open date you want to search (dd-mm-yyyy hh:tt) : ");
+                printf(">>>>> Type open date you want to search (dd-mm-yyyy) : ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", date);
-                validate = validateDateTime(date);
-                if(validate != 2)
+                printf("\n");
+                validate = validateDateTime2(date);
+                if(validate != 1)
                 {
                     printf("\tInvalid Date - please try again\n");
                 }
                 else
                 {
                     dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
-                    inputDate = createDateStruct(date);
-                    searchByOpenDate(category, inputDate, currentDate);
-                    bidMenu();
+                    inputDate = createDateStruct2(date);
+                    if(searchByOpenDate(category, inputDate, currentDate)==0)
+                    {
+                        found = 0;
+                        printf("\tSorry, we cannot find any product with your specification.\n\n");
+                    }
                     break;
                 }
-            } while (validate == 0);
+            } while (validate == 1);
             break;
         case 2:
             do
             {
                 memset(date,0,sizeof(date));
-                printf(">>>>> Type close date you want to search (dd-mm-yyyy hh:tt) : ");
+                printf(">>>>> Type close date you want to search (dd-mm-yyyy) : ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", date);
-                validate = validateDateTime(date);
+                printf("\n");
+                validate = validateDateTime2(date);
                 if(validate == 0)
                 {
                     printf("\tInvalid Date - please try again\n");
@@ -465,8 +508,12 @@ int subBrowse(int category)
                 else
                 {
                     dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
-                    inputDate = createDateStruct(date);
-                    searchByCloseDate(category, inputDate, currentDate);
+                    inputDate = createDateStruct2(date);
+                    if(searchByCloseDate(category, inputDate, currentDate)==0)
+                    {
+                        found = 0;
+                        printf("\n\tSorry, we cannot find any product with your specification.\n\n");
+                    }
                     break;
                 }
             } while (validate == 0);
@@ -478,6 +525,7 @@ int subBrowse(int category)
                 printf(">>>>> Type amount of minimum bid you want to searh: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%lf", &minBid);
+                printf("\n");
                 if(minBid <= 0)
                 {
                     printf("\tInvalid amount - please try again\n");
@@ -485,7 +533,11 @@ int subBrowse(int category)
                 else
                 {
                     dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
-                    searchByMinbid(category, minBid, currentDate);
+                    if(searchByMinbid(category, minBid, currentDate) == 0)
+                    {
+                        found = 0;
+                        printf("\n\tSorry, we cannot find any product with your specification.\n\n");
+                    }
                     break;
                 }
             } while (minBid <= 0);
@@ -497,14 +549,19 @@ int subBrowse(int category)
                 printf(">>>>> Type amount of final price you want to searh (Closed Auction only): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%lf", &finalPrice);
-                if(finalPrice <= 0)
+                printf("\n");
+                if(finalPrice < 0)
                 {
                     printf("\tInvalid amount - please try again\n");
                 }
                 else
                 {
                     dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
-                    searchByFinalPrice(category, finalPrice, currentDate);
+                    if(searchByFinalPrice(category, finalPrice, currentDate)==0)
+                    {
+                        found = 0;
+                        printf("\n\tSorry, we cannot find any product with your specification.\n\n");
+                    }
                     break;
                 }
             } while (finalPrice <= 0);
@@ -513,7 +570,7 @@ int subBrowse(int category)
             break;
     }
     
-    if(choice != 5)
+    if((choice != 5)&&(found != 0))
     {
         bidMenu();
     }
@@ -525,17 +582,18 @@ int browseByCategory()
 {
     char buffer[32];
     int choice = 0;
+    int validate = 0;
     
     printf("=============================================== BROWSE BY CATEGORY ===============================================\n\n");
-    printf("                                              1.Home & Garden                                            \n");
-    printf("                                              2.Collectibles                                             \n");
-    printf("                                              3.Sport                                                    \n");
-    printf("                                              4.Electronic                                               \n");
-    printf("                                              5.Fashion                                                  \n");
-    printf("                                              6.Health & Beauty                                          \n");
-    printf("                                              7.Motor                                                    \n");
-    printf("                                              8.print all product                                        \n");
-    printf("                                              9.Back to homepage                                         \n\n");
+    printf("                                              1. Home & Garden                                            \n");
+    printf("                                              2. Collectibles                                             \n");
+    printf("                                              3. Sport                                                    \n");
+    printf("                                              4. Electronic                                               \n");
+    printf("                                              5. Fashion                                                  \n");
+    printf("                                              6. Health & Beauty                                          \n");
+    printf("                                              7. Motor                                                    \n");
+    printf("                                              8. Print all products                                       \n");
+    printf("                                              9. Back to homepage                                         \n\n");
     printf("===================================================================================================================\n\n");
     
     do
@@ -563,8 +621,15 @@ int browseByCategory()
     }
     else if (choice == 8)
     {
-        showProductByCat(choice,currentDate);  /* print all the product in ID sequence */
-        bidMenu();
+        validate = showProductByCat(choice,currentDate);  /* print all the product in ID sequence */
+        if(validate == 1)
+        {
+            bidMenu();
+        }
+        else
+        {
+            printf("\tSorry, There is currently no product in the market.\n\n");
+        }
     }
     else
     {
@@ -581,7 +646,7 @@ int browse()
     int continues = 0;
     
     printf("====================================================== BROWSE =====================================================\n\n");
-    printf("                Browse Instruction                                                                                 \n");
+    printf("                * Browse Instruction *                                                                             \n");
     printf("                Firstly  - Choose your categories or print all the products in ID sequence                         \n");
     printf("                Secondly - Choose how you want to seach the product in that category                               \n");
     printf("                                > Open Date                                                                        \n");
@@ -621,52 +686,23 @@ int browse()
 void bidHistory()
 {
     char buffer[32];
-    int choice = 0;
     int userId = -1;
     int productId = -1;
     int validate = 0;
     
     printf("================================================= BID HISTORY =====================================================\n\n");
-    printf("                                          1.View all bid history                                              \n");
-    printf("                                          2.Search bid history by product ID                                  \n");
-    printf("                                          3.Back to homepage                                                  \n\n");
-    printf("===================================================================================================================\n\n");
-    
-    do
-    {
-        choice = 0;
-        printf(">>>>> How do you want to view your bid history : ");
-        fgets(buffer,sizeof(buffer),stdin);
-        sscanf(buffer,"%d", &choice);
-          
-        if((choice > 3)||(choice < 1))
-        {
-            printf("\tInvalid choice! please try again\n\n");
-        }
-        else
-        {
-            break;
-        }
-          
-    }while ((choice > 5)||(choice < 1));
-    
+
     userId = loginUser->idUser;
     dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+
+    validate = showbidHistory(userId,currentDate);
+    if(validate == 0)
+    {
+        printf("\tYou haven't bid any product yet.\n\n");
+    }
     
-    if(choice == 1)
-    {
-        showbidHistory(userId,currentDate);
-    }
-    else if(choice == 2)
-    {
-        printf(">>>>> Please type the product ID : ");
-        fgets(buffer,sizeof(buffer),stdin);
-        sscanf(buffer,"%d", &productId);
-        if(searchProductBid(productId,loginUser,currentDate) == 0)
-        {
-            printf("\tYou haven't bid this product yet\n\n");
-        }
-    }
+    printf("===================================================================================================================\n\n");
+    
 }
 
 void saleHistory()
@@ -677,47 +713,19 @@ void saleHistory()
     int productId = -1;
     int validate = 0;
     
-    printf("================================================= BID HISTORY =====================================================\n\n");
-    printf("                                          1.View all sell history                                              \n");
-    printf("                                          2.Search sell history by product ID                                  \n");
-    printf("                                          3.Back to homepage                                                  \n\n");
-    printf("===================================================================================================================\n\n");
-    
-    do
-    {
-        choice = 0;
-        printf(">>>>> How do you want to view your sell history : ");
-        fgets(buffer,sizeof(buffer),stdin);
-        sscanf(buffer,"%d", &choice);
-          
-        if((choice > 3)||(choice < 1))
-        {
-            printf("\tInvalid choice! please try again\n\n");
-        }
-        else
-        {
-            break;
-        }
-          
-    }while ((choice > 5)||(choice < 1));
+    printf("================================================ SALE HISTORY =====================================================\n\n");
     
     userId = loginUser->idUser;
     dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+
+    validate = showsellHistory(userId,currentDate);
+    if(validate == 0)
+    {
+        printf("\tYou haven't sold any product yet.\n\n");
+    }
     
-    if(choice == 1)
-    {
-        showsellHistory(userId,currentDate);
-    }
-    else if(choice == 2)
-    {
-        printf(">>>>> Please type the product ID : ");
-        fgets(buffer,sizeof(buffer),stdin);
-        sscanf(buffer,"%d", &productId);
-        if(searchSaleAuction(productId,loginUser,currentDate) == 0)
-        {
-            printf("\tYou are not selling any product with this ID\n\n");
-        }
-    }
+    printf("===================================================================================================================\n\n");
+
 }
 
 int createAuction()
@@ -803,6 +811,10 @@ int createAuction()
                 newProduct.dateClose = createDateStruct(dateClose);
                 break;
             }
+            else
+            {
+                printf("\tInvalid input please type agian\n");
+            }
         }while (validate != 1);
         
         dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
@@ -810,7 +822,7 @@ int createAuction()
         if(validate == 1)
         {
             insertProduct(newProduct,loginUser,currentDate);
-            printf("\n>>>>> This is your product information\n");
+            printf("\n>>>>> This is your product information\n\n");
             printf("\tName: %s\n",name);
             printf("\tDescription: %s\n",description);
             printCategory(category);
@@ -831,13 +843,13 @@ int personalInfo()
     int choice = 0;
     
     printf("=================================================== PERSONAL INFO =================================================\n\n");
-    printf("                    1. Email: %s                      \n",loginUser->email);
-    printf("                    2. Password: %s                   \n",loginUser->password);
-    printf("                    3. Full name (No title): %s       \n",loginUser->name);
-    printf("                    4. Address: %s                    \n",loginUser->address);
-    printf("                    5. Phone Number (Thai): %s        \n",loginUser->phoneNumber);
-    printf("                    6. Bank Account: %s               \n",loginUser->bankAccNumber);
-    printf("                    7. Back to homepage               \n\n");
+    printf("                           1. Email: %s                      \n",loginUser->email);
+    printf("                           2. Password: %s                   \n",loginUser->password);
+    printf("                           3. Full name (No title): %s       \n",loginUser->name);
+    printf("                           4. Address: %s                    \n",loginUser->address);
+    printf("                           5. Phone Number (Thai): %s        \n",loginUser->phoneNumber);
+    printf("                           6. Bank Account: %s               \n",loginUser->bankAccNumber);
+    printf("                           7. Back to homepage               \n\n");
     printf("===================================================================================================================\n\n");
    
     do
@@ -880,6 +892,15 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(email,0, sizeof(email));
+                printf("\t* Please enter email following to these rules *\n");
+                printf("\t- No embedded spaces or special characters anywhere in the email address, except . - @ _\n");
+                printf("\t- Must begin with an alphanumeric (letter or digit) character.\n");
+                printf("\t- Exactly one occurrence of the at­sign (@).\n");
+                printf("\t- At least one alphabetic character before the at­sign.\n");
+                printf("\t- Address must end in one of: .com, .net, .ac.th, or .co.th (top­level domains or TLD).\n");
+                printf("\t- At least one alphanumeric character between the at­sign and the TLD.\n");
+                printf("\t- No underscores after the at­sign.\n");
+                printf("\t- At least one alphanumeric character between any periods that occur after the at­sign.\n\n");
                 printf("\tEmail: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", email);
@@ -896,13 +917,13 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(password,0, sizeof(password));
-                printf("\tPlease enter password following to these rules\n");
+                printf("\t* Please enter password following to these rules *\n");
                 printf("\t- At least 8 characters long and no longer than 12 characters\n");
                 printf("\t- MUST contain at least one upper case letter\n");
                 printf("\t- MUST contain at least one lower case letter\n");
                 printf("\t- MUST contain at least two digits\n");
                 printf("\t- MUST contain at least one of the following special characters: ? @ %% $ #\n");
-                printf("\t- MUST not contain any other special characters not in the list above\n");
+                printf("\t- MUST not contain any other special characters not in the list above\n\n");
                 printf("\tPassword: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", password);
@@ -919,6 +940,9 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(name,0, sizeof(name));
+                printf("\t* Please enter your name following to these rules *\n");
+                printf("\t- First and last names must be at least 2 characters long and no longer than 30 characters (each)\n");
+                printf("\t- Do NOT include title.\n\n");
                 printf("\tFull name (No title): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", name);
@@ -935,12 +959,12 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(address,0, sizeof(address));
-                printf("\tPlease enter address following to these rules\n");
+                printf("\t* Please enter address following to these rules *\n");
                 printf("\t- Begins with a number (the house number) which can include a slash, e.g. “34/12”\n");
                 printf("\tbut must have at least one digit before and one digit after the slash.\n");
                 printf("\t- Next a street name which can include numbers as well as letters\n");
                 printf("\t- Next an optional label “Road”, “Street” or “Lane”\n");
-                printf("\t- a postal code must be five digits and which must begin with “10”\n");
+                printf("\t- a postal code must be five digits and which must begin with “10”\n\n");
                 printf("\tAddress (Bangkok): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%[^\n]", address);
@@ -957,6 +981,10 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(phoneNumber,0, sizeof(phoneNumber));
+                printf("\t* Please enter phone number following to these rules *\n");
+                printf("\t- Only digits and dashes allowed (no blanks)\n");
+                printf("\t- Must include ten digits.\n");
+                printf("\t- First two digits must be: 01, 05, 06, 08 or 09.\n\n");
                 printf("\tPhone Number (Thai): ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", phoneNumber);
@@ -973,6 +1001,11 @@ int editInfo(int choice)
             {
                 printf("\n");
                 memset(bankAccNumber,0, sizeof(bankAccNumber));
+                printf("\t* Please enter bank account number following to these rules *\n");
+                printf("\t- A bank account number is exactly 11 digits, with or without dashes.\n");
+                printf("\t- If there are dashes, they must be type in like this: ddd­ddddd­ddd.\n");
+                printf("\t- The first three digits must be one of the following: 206, 209, 128, 921, 403, 421.\n");
+                printf("\t- The last three digits must include at least one zero.\n\n");
                 printf("\tBank Account: ");
                 fgets(buffer,sizeof(buffer),stdin);
                 sscanf(buffer,"%s", bankAccNumber);
@@ -997,6 +1030,7 @@ int editInfo(int choice)
     else
     {
         bufferUser = loginUser;
+        saveEditInfo();
     }
     
     return 0;
@@ -1043,7 +1077,8 @@ int main()
 {
     int choice = 0;
     
-    buildData();   /* build data structure by reading data in the file */
+    dateTimeToday(&currentDate.day,&currentDate.month,&currentDate.year,&currentDate.hour,&currentDate.minute);
+    buildData(currentDate);   /* build data structure by reading data in the file */
     
     printf("+ + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +\n");
     printf("===================================================================================================================\n");
@@ -1071,6 +1106,8 @@ int main()
     
     do
     {
+        loginUser = NULL;
+        loginStatus = NLOGIN;
         choice = logInMenu();
         
         if (choice == 1)
@@ -1110,6 +1147,8 @@ int main()
                             choice = 1;
                             break;
                         default:
+                            loginUser = NULL;
+                            loginStatus = NLOGIN;
                             break;
                     }
                 }
@@ -1117,6 +1156,8 @@ int main()
         }
         else if (choice == 2)
         {
+            loginUser = NULL;
+            loginStatus = NLOGIN;
             do
             {
                 choice = browse();
@@ -1132,6 +1173,8 @@ int main()
         }
         else if (choice == 3)
         {
+            loginUser = NULL;
+            loginStatus = NLOGIN;
             registration();
         }
         else
