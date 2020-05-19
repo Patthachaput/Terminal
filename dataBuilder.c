@@ -281,7 +281,6 @@ void printProductHistory(PRODUCT_T* product,DATE_T currentDate,int userId)
     
     if(status == 0)
     {
-
         printf("-------------------------------------------------------------------------------------------------------------------\n");
         printf("\t| PRODUCT ID %d |\n\n", product->idProduct);
         if(product->userAuthorityId == userId)
@@ -416,9 +415,6 @@ int buildData(DATE_T currentDate)
     	lProduct[totalProductsLocation] = p;
     	totalProductsLocation++;
         
-        insertMinbidSort(p);
-        insertOpenDateSort(p);
-        insertCloseDateSort(p);
         if(p->status == 1)
         {
             p->status = checkProductStatus(p,currentDate);
@@ -428,15 +424,12 @@ int buildData(DATE_T currentDate)
             insertfinalPriceSort(p);
         }
 
-<<<<<<< HEAD
     	insertMinbidSort(p);
-    	insertfinalPriceSort(p);
     	insertOpenDateSort(p);
     	insertCloseDateSort(p);
 
-=======
         writeProduct(products);
->>>>>>> 7d8dc99b39974efe28e2b2dcd61950e0f75bc3fc
+
     }
 
     for(i=0;i<TOTALUSER;i++)
@@ -468,6 +461,7 @@ int insertUser(USER_T user)
     user_history.sizeofSealAuction = 0;
     user_history.productBid = calloc(user_history.sizeofProductBit,sizeof(int));
     user_history.sealAuction = calloc(user_history.sizeofSealAuction,sizeof(int));
+    
     if(user_history.productBid==NULL || user_history.sealAuction==NULL)
     {
 		printf("Error allocating memories\n");
@@ -552,9 +546,11 @@ int insertProduct(PRODUCT_T product, USER_T * user, DATE_T currentDate)
     ADDNEWPRODUCT++;
     product.idProduct = TOTALPRODUCT + ADDNEWPRODUCT;
     product.hostId = user->idUser;
-    product.userAuthorityId = 0;
     product.nowPrice = 0; /*set default bid price*/
+    
+    product.userAuthorityId = -1;
     product.finalPrice = 0;
+
     product.dateOpen = currentDate;
     product.status = 1; /*assume the auction is currently open*/
 
@@ -886,7 +882,7 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
     int count =0;
 
     PRODUCT_T *p = NULL;
-    
+
     while(l <= h)
     {
         if(bidTimeCompare2(product_in_cat[cat].closeDateSort[m].date.year,
@@ -907,9 +903,9 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
         {
             for(i=m;i>=0;i--)
             {
-                if(bidTimeCompare2(product_in_cat[cat].closeDateSort[m].date.year,
-                                product_in_cat[cat].closeDateSort[m].date.month,
-                                product_in_cat[cat].closeDateSort[m].date.day,
+                if(bidTimeCompare2(product_in_cat[cat].closeDateSort[i].date.year,
+                                product_in_cat[cat].closeDateSort[i].date.month,
+                                product_in_cat[cat].closeDateSort[i].date.day,
                                 date.year,
                                 date.month,
                                 date.day) == 0)
@@ -925,9 +921,9 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
 
             for(i=m+1;i<product_in_cat[cat].closeDateCount;i++)
             {
-                if(bidTimeCompare2(product_in_cat[cat].closeDateSort[m].date.year,
-                                product_in_cat[cat].closeDateSort[m].date.month,
-                                product_in_cat[cat].closeDateSort[m].date.day,
+                if(bidTimeCompare2(product_in_cat[cat].closeDateSort[i].date.year,
+                                product_in_cat[cat].closeDateSort[i].date.month,
+                                product_in_cat[cat].closeDateSort[i].date.day,
                                 date.year,
                                 date.month,
                                 date.day) == 0)
@@ -953,7 +949,7 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
         m = (l+h)/2;
 
     }
-    return count;
+    return 0;
 }
 
 /* searching for product by open date
@@ -973,7 +969,6 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
     int m = h/2; /*middle*/
     int count = 0;
     PRODUCT_T *p = NULL;
-    
     while(l <= h)
     {
         if(bidTimeCompare2(product_in_cat[cat].openDateSort[m].date.year,
@@ -994,9 +989,9 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
         {
             for(i=m;i>=0;i--)
             {
-                if(bidTimeCompare2(product_in_cat[cat].openDateSort[m].date.year,
-                                product_in_cat[cat].openDateSort[m].date.month,
-                                product_in_cat[cat].openDateSort[m].date.day,
+                if(bidTimeCompare2(product_in_cat[cat].openDateSort[i].date.year,
+                                product_in_cat[cat].openDateSort[i].date.month,
+                                product_in_cat[cat].openDateSort[i].date.day,
                                 date.year,
                                 date.month,
                                 date.day) == 0)
@@ -1012,9 +1007,9 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
 
             for(i=m+1;i<product_in_cat[cat].openDateCount;i++)
             {
-                if(bidTimeCompare2(product_in_cat[cat].openDateSort[m].date.year,
-                                product_in_cat[cat].openDateSort[m].date.month,
-                                product_in_cat[cat].openDateSort[m].date.day,
+                if(bidTimeCompare2(product_in_cat[cat].openDateSort[i].date.year,
+                                product_in_cat[cat].openDateSort[i].date.month,
+                                product_in_cat[cat].openDateSort[i].date.day,
                                 date.year,
                                 date.month,
                                 date.day) == 0)
@@ -1053,16 +1048,12 @@ int searchProductBid(int id, USER_T* user, DATE_T currentDate)
 
     while(l <= h)
     {
-    	printf("l = %d\n", l);
-    	printf("h= %d\n",h );
-    	printf("m = %d\n",m );
         if(histories[user->idUser -1].productBid[m] < id)
         {
             l = m +1;
         }
         else if(histories[user->idUser -1].productBid[m] == id)
         {
-            printProduct(lProduct[id],currentDate);
             return 1;
         }
         else
@@ -1075,6 +1066,7 @@ int searchProductBid(int id, USER_T* user, DATE_T currentDate)
     }
     return 0;
 }
+
 /* this function bid product by insert price and user
  * into product struct
  *
@@ -1108,19 +1100,23 @@ int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double pric
 	{
 		return -4;
 	}
-	if(products->userAuthorityId == user->idUser)
-	{
-        return -5;
-	}
+	// if(products->userAuthorityId == user->idUser)
+	// {
+ //        return -5;
+	// }
 
-    histories[user->idUser - 1].sizeofProductBit++;
-    histories[user->idUser - 1].productBid = realloc(histories[user->idUser - 1].productBid,histories[user->idUser - 1].sizeofProductBit*sizeof(int));
-    if(histories[user->idUser - 1].productBid == NULL)
+    if(searchProductBid(product->idProduct, user, currentDate)==0)
     {
-        printf("Error reallocating memories\n");
-        exit(0);
+        histories[user->idUser - 1].sizeofProductBit++;
+        histories[user->idUser - 1].productBid = realloc(histories[user->idUser - 1].productBid,histories[user->idUser - 1].sizeofProductBit*sizeof(int));
+        if(histories[user->idUser - 1].productBid == NULL)
+        {
+            printf("Error reallocating memories\n");
+            exit(0);
+        }
+        insertProductBidSort(product->idProduct,user);     
     }
-    insertProductBidSort(product->idProduct,user);
+
 	product->nowPrice = price;
 	product->userAuthorityId = user->idUser;
 
@@ -1290,6 +1286,3 @@ int closeProgram()
     return 0;
 }
 
-int searchSaleAuction(int id, USER_T* user,DATE_T currentDate){
-	return 0;
-}

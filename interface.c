@@ -62,6 +62,8 @@ DATE_T createDateStruct2(char input[64])
     int hour=0;
     int minute=0;
     
+    sscanf(input,"%d-%d-%d",&day,&month,&year);
+
     dateInput.hour = 0;
     dateInput.minute = 0;
     dateInput.day = day;
