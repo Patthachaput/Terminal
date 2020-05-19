@@ -303,12 +303,12 @@ int validateEmail(char email[])
     valid=validEmail(email);
     if (valid==1)
     {
-        printf("\tValid\n");
+        //printf("\tValid\n");
         emailResult = 1;
     }
     else
     {
-        printf("\tInvalid\n");
+        //printf("\tInvalid\n");
         emailResult = 0;
     }
     
@@ -352,7 +352,7 @@ int validatePassword(char password[MAXLEN])
                     {
                         if (stringLength-digit-upperCase-lowerCase-symbol == 0)
                         {
-                            printf("\tValid\n");
+                            //printf("\tValid\n");
                             correctness = 1;
                         }
                         else
@@ -407,7 +407,6 @@ int validateName(char nameInput[])
     {
         nameInput[countNameInput - 1] = '\0';
     }
-   
     
     if(checkSpace(nameInput) != 1)
     {
@@ -448,7 +447,7 @@ int validateName(char nameInput[])
         }
         else
         {
-            printf("\tValid\n");
+            //printf("\tValid\n");
             nameInput[countFirstName] = ' ';
             return 1;
         }
@@ -533,7 +532,7 @@ int validatePhoneNumThai(char phoneNumInput[], char fromkeyboard[])
                 }
                 else
                 {
-                    printf("\tValid\n");
+                    //printf("\tValid\n");
                     return 1;
                 }
             }
@@ -1073,7 +1072,7 @@ int dateCompare(int day, int month, int year)
  * timeCompare
  *  - function which check the time getting from user is not in past
  *  - get the string input from the user hh:tt
- *  - return 0 for invalid time and 1 for future time, 2 for the same date and 3 for the past
+ *  - return 0 for invalid time and 1 for future time, 2 for the same time and 3 for the past
  * created by Narapathra Morakrant 62070503464
  */
 int timeCompare (char time[MAXLEN])
@@ -1111,10 +1110,10 @@ int timeCompare (char time[MAXLEN])
         }
     }
     
-    if (correctness == 0)
+    /*if (correctness == 0)
     {
         printf("\tNot Valid - time cannot be in the past \n");
-    }
+    }*/
     
     return correctness;
 }
@@ -1254,33 +1253,83 @@ int validateDateTime(char input[MAXLEN])
     int month=0;
     int year=0;
     
-    sscanf(input,"%s %s",date,time);
-    sscanf(date,"%d-%d-%d",&day,&month,&year);
-    if ((validateDate(date) == 1)&&(validateTime(time)==1))
+    if(strlen(input)==16)
     {
-        validate = dateCompare(day,month,year);
-        if (validate == 1)
+        sscanf(input,"%s %s",date,time);
+        sscanf(date,"%d-%d-%d",&day,&month,&year);
+        if ((validateDate(date) == 1)&&(validateTime(time)==1))
         {
-            correctness = 1;
-        }
-        else if (validate == 2)
-        {
-            validate = timeCompare(time);
-            if(validate == 1)
+            validate = dateCompare(day,month,year);
+            if (validate == 1)
             {
                 correctness = 1;
             }
-            else if(validate == 3)
+            else if (validate == 2)
+            {
+                validate = timeCompare(time);
+                if(validate == 1)
+                {
+                    correctness = 1;
+                }
+                else if(validate == 3)
+                {
+                    correctness = 2;
+                }
+            }
+            else if (validate == 3)
             {
                 correctness = 2;
             }
         }
-        else if (validate == 3)
-        {
-            correctness = 2;
-        }
+    }
+    else
+    {
+        correctness =0;
     }
     
     return correctness;
 }
 
+/*********************************************************************************
+ * validateDateTime
+ *  - function which check the date and time is valid
+ *  - get the string input from the user
+ *  - call others function to print error message if it is invalid
+ *  - return 0 for invalid, 1 for future, 2 for valid past
+ * created by Narapathra Morakrant 62070503464
+ */
+int validateDateTime2(char input[MAXLEN])
+{
+    int validate = 0;
+    int correctness =0;
+    int day=0;
+    int month=0;
+    int year=0;
+
+    if(strlen(input) == 10)
+    {
+        sscanf(input,"%d-%d-%d",&day,&month,&year);
+        if (validateDate(input) == 1)
+        {
+            validate = dateCompare(day,month,year);
+            if (validate == 1)
+            {
+                correctness = 1;    /* future */
+            }
+            else if (validate == 2)
+            {
+                correctness = 1;
+            }
+            else if (validate == 3)
+            {
+                correctness = 2;    /* past */
+            }
+        }
+    }
+    else
+    {
+        correctness = 0;
+    }
+    
+    return correctness;
+}

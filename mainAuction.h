@@ -57,6 +57,7 @@ typedef struct _product
     double finalPrice;
     double nowPrice;
     double minbid;          /*minimum bid price*/
+    int status;             /*close or open auction*/
     int hostId;             /*user who created this product*/
     int userAuthorityId;    /*user who have now authority*/
 }PRODUCT_T;

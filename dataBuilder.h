@@ -58,6 +58,23 @@ typedef struct
 int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1,
                    int year2, int month2, int day2, int hour2, int min2);
 
+/* Compares two dates. Returns 1 if the
+ * first date is later than the second, -1 if the
+ * first date is earlier than the second, and 0 if
+ * they are the same.
+ *
+ * Created by Sally Goldin (Edit by permission)
+ * Edit by Narapathra Morakrant 62070503464
+ *
+ * Arguments: day1   - day of first date
+ *            month1 - month of first date
+ *            year1  - year of first date
+ *            day2   - day of second date
+ *            month2 - month of second date
+ *            year2  - year of second date
+ */
+int bidTimeCompare2(int year1, int month1, int day1, int year2, int month2, int day2);
+
 /***********************************************************************
 *  checkProductStatus
 *  - check does this auction are not close or currently open
@@ -82,10 +99,18 @@ void printCategory(int category);
  */
 void printProduct(PRODUCT_T* product,DATE_T currentDate);
 
+/***********************************************************************
+ *  printProduct
+ *  - for display product history in the terminal
+ *  - no return
+ * created by Narapathra Morakrant 62070503464
+ */
+void printProductHistory(PRODUCT_T* product,DATE_T currentDate,int userId);
+
 /* build data structure by reading data in the file
  * No return - if error occur program will be close automatically
  */
-int buildData();
+int buildData(DATE_T currentDate);
 
 /* insert users into data structure
  * No return
@@ -96,6 +121,14 @@ int insertUser(USER_T user);
  * No return
  */
 int insertUserSortByEmail(USER_T user);
+
+/* serch for users by ID
+ * using binary search
+ *
+ * Return USER_T - if user is exist
+ *        NULL - if user is not exist
+ */
+USER_T * searchUserById(int userId);
 
 /* serch for users by email 
  * using binary search
@@ -108,7 +141,7 @@ USER_T * searchUserByEmail(char* email);
 /* insert product into data structure
  * No return
  */
-int insertProduct(PRODUCT_T product, USER_T * user);
+int insertProduct(PRODUCT_T product, USER_T * user, DATE_T currentDate);
 
 /* insert product and sort by minbid
  * No return
@@ -225,9 +258,9 @@ int closeProgram();
 /* This function display all products in lists*/
 int showProductByCat(int cat,DATE_T currentDate);
 
-void showbidHistory(int userId,DATE_T currentDate);
+int showbidHistory(int userId,DATE_T currentDate);
 
-void showsellHistory(int userId,DATE_T currentDate);
+int showsellHistory(int userId,DATE_T currentDate);
 
 /*This function register new user and add user
  * into data structure 
@@ -235,6 +268,8 @@ void showsellHistory(int userId,DATE_T currentDate);
  * Return 1 - if register success
  *        0 - in case user already exist*/
 int registerNewUser(USER_T user);
+
+int saveEditInfo();
 
 /*This function login and return USER
  * 
