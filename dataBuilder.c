@@ -22,7 +22,8 @@ HISTORY_T * histories; /*keep entire histories for all users*/
 int totalUsersByEmail =0;
 int totalProductsLocation =0;
 
-/* serch for users by ID
+/******************************************************************************
+ * serch for users by ID
  * using binary search
  *
  * Return USER_T - if user is exist
@@ -36,7 +37,8 @@ USER_T * searchUserById(int userId)
     return user;
 }
 
-/* Compares two dates. Returns 1 if the
+/******************************************************************************
+ * Compares two dates. Returns 1 if the
  * first date is later than the second, -1 if the
  * first date is earlier than the second, and 0 if
  * they are the same.
@@ -53,7 +55,8 @@ USER_T * searchUserById(int userId)
  *            month2 - month of second date
  *            year2  - year of second date
  *            hour2  - hour of second date
- *            min2   - minute of second date */
+ *            min2   - minute of second date 
+ */
 int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1,
                    int year2, int month2, int day2, int hour2, int min2)
 {
@@ -104,7 +107,8 @@ int bidTimeCompare(int year1, int month1, int day1, int hour1, int min1,
     return compareValue;
 }
 
-/* Compares two dates. Returns 1 if the
+/******************************************************************************
+ * Compares two dates. Returns 1 if the
  * first date is later than the second, -1 if the
  * first date is earlier than the second, and 0 if
  * they are the same.
@@ -317,8 +321,14 @@ void printProductHistory(PRODUCT_T* product,DATE_T currentDate,int userId)
     printf("\n");
 }
 
-/* build data structure by reading data in the file
- * No return - if error occur program will be close automatically
+/******************************************************************************
+ *  build data structure by reading data in the file
+ *  return 0 - if success 
+ *           - if error occur program will be close automatically
+ *  
+ *  Arguement current date
+ *
+ *  Created by Supakorn Srisawas 62070503449
  */
 int buildData(DATE_T currentDate)
 {
@@ -440,8 +450,13 @@ int buildData(DATE_T currentDate)
    return 0;
 }
 
-/* insert users into data structure
- * No return
+/******************************************************************************
+ * insert users into data structure
+ * return 0 - if successs
+ *          - if error occur program will be close automatically
+ *
+ *  Argument user
+ *  Created by Supakorn Srisawas 62070503449
  */
 int insertUser(USER_T user)
 {
@@ -485,8 +500,13 @@ int insertUser(USER_T user)
     return 0;
 }
 
-/* insert users into data structure sort by name
- * No return
+/******************************************************************************
+ * insert users into data structure sort by email
+ * return 0 - if success
+ *
+ * Arguement user
+ *
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertUserSortByEmail(USER_T user)
 {
@@ -501,11 +521,14 @@ int insertUserSortByEmail(USER_T user)
     return 0;
 }
 
-/* serch for users by email 
+/******************************************************************************
+ * serch for users by email 
  * using binary search
  *
  * Return USER_T - if user is exist
  *        NULL - if user is not exist
+ *
+ * Created by Supakorn Srisawas 62070503449
  */
 USER_T * searchUserByEmail(char* email)
 {
@@ -538,8 +561,16 @@ USER_T * searchUserByEmail(char* email)
 	return NULL;
 }
 
-/* insert product into data structure
- * No return
+/******************************************************************************
+ * insert product into data structure
+ * return 0 - if success
+ *          - if error oucure program will close automatically
+ * 
+ * Argurment - prouduct user created
+ *           - user 
+ *           - current date
+ *
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertProduct(PRODUCT_T product, USER_T * user, DATE_T currentDate)
 {
@@ -615,8 +646,15 @@ int insertProduct(PRODUCT_T product, USER_T * user, DATE_T currentDate)
     return 0;
 }	
 
-/* insert sale aucion into history
- * No return
+/******************************************************************************
+ * insert sale aucion into history
+ * 
+ * return 0 - if success
+ *
+ * Argurment - product id
+ *           - user
+ *           
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertSaleAuctionSort(int id, USER_T* user)
 {
@@ -626,8 +664,13 @@ int insertSaleAuctionSort(int id, USER_T* user)
     return 0;
 }
 
-/* insert product for searching by min bid price.
- * No return
+/******************************************************************************
+ * insert product for searching by min bid price.
+ * return 0 - if success
+ *
+ * Argurment - product
+ * 
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertMinbidSort(PRODUCT_T* product)
 {
@@ -643,8 +686,13 @@ int insertMinbidSort(PRODUCT_T* product)
     return 0;
 }
 
-/* insert product for searching by final price.
- * No return
+/******************************************************************************
+ * insert product for searching by final price.
+ * return 0 - if success
+ *  
+ * Argurment - product
+ * 
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertfinalPriceSort(PRODUCT_T* product)
 {
@@ -660,8 +708,13 @@ int insertfinalPriceSort(PRODUCT_T* product)
     return 0;
 }
 
-/* insert product for searching by open date.
- * No return
+/******************************************************************************
+ * insert product for searching by open date.
+ * return 0 - if success
+ *
+ * Argument - product
+ * 
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertOpenDateSort(PRODUCT_T* product)
 {
@@ -688,8 +741,13 @@ int insertOpenDateSort(PRODUCT_T* product)
     return 0;
 }
 
-/* insert product for searching by close date. 
- * No return
+/******************************************************************************
+ * insert product for searching by close date. 
+ * return 0 - if success
+ *
+ * Argument - product
+ * 
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertCloseDateSort(PRODUCT_T* product)
 {
@@ -716,9 +774,14 @@ int insertCloseDateSort(PRODUCT_T* product)
     return 0;
 }
 
-/* searching for product by product id
+/******************************************************************************
+ * searching for product by product id
  * Return  PRODUCT_T - in case found
  * 		   NULL - in case not found 
+ * 
+ * Argument - product id
+ * 
+ * Created by Supakorn Srisawas 62070503449
  */
 PRODUCT_T* searchProductById(int id)
 {
@@ -734,14 +797,17 @@ PRODUCT_T* searchProductById(int id)
 	return NULL;
 }
 
-/* searching for product by minimum bid
+/******************************************************************************
+ * searching for product by minimum bid
  * using binary search
  *
  * Arguments cat - category of product
  *           bid - amount of bid price 
  *           
  * Return NULL - 1 success
- * 			   - 0 in case fail 
+ * 			   - 0 in case fail
+ *                 
+ * Created by Supakorn Srisawas 62070503449
  */
 int searchByMinbid(int cat, double bid, DATE_T currentDate)
 {
@@ -800,14 +866,18 @@ int searchByMinbid(int cat, double bid, DATE_T currentDate)
     return count;
 }
 
-/* searching for product by final price
+/******************************************************************************
+ * searching for product by final price
  * using binary search
  *
  * Arguments cat - category of product
  *           bid - amount of bid price 
+ *           currentDate - current date
  *  
  * Return NULL - 1 success
  * 			   - 0 in case fail 
+ *                
+ * Created by Supakorn Srisawas 62070503449
  */
 int searchByFinalPrice(int cat, double bid, DATE_T currentDate)
 {
@@ -864,14 +934,18 @@ int searchByFinalPrice(int cat, double bid, DATE_T currentDate)
     return count;
 }
 
-/* searching for product by close date
+/******************************************************************************
+ * searching for product by close date
  * using binary search
  *
  * Arguments cat - category of product
  *           bid - amount of bid price 
- *  
+ *           currentDate - current date
+ *           
  * Return NULL - 1 success
  * 			   - 0 in case fail 
+ *                
+ * Created by Supakorn Srisawas 62070503449
  */
 int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
 {
@@ -952,14 +1026,18 @@ int searchByCloseDate(int cat, DATE_T date, DATE_T currentDate)
     return 0;
 }
 
-/* searching for product by open date
+/******************************************************************************
+ * searching for product by open date
  * using binary search
  *
  * Arguments cat - category of product
  *           bid - amount of bid price 
- *  
+ *           currentDate - current Date
+ *           
  * Return NULL - 1 if found
  * 			   - 0 cannot find any product
+ *                
+ * Created by Supakorn Srisawas 62070503449
  */
 int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
 {
@@ -1036,9 +1114,16 @@ int searchByOpenDate(int cat, DATE_T date,DATE_T currentDate)
     return count;
 }
 
-/* search for product bid using binary search
+/******************************************************************************
+ * search for product bid using binary search
  * Return 1 - if product exist
  *        0 - if product does not exist
+ *
+ * Argument id - product id
+ *          user - current user
+ *          curerntDate - current date
+ *          
+ * Created by Supakorn Srisawas 62070503449
  */
 int searchProductBid(int id, USER_T* user, DATE_T currentDate)
 {
@@ -1067,7 +1152,8 @@ int searchProductBid(int id, USER_T* user, DATE_T currentDate)
     return 0;
 }
 
-/* this function bid product by insert price and user
+/******************************************************************************
+ * this function bid product by insert price and user
  * into product struct
  *
  * Argument USER_T* user
@@ -1080,6 +1166,8 @@ int searchProductBid(int id, USER_T* user, DATE_T currentDate)
  *        -3 if bid price is less than or equal to current price
  *        -4 if user try to bid his/her product
  *        -5 if user try to bid when he/she is current highest bid
+ *        
+ * Created by Supakorn Srisawas 62070503449
  */
 int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double price)
 {	
@@ -1127,8 +1215,14 @@ int bidProduct(PRODUCT_T* product, USER_T* user, DATE_T currentDate, double pric
 	return 1;
 }
 
-/* insert product bit into history
- * No return
+/******************************************************************************
+ * insert product bit into history
+ * return 1 - if success
+ *
+ * Arguement id - user id
+ *           user - current user
+ * 
+ * Created by Supakorn Srisawas 62070503449
  */
 int insertProductBidSort(int id, USER_T* user)
 {
@@ -1144,11 +1238,16 @@ int insertProductBidSort(int id, USER_T* user)
 }
 
 
-/*This function register new user and add user
+/******************************************************************************
+ * This function register new user and add user
  * into data structure 
  * 
  * Return 1 - if register success
  *        0 - in case user already exist
+ *
+ * Argument user - current user
+ * 
+ * Created by Supakorn Srisawas 62070503449
  */
 int registerNewUser(USER_T user)
 {
@@ -1161,7 +1260,8 @@ int registerNewUser(USER_T user)
 	return 0;
 }
 
-/*This function login and return USER
+/******************************************************************************
+ * This function login and return USER
  * 
  * Return USER_T* - if login success
  * 		  NULL    - if login fail
@@ -1169,7 +1269,12 @@ int registerNewUser(USER_T user)
  * Output argument int* status
  * 		  -1 - if user does not exit 
  *        -2 - password does not match
- *         1 - if login success */
+ *         1 - if login success 
+ * Argument email - email of user
+ *          password - password of user
+ *
+ * Created by Supakorn Srisawas 62070503449
+ */
 USER_T* login(char *email, char* password, int* status)
 {
 	USER_T * user = NULL;
@@ -1191,7 +1296,16 @@ USER_T* login(char *email, char* password, int* status)
 	return user;
 }
 
-/*This function display all products in lists*/
+/******************************************************************************
+ *This function display all products in lists
+ * return 1 - if found product
+ *        0 - if not founr
+ *
+ * Argument cat - category of product
+ *          currentDate - current date
+ *          
+ * created by Narapathra Morakrant 62070503464
+ */
 int showProductByCat(int cat,DATE_T currentDate)
 {    
 	int i;
@@ -1206,7 +1320,17 @@ int showProductByCat(int cat,DATE_T currentDate)
     return count;
 }
 
-int showbidHistory(int userId,DATE_T currentDate)
+/******************************************************************************
+ * display history of product user had bid
+ *
+ *  return 0 - if not found
+ *  return 1 - if found
+ *
+ *  Argument userId - user id
+ *           currentDate - current date
+ *  Created by Narapathra Morakrant 62070503464
+ */
+int showbidHistory(int userId, DATE_T currentDate)
 {
     int lproductId;
     int count = 0;
@@ -1223,6 +1347,17 @@ int showbidHistory(int userId,DATE_T currentDate)
     return count;
 }
 
+/******************************************************************************
+ * display all auctions user had created
+ *
+ * return 1 - if found auctions
+ *        0 - not found
+ * 
+ * Argument userId - user id
+ *          currentDate - current date 
+ * 
+ * Created by Narapathra Morakrant 62070503464
+ */
 int showsellHistory(int userId,DATE_T currentDate)
 {
     int lproductId;
@@ -1240,6 +1375,15 @@ int showsellHistory(int userId,DATE_T currentDate)
     return count;
 }
 
+/******************************************************************************
+ * save user information when user edited
+ * 
+ * return 1 - if success
+ *        0 - if fail
+ *        
+ *  Created by Narapathra Morakrant 62070503464
+ */
+
 int saveEditInfo()
 {
     if(writeUser(users_by_id) == 1)
@@ -1250,8 +1394,12 @@ int saveEditInfo()
     return 0;
 }
 
-/*close program and write all file into data
- * No return
+/******************************************************************************
+ * close program and write all file into data
+ * 
+ * return - if finished
+ *
+ * Created by Supakorn Srisawas 62070503449
  */
 int closeProgram()
 {
