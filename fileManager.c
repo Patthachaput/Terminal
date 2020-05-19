@@ -195,19 +195,30 @@ int init()
 /* this function will save all file return 1 if done else return 0 */
 int saveAllDatas(USER_T* user, PRODUCT_T* product, HISTORY_T* history)
 {
-	int status = 0;
+	int status = 1;
 
-	status = writeUser(user);
-	if(status == 0)
+	if(TOTALUSER > 0)
 	{
-		return status;
+		status = writeUser(user);
+		if(status == 0)
+		{
+			return status;
+		}
 	}
-	status = writeProduct(product);
-	if(status == 0)
+
+	if(TOTALPRODUCT > 0)
 	{
-		return status;
+		status = writeProduct(product);
+		if(status == 0)
+		{
+			return status;
+		}
 	}
-	status = writeHistory(history);
+
+	if(TOTALHISTORY > 0)
+	{
+		status = writeHistory(history);
+	}
 
 	return status;
 }
